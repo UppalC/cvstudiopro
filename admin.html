@@ -1,0 +1,25 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Owner Order Tools - CV Studio Pro</title><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="css/style.css"></head><body><div class="wrap"><nav class="nav"><div class="brand">CV Studio <span>Owner</span></div><div class="links"><a href="index.html">Home</a><a href="builder.html?ownerKey=cvspro-9f21">Builder Owner Mode</a></div></nav><div id="restricted" style="display:none"><section class="topbar"><h1>Owner Area</h1><p>This page is restricted. Open it using your private owner link with the correct owner key.</p></section></div><div id="ownerArea" style="display:none"><section class="topbar"><h1>Owner Order Tools</h1><p>Launch version: orders come through WhatsApp. Use builder owner mode to import structured order text or order files.</p></section><section class="section"><h2>How to process an order</h2><ol class="muted"><li>Open WhatsApp order message.</li><li>Confirm payment has been received.</li><li>Send the customer this access code on WhatsApp: <b id="codeInline"></b> (they enter it on the "Order / Payment Options" popup on their own screen to unlock Print/Export themselves).</li><li>Optional: if you want to prepare/export it yourself instead, open <b>builder.html?ownerKey=cvspro-9f21</b>, paste structured order text (now includes photo automatically) into Owner Order Tools, click Import Order Text, then Export PDF/Word and send to customer.</li></ol><a class="btn" href="builder.html?ownerKey=cvspro-9f21">Open Owner Builder</a></section><section class="section"><h2>Access Code Manager</h2><p class="muted">This is the code customers enter after paying, to unlock Print/Export themselves. Currently active code:</p><div class="status" id="currentCodeBox" style="font-size:20px;text-align:center"></div><div class="formsec"><h3>Change the access code</h3><p class="muted">Type a new code below, then copy the generated line into <b>js/app.js</b> (near the very top, replacing the existing <b>ACCESS_CODE</b> line), save, and re-upload/redeploy. On GitHub Pages you can edit this file directly on github.com without downloading anything.</p><input id="newCodeInput" placeholder="Type your new access code, e.g. CVPRO-AUG-2026"><div class="actions" style="margin-top:10px"><button class="btn dark" onclick="genCodeSnippet()">Generate Code Line</button></div><textarea id="codeSnippetOut" readonly style="margin-top:10px;display:none;font-family:monospace"></textarea><button class="btn light" id="copySnippetBtn" style="display:none;margin-top:8px" onclick="copySnippet()">Copy Line</button><p class="muted small" style="margin-top:8px">Tip: if you ever forget your current code, just reopen this page with your owner link — the active code is always shown above.</p></div></section></div><script src="js/app.js"></script><script>
+(function(){
+  const params=new URLSearchParams(location.search);
+  if(params.get('ownerKey')==='cvspro-9f21'){
+    document.getElementById('ownerArea').style.display='block';
+    document.getElementById('currentCodeBox').textContent=ACCESS_CODE;
+    document.getElementById('codeInline').textContent=ACCESS_CODE;
+  }else{
+    document.getElementById('restricted').style.display='block';
+  }
+})();
+function genCodeSnippet(){
+  const v=document.getElementById('newCodeInput').value.trim();
+  if(!v){alert('Please type a new code first.');return}
+  const out=document.getElementById('codeSnippetOut');
+  out.value=`const ACCESS_CODE='${v}';`;
+  out.style.display='block';
+  document.getElementById('copySnippetBtn').style.display='inline-flex';
+}
+function copySnippet(){
+  const out=document.getElementById('codeSnippetOut');
+  out.select();
+  navigator.clipboard.writeText(out.value).then(()=>alert('Copied! Now paste this into js/app.js, replacing the old ACCESS_CODE line.')).catch(()=>alert('Could not copy automatically. Please select and copy the text manually.'));
+}
+</script></div></body></html>
