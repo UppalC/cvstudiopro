@@ -71,7 +71,103 @@ function importStructured(){const txt=state.form.pasteOrder||'';const map={};txt
 function importResume(){const txt=state.form.pasteResume||'';if(!txt.trim()){alert('Paste resume text first');return}const email=txt.match(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i);const phone=txt.match(/(?:\+?92|0)?3\d{2}[\s-]?\d{7}/);const lines=txt.split(/\n+/).map(x=>x.trim()).filter(Boolean);if(!state.form.name&&lines[0])state.form.name=lines[0];if(email)state.form.email=email[0];if(phone)state.form.phone=phone[0];if(!state.form.summary)state.form.summary=lines.slice(1,4).join(' ');fullRender()}
 function setPhotoFit(k,v){state.photoFit[k]=Number(v);saveAuto();refreshPreview()}function photoStyle(){return `--photo-zoom:${state.photoFit.zoom};--photo-x:${state.photoFit.x}%;--photo-y:${state.photoFit.y}%`}
 function photoFrameHTML(){const unlocked=customerUnlocked()||ownerMode;const f=state.photoFrame;const shapes=[['circle','Circle'],['rounded','Rounded'],['square','Square']];const lockNote=unlocked?'':'<p class="muted small">Premium feature — order and unlock to customize your photo frame.</p>';return `<div class="formsec photo-frame-box"><h3>Photo Frame ${unlocked?'':'🔒'}</h3>${lockNote}<div class="row"><div><label>Frame Shape</label><div class="actions">${shapes.map(([v,l])=>`<button class="btn ${f.shape===v?'dark':'light'}" onclick="setPhotoFrame('shape','${v}')">${l}</button>`).join('')}</div></div></div><div class="row"><div><label><input type="checkbox" ${f.outline?'checked':''} onchange="setPhotoFrame('outline',this.checked)"> Show Outline</label></div><div>${f.outline?`<label>Outline Color</label><input type="color" value="${f.outlineColor}" oninput="setPhotoFrame('outlineColor',this.value)">`:''}</div></div></div>`}
-function setPhotoFrame(key,value){const unlocked=customerUnlocked()||ownerMode;if(!unlocked){openOrder();return}state.photoFrame[key]=value;saveAuto();fullRender()}function handlePhoto(input){const file=input.files?.[0];if(!file)return;if(!file.type.startsWith('image/')){alert('Please choose an image file (JPG or PNG).');input.value='';return}const img=new Image();const reader=new FileReader();reader.onload=()=>{img.onload=()=>{const maxSize=700;let w=img.width,h=img.height;if(w>h&&w>maxSize){h=Math.round(h*(maxSize/w));w=maxSize}else if(h>maxSize){w=Math.round(w*(maxSize/h));h=maxSize}const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;canvas.getContext('2d').drawImage(img,0,0,w,h);state.photo=canvas.toDataURL('image/jpeg',0.82);let tw=img.width,th=img.height;const tMax=260;if(tw>th&&tw>tMax){th=Math.round(th*(tMax/tw));tw=tMax}else if(th>tMax){tw=Math.round(tw*(tMax/th));th=tMax}const tCanvas=document.createElement('canvas');tCanvas.width=tw;tCanvas.height=th;tCanvas.getContext('2d').drawImage(img,0,0,tw,th);state.photoThumb=tCanvas.toDataURL('image/jpeg',0.6);saveAuto();fullRender()};img.onerror=()=>alert('This image could not be loaded. Please try a different photo.');img.src=reader.result};reader.onerror=()=>alert('This photo could not be read. Please try a different file.');reader.readAsDataURL(file)}
+function setPhotoFrame(key,value){const unlocked=customerUnlocked()||ownerMode;if(!unlocked){openOrder();return}state.photoFrame[key]=value;saveAuto();fullRender()}function handlePhoto(input){
+  const file=input.files?.[0];
+  if(!file)return;
+
+  if(!file.type.startsWith('image/')){
+    alert('Please choose an image file (JPG or PNG).');
+    input.value='';
+    return;
+  }
+
+  const reader=new FileReader();
+
+  reader.onload=()=>{
+    const originalData=reader.result;
+
+    // Show the selected photo immediately.
+    state.photo=originalData;
+    state.photoThumb=originalData;
+
+    // Save immediately so the photo is not lost during re-render.
+    saveAuto();
+    fullRender();
+
+    // Create a smaller version for storage/export compatibility.
+    const img=new Image();
+
+    img.onload=()=>{
+      try{
+        const maxSize=700;
+        let w=img.width;
+        let h=img.height;
+
+        if(w>h&&w>maxSize){
+          h=Math.round(h*(maxSize/w));
+          w=maxSize;
+        }else if(h>maxSize){
+          w=Math.round(w*(maxSize/h));
+          h=maxSize;
+        }
+
+        const canvas=document.createElement('canvas');
+        canvas.width=w;
+        canvas.height=h;
+
+        const ctx=canvas.getContext('2d');
+        if(!ctx)return;
+
+        ctx.drawImage(img,0,0,w,h);
+        state.photo=canvas.toDataURL('image/jpeg',0.82);
+
+        let tw=img.width;
+        let th=img.height;
+        const tMax=260;
+
+        if(tw>th&&tw>tMax){
+          th=Math.round(th*(tMax/tw));
+          tw=tMax;
+        }else if(th>tMax){
+          tw=Math.round(tw*(tMax/th));
+          th=tMax;
+        }
+
+        const tCanvas=document.createElement('canvas');
+        tCanvas.width=tw;
+        tCanvas.height=th;
+
+        const tCtx=tCanvas.getContext('2d');
+        if(tCtx){
+          tCtx.drawImage(img,0,0,tw,th);
+          state.photoThumb=tCanvas.toDataURL('image/jpeg',0.6);
+        }
+
+        saveAuto();
+        fullRender();
+
+      }catch(e){
+        console.error('Photo compression failed:',e);
+        saveAuto();
+      }
+    };
+
+    img.onerror=()=>{
+      // Original photo is already saved and displayed.
+      console.warn('Photo compression could not be completed.');
+      saveAuto();
+    };
+
+    img.src=originalData;
+  };
+
+  reader.onerror=()=>{
+    alert('This photo could not be read. Please try another JPG or PNG file.');
+    input.value='';
+  };
+
+  reader.readAsDataURL(file);
+}
 function photoFor(pos,circle=false){if(state.photoPlacement==='none')return'';if(state.photoPlacement!=='auto'&&state.photoPlacement!==pos)return'';const canCustomize=customerUnlocked()||ownerMode;let extraStyle='';let cls=circle?'circle':'';if(canCustomize){const f=state.photoFrame;const radius=f.shape==='circle'?'50%':f.shape==='square'?'4px':'16px';const wh=f.shape==='circle'?'width:96px;height:96px;':'';cls='';extraStyle=`border-radius:${radius};${wh}${f.outline?`border:4px solid ${f.outlineColor};`:'border:3px solid rgba(255,255,255,.85);'}`}return `<div class="cv-photo ${cls}" style="${photoStyle()}${extraStyle}">${state.photo?`<img src="${state.photo}" alt="profile">`:'Profile Photo'}</div>`}
 function contact(){const f=state.form;return `<div class="small">${[f.phone,f.email,f.address].filter(Boolean).map(esc).join('<br>')}</div>`}
 function section(title,inner){return inner?`<div class="cv-section"><h2>${esc(title)}</h2>${inner}</div>`:''}
