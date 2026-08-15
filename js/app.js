@@ -77,24 +77,22 @@ function setPhotoFrame(key,value){const unlocked=customerUnlocked()||ownerMode;i
 
   if(!file.type.startsWith('image/')){
     alert('Please choose an image file (JPG or PNG).');
-    input.value='';
     return;
   }
 
   const reader=new FileReader();
 
   reader.onload=()=>{
-    const originalData=reader.result;
+    const data=reader.result;
 
-    // Show the selected photo immediately.
-    state.photo=originalData;
-    state.photoThumb=originalData;
+    state.photo=data;
+    state.photoThumb=data;
 
-    // Save immediately so the photo is not lost during re-render.
+    // IMPORTANT:
+    // Do not rebuild the whole builder here.
+    refreshPreview();
     saveAuto();
-    fullRender();
 
-    // Create a smaller version for storage/export compatibility.
     const img=new Image();
 
     img.onload=()=>{
@@ -103,7 +101,7 @@ function setPhotoFrame(key,value){const unlocked=customerUnlocked()||ownerMode;i
         let w=img.width;
         let h=img.height;
 
-        if(w>h&&w>maxSize){
+        if(w>h && w>maxSize){
           h=Math.round(h*(maxSize/w));
           w=maxSize;
         }else if(h>maxSize){
@@ -116,16 +114,17 @@ function setPhotoFrame(key,value){const unlocked=customerUnlocked()||ownerMode;i
         canvas.height=h;
 
         const ctx=canvas.getContext('2d');
-        if(!ctx)return;
 
-        ctx.drawImage(img,0,0,w,h);
-        state.photo=canvas.toDataURL('image/jpeg',0.82);
+        if(ctx){
+          ctx.drawImage(img,0,0,w,h);
+          state.photo=canvas.toDataURL('image/jpeg',0.82);
+        }
 
         let tw=img.width;
         let th=img.height;
         const tMax=260;
 
-        if(tw>th&&tw>tMax){
+        if(tw>th && tw>tMax){
           th=Math.round(th*(tMax/tw));
           tw=tMax;
         }else if(th>tMax){
@@ -138,32 +137,33 @@ function setPhotoFrame(key,value){const unlocked=customerUnlocked()||ownerMode;i
         tCanvas.height=th;
 
         const tCtx=tCanvas.getContext('2d');
+
         if(tCtx){
           tCtx.drawImage(img,0,0,tw,th);
           state.photoThumb=tCanvas.toDataURL('image/jpeg',0.6);
         }
 
         saveAuto();
-        fullRender();
+        refreshPreview();
 
       }catch(e){
-        console.error('Photo compression failed:',e);
+        console.error('Photo processing failed:',e);
         saveAuto();
+        refreshPreview();
       }
     };
 
     img.onerror=()=>{
-      // Original photo is already saved and displayed.
-      console.warn('Photo compression could not be completed.');
+      console.warn('Photo optimization failed. Original photo will be used.');
       saveAuto();
+      refreshPreview();
     };
 
-    img.src=originalData;
+    img.src=data;
   };
 
   reader.onerror=()=>{
     alert('This photo could not be read. Please try another JPG or PNG file.');
-    input.value='';
   };
 
   reader.readAsDataURL(file);
