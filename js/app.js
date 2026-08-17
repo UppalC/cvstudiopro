@@ -181,7 +181,7 @@ function renderCV(){document.documentElement.style.setProperty('--cv-primary',st
 function brandHeader(label=''){return `<div class="cv-continue-head"><div>${head}${label?`<div class="cv-sub">${label}</div>`:''}</div><div class="continue-contact">${contact()}</div></div>`}
 function page(content,page,extra=''){return `<div class="cvpage ${t.cls} ${extra}" data-person="${person}" style="${style}">${content}${footer(page)}</div>`}
 if(contentLen>1500){
- const p1=page(`${brandHeader('Professional CV')}${s.summary}${s.exp}`,1,'multi-premium');
+const p1=page(`${brandHeader('Professional CV')}${photoFor('top',true)}${s.summary}${s.exp}`,1,'multi-premium');
  const p2=page(`${brandHeader('Continued')}${s.edu}${s.tech}${s.soft}${s.lang}`,2,'multi-premium cv-cont');
  const extra=s.proj+s.cert+s.refs+s.custom;
  const p3=extra?page(`${brandHeader('Additional Information')}${extra}`,3,'multi-premium cv-cont'):'';
