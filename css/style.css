@@ -65,3 +65,29 @@ button{touch-action:manipulation}
 .crimson-head{background:#be123c;color:#fff;padding:22px;margin:-15mm -15mm 18px;display:flex;align-items:center;gap:16px}.crimson-head>*{min-width:0}.crimson-head h1{color:#fff}.crimson-body{display:grid;grid-template-columns:1.3fr 1fr;gap:18px}.crimson-body>*{min-width:0!important}
 .indigo-timeline .cv-card{position:relative;padding-left:18px;border-left:2px solid #c7d2fe;margin-left:4px}.indigo-timeline .cv-card:before{content:'';position:absolute;left:-6px;top:5px;width:10px;height:10px;border-radius:50%;background:#4338ca;border:2px solid #fff}
 .multi-premium.cv-l25,.cv-cont.cv-l25,.multi-premium.cv-l28,.cv-cont.cv-l28{display:block!important}
+@media print{
+  .cvbook{
+    display:block!important;
+    margin:0!important;
+    padding:0!important;
+    gap:0!important;
+  }
+
+  .cvpage{
+    width:210mm!important;
+    min-height:297mm!important;
+    margin:0!important;
+    box-sizing:border-box!important;
+    break-inside:avoid!important;
+  }
+
+  .cvpage:not(:last-child){
+    break-after:page!important;
+    page-break-after:always!important;
+  }
+
+  .cvpage:last-child{
+    break-after:auto!important;
+    page-break-after:auto!important;
+  }
+}
