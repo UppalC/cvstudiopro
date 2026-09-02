@@ -81,13 +81,9 @@ button{touch-action:manipulation}
     break-inside:avoid!important;
   }
 
-  .cvpage:not(:last-child){
-    break-after:page!important;
-    page-break-after:always!important;
-  }
-
-  .cvpage:last-child{
-    break-after:auto!important;
-    page-break-after:auto!important;
-  }
+  .cvpage+.cvpage{
+  break-before:page!important;
+  page-break-before:always!important;
 }
+
+  
