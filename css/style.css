@@ -85,5 +85,14 @@ button{touch-action:manipulation}
   break-before:page!important;
   page-break-before:always!important;
 }
+html,body{
+  height:auto!important;
+  min-height:0!important;
+}
 
+#cvPreview{
+  height:auto!important;
+  min-height:0!important;
+  overflow:visible!important;
+}
   
