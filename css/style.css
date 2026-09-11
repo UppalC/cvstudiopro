@@ -96,3 +96,11 @@ html,body{
   overflow:visible!important;
 }
   
+.previewpanel{
+  padding:0!important;
+  margin:0!important;
+  position:static!important;
+  width:210mm!important;
+  max-height:none!important;
+  overflow:visible!important;
+}
