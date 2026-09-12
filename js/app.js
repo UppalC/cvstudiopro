@@ -169,7 +169,34 @@ function setPhotoFrame(key,value){const unlocked=customerUnlocked()||ownerMode;i
 
   reader.readAsDataURL(file);
 }
-function photoFor(pos,circle=false){if(state.photoPlacement==='none')return'';if(state.photoPlacement!=='auto'&&state.photoPlacement!==pos)return'';const canCustomize=customerUnlocked()||ownerMode;let extraStyle='';let cls=circle?'circle':'';if(canCustomize){const f=state.photoFrame;const radius=f.shape==='circle'?'50%':f.shape==='square'?'0':'16px';const wh=f.shape==='circle'?'width:96px;height:96px;':'';cls='';extraStyle=`border-radius:${radius};${wh}${f.outline?`border:4px solid ${f.outlineColor};`:'border:3px solid rgba(255,255,255,.85);'}`}return `<div class="cv-photo ${cls}" style="${photoStyle()}${extraStyle}">${state.photo?`<img src="${state.photo}" alt="profile">`:'Profile Photo'}</div>`}
+function photoFor(pos,circle=false){
+  if(state.photoPlacement==='none')return'';
+  if(state.photoPlacement!=='auto'&&state.photoPlacement!==pos)return'';
+
+  const canCustomize=customerUnlocked()||ownerMode;
+  let extraStyle='';
+  let cls=circle?'circle':'';
+
+  const x=Number(state.photoFit.x)||50;
+  const y=Number(state.photoFit.y)||50;
+  const zoom=Number(state.photoFit.zoom)||1;
+
+  const tx=(x-50)*0.7;
+  const ty=(y-50)*0.7;
+
+  if(canCustomize){
+    const f=state.photoFrame;
+    const radius=f.shape==='circle'?'50%':f.shape==='square'?'0':'16px';
+    const wh=f.shape==='circle'?'width:96px;height:96px;':'';
+
+    cls='';
+    extraStyle=`border-radius:${radius};${wh}${f.outline?`border:4px solid ${f.outlineColor};`:'border:3px solid rgba(255,255,255,.85);'}`;
+  }
+
+  const imgStyle=`width:100%;height:100%;object-fit:cover;object-position:50% 50%;transform:translate(${tx}%,${ty}%) scale(${zoom});transform-origin:50% 50%;`;
+
+  return `<div class="cv-photo ${cls}" style="${extraStyle}">${state.photo?`<img src="${state.photo}" alt="profile" style="${imgStyle}">`:'Profile Photo'}</div>`;
+}
 function contact(){const f=state.form;return `<div class="small">${[f.phone,f.email,f.address].filter(Boolean).map(esc).join('<br>')}</div>`}
 function section(title,inner){return inner?`<div class="cv-section"><h2>${esc(title)}</h2>${inner}</div>`:''}
 function cards(items){return items.map(x=>`<div class="cv-card"><div class="cv-title">${esc(x.t)}</div>${x.c?`<div class="cv-sub">${esc(x.c)}</div>`:''}${x.d?`<p>${esc(x.d)}</p>`:''}</div>`).join('')}
