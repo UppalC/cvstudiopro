@@ -186,11 +186,37 @@ function photoFor(pos,circle=false){
 
   if(canCustomize){
     const f=state.photoFrame;
-    const radius=f.shape==='circle'?'50%':f.shape==='square'?'0':'16px';
-    const wh=f.shape==='circle'?'width:96px;height:96px;':'';
+    const outlineColor=f.outlineColor||'#2563eb';
+    const hasOutline=!!f.outline;
+    let radius='16px',wh='',clip='',shadow='';
+    let borderStyle=hasOutline?`border:4px solid ${outlineColor};`:'border:3px solid rgba(255,255,255,.85);';
+
+    if(f.shape==='circle'){
+      radius='50%';wh='width:96px;height:96px;';
+    }else if(f.shape==='square'){
+      radius='0';
+    }else if(f.shape==='rounded'){
+      radius='16px';
+    }else if(f.shape==='soft'){
+      radius='22px';
+      shadow='box-shadow:0 14px 30px rgba(15,23,42,.22);';
+      borderStyle=hasOutline?`border:5px solid ${outlineColor};`:'border:6px solid #fff;';
+    }else if(f.shape==='double'){
+      radius='50%';wh='width:96px;height:96px;';
+      borderStyle='border:3px solid #fff;';
+      shadow=`box-shadow:0 0 0 3px #fff,0 0 0 7px ${hasOutline?outlineColor:'#2563eb'};`;
+    }else if(f.shape==='hex'){
+      radius='0';wh='width:104px;height:104px;';
+      clip='clip-path:polygon(25% 5%,75% 5%,100% 50%,75% 95%,25% 95%,0% 50%);';
+      borderStyle=hasOutline?`border:4px solid ${outlineColor};`:'border:4px solid rgba(255,255,255,.9);';
+    }else if(f.shape==='diamond'){
+      radius='0';wh='width:104px;height:104px;';
+      clip='clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);';
+      borderStyle=hasOutline?`border:4px solid ${outlineColor};`:'border:4px solid rgba(255,255,255,.9);';
+    }
 
     cls='';
-    extraStyle=`border-radius:${radius};${wh}${f.outline?`border:4px solid ${f.outlineColor};`:'border:3px solid rgba(255,255,255,.85);'}`;
+    extraStyle=`border-radius:${radius};${wh}${clip}${shadow}${borderStyle}`;
   }
 
   const imgStyle=`width:100%;height:100%;object-fit:cover;object-position:50% 50%;transform:translate(${tx}%,${ty}%) scale(${zoom});transform-origin:50% 50%;`;
