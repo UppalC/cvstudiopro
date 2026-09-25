@@ -4,7 +4,7 @@ const BUSINESS={whatsapp:'923217497530',email:'cv_studio_pro@gmail.com',offer:{e
 // Premium unlock codes and owner login are verified server-side via a
 // Google Apps Script Web App — see /apps-script/README.md for setup.
 // Paste your deployed Apps Script Web App URL below after deployment.
-https://script.google.com/macros/s/AKfycby_l3GWxUvJ63lSd_JahV90EhGNkHXsayhJeOq-44ngmM9VBeNtiyTLT5P1_0s21gU/exec
+const VERIFY_API_URL='https://script.google.com/macros/s/AKfycby_l3GWxUvJ63lSd_JahV90EhGNkHXsayhJeOq-44ngmM9VBeNtiyTLT5P1_0s21gU/exec';
 function customerUnlocked(){return localStorage.getItem('cvStudioUnlocked')==='1'}
 async function verifyWithBackend(payload){
   if(VERIFY_API_URL.indexOf('PASTE_YOUR')===0){return{valid:false,error:'setup_incomplete'}}
