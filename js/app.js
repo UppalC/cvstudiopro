@@ -5,7 +5,10 @@ const BUSINESS={whatsapp:'923217497530',email:'cv_studio_pro@gmail.com',offer:{e
 // Google Apps Script Web App — see /apps-script/README.md for setup.
 // Paste your deployed Apps Script Web App URL below after deployment.
 const VERIFY_API_URL='https://script.google.com/macros/s/AKfycbwR0RepXaL9xhnf2XXqbxnaJ3jx7g4ih7oxD3NhYMeHDWtUrsj_EojVlBgEKZqqc5M/exec';
-function customerUnlocked(){return localStorage.getItem('cvStudioUnlocked')==='1'}
+function applySiteSettings(s){if(!s)return;if(s.whatsapp)BUSINESS.whatsapp=String(s.whatsapp);if(s.email)BUSINESS.email=String(s.email);if(typeof s.offer_enabled!=='undefined')BUSINESS.offer.enabled=(String(s.offer_enabled).toLowerCase()==='true');if(s.offer_text)BUSINESS.offer.text=String(s.offer_text);window.__freeTrialMode=(typeof s.free_trial_mode!=='undefined')&&(String(s.free_trial_mode).toLowerCase()==='true');try{renderOffer()}catch(e){}try{if(typeof fullRender==='function')fullRender()}catch(e){}}
+function fetchSiteSettings(){if(typeof VERIFY_API_URL==='undefined'||VERIFY_API_URL.indexOf('PASTE_YOUR')===0)return;fetch(VERIFY_API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'getSettings'})}).then(r=>r.json()).then(d=>{if(d&&d.valid&&d.settings)applySiteSettings(d.settings)}).catch(()=>{})}
+fetchSiteSettings();
+function customerUnlocked(){return localStorage.getItem('cvStudioUnlocked')==='1'||window.__freeTrialMode===true}
 async function verifyWithBackend(payload){
   if(VERIFY_API_URL.indexOf('PASTE_YOUR')===0){return{valid:false,error:'setup_incomplete'}}
   try{
