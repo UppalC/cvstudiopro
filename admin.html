@@ -1,7 +1,8 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Owner Order Tools - CV Studio Pro</title><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="css/style.css"></head><body><div class="wrap"><nav class="nav"><div class="brand">CV Studio <span>Owner</span></div><div class="links"><a href="index.html">Home</a><a href="builder.html">Builder</a></div></nav><div id="ownerLogin" style="display:none"><section class="topbar"><h1>Owner Login</h1><p>Enter your owner password to access order tools. This is checked securely on the server — nothing here is stored in the site's code.</p></section><section class="section"><div class="formsec"><label>Owner Password</label><input id="ownerPassInput" type="password" placeholder="Enter owner password"><div class="actions" style="margin-top:10px"><button class="btn dark" id="ownerLoginBtn" onclick="ownerLogin()">Login</button></div><p class="muted small" id="ownerLoginMsg"></p></div></section></div><div id="ownerArea" style="display:none"><section class="topbar"><h1>Owner Order Tools</h1><p>Launch version: orders come through WhatsApp. Use builder owner mode to import structured order text or order files.</p></section><section class="section"><h2>How to process an order</h2><ol class="muted"><li>Open the WhatsApp order message.</li><li>Confirm payment has been received.</li><li>Open your Google Sheet, go to the <b>Codes</b> tab, and add a new row with a unique code for this order (e.g. <b>CVPRO-4F82K</b>). Leave the "used" column blank.</li><li>Send that exact code to the customer on WhatsApp. They enter it in the "Order / Payment Options" popup to unlock Print/Export themselves. Each code works <b>once only</b> — the Sheet marks it used automatically.</li><li>Optional: if you want to prepare/export the CV yourself instead, click <b>Open Owner Builder</b> below (your login stays active for this browser tab), paste the structured order text into Owner Order Tools, click Import Order Text, then Export PDF/Word and send it to the customer.</li></ol><div class="actions"><a class="btn" href="builder.html">Open Owner Builder</a><button class="btn light" onclick="ownerLogout()">Log Out</button></div></section></div><script src="js/app.js"></script><script>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Owner Order Tools - CV Studio Pro</title><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="css/style.css"></head><body><div class="wrap"><nav class="nav"><div class="brand">CV Studio <span>Owner</span></div><div class="links"><a href="index.html">Home</a><a href="builder.html">Builder</a></div></nav><div id="ownerLogin" style="display:none"><section class="topbar"><h1>Owner Login</h1><p>Enter your owner password to access order tools. This is checked securely on the server — nothing here is stored in the site's code.</p></section><section class="section"><div class="formsec"><label>Owner Password</label><input id="ownerPassInput" type="password" placeholder="Enter owner password"><div class="actions" style="margin-top:10px"><button class="btn dark" id="ownerLoginBtn" onclick="ownerLogin()">Login</button></div><p class="muted small" id="ownerLoginMsg"></p></div></section></div><div id="ownerArea" style="display:none"><section class="topbar"><h1>Owner Order Tools</h1><p>Launch version: orders come through WhatsApp. Use builder owner mode to import structured order text or order files.</p></section><section class="section"><h2>How to process an order</h2><ol class="muted"><li>Open the WhatsApp order message.</li><li>Confirm payment has been received.</li><li>Open your Google Sheet, go to the <b>Codes</b> tab, and add a new row with a unique code for this order (e.g. <b>CVPRO-4F82K</b>). Leave the "used" column blank.</li><li>Send that exact code to the customer on WhatsApp. They enter it in the "Order / Payment Options" popup to unlock Print/Export themselves. Each code works <b>once only</b> — the Sheet marks it used automatically.</li><li>Optional: if you want to prepare/export the CV yourself instead, click <b>Open Owner Builder</b> below (your login stays active for this browser tab), paste the structured order text into Owner Order Tools, click Import Order Text, then Export PDF/Word and send it to the customer.</li></ol><div class="actions"><a class="btn" href="builder.html">Open Owner Builder</a><button class="btn light" onclick="ownerLogout()">Log Out</button></div></section><section class="section"><h2>Orders</h2><p class="muted small">New orders submitted through the site show up here. Approve a pending order to assign the next unused code and email it to the customer automatically.</p><div class="actions" style="margin-bottom:10px"><button class="btn light" onclick="loadOrders()">Refresh Orders</button></div><div id="ordersList" class="muted">Loading...</div></section></div><script src="js/app.js"></script><script>
 (function(){
   if(sessionStorage.getItem('cvStudioOwnerVerified')==='1'){
     document.getElementById('ownerArea').style.display='block';
+    setTimeout(loadOrders,0);
   }else{
     document.getElementById('ownerLogin').style.display='block';
   }
@@ -19,14 +20,38 @@ async function ownerLogin(){
   if(result&&result.error==='network'){if(msg)msg.textContent='Could not reach the server. Please check your internet connection and try again.';return}
   if(result&&result.valid){
     sessionStorage.setItem('cvStudioOwnerVerified','1');
+    sessionStorage.setItem('cvStudioOwnerPass',v);
     document.getElementById('ownerLogin').style.display='none';
     document.getElementById('ownerArea').style.display='block';
+    loadOrders();
   }else{
     if(msg)msg.textContent='Incorrect password.';
   }
 }
 function ownerLogout(){
   sessionStorage.removeItem('cvStudioOwnerVerified');
+  sessionStorage.removeItem('cvStudioOwnerPass');
   location.reload();
+}
+async function loadOrders(){
+  const pass=sessionStorage.getItem('cvStudioOwnerPass')||'';
+  const box=document.getElementById('ordersList');
+  if(!box)return;
+  box.textContent='Loading...';
+  const result=await verifyWithBackend({action:'getOrders',password:pass});
+  if(!result||!result.valid){box.textContent='Could not load orders.';return}
+  if(!result.orders||!result.orders.length){box.textContent='No orders yet.';return}
+  box.innerHTML=result.orders.slice().reverse().map(o=>`<div class="formsec" style="margin-bottom:10px"><div><b>${esc(o.name||'(no name)')}</b> \u2014 ${esc(o.status||'')}</div><div class="muted small">${esc(o.whatsapp||'')} \u00b7 ${esc(o.email||'')} \u00b7 ${esc(o.template||'')}</div>${o.note?`<div class="muted small">Note: ${esc(o.note)}</div>`:''}${o.status==='Pending'?`<div class="actions" style="margin-top:6px"><button class="btn dark" onclick="approveOrderRow(${o.row},this)">Approve &amp; Send Code</button></div>`:''}${o.code?`<div class="muted small">Code: <b>${esc(o.code)}</b></div>`:''}</div>`).join('');
+}
+async function approveOrderRow(row,btn){
+  const pass=sessionStorage.getItem('cvStudioOwnerPass')||'';
+  if(btn){btn.disabled=true;btn.textContent='Approving...'}
+  const result=await verifyWithBackend({action:'approveOrder',password:pass,rowIndex:row});
+  if(result&&result.valid){
+    loadOrders();
+  }else{
+    alert('Could not approve: '+(result&&result.error?result.error:'unknown error'));
+    if(btn){btn.disabled=false;btn.textContent='Approve & Send Code'}
+  }
 }
 </script></div></body></html>
