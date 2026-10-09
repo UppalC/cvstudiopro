@@ -145,3 +145,4 @@ html,body{
   max-height:none!important;
   overflow:visible!important;
 }
+.cv-l7 .cv-header,.cv-l12 .cv-header{flex-direction:column;align-items:center;justify-content:center}
