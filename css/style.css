@@ -145,6 +145,7 @@ html,body{
   max-height:none!important;
   overflow:visible!important;
 }
+}
 .cv-l7 .cv-header,.cv-l12 .cv-header{flex-direction:column;align-items:center;justify-content:center}
 .cv-l3 .cv-profile-band{flex-direction:row-reverse}
 .cv-l5 .cv-header{flex-direction:row-reverse}
@@ -153,3 +154,11 @@ html,body{
 .cv-l29 .crimson-head{flex-direction:row-reverse}
 .cv-l32 .peach-head{flex-direction:row-reverse}
 .cv-l8 .cv-header,.cv-l15 .cv-header,.cv-l30 .cv-header{flex-direction:column;align-items:center;justify-content:center;text-align:center}
+
+.cv-l5 .cv-header,.cv-l7 .cv-header,.cv-l8 .cv-header,.cv-l11 .cv-header,.cv-l12 .cv-header,.cv-l13 .cv-header,.cv-l15 .cv-header,.cv-l21 .cv-header,.cv-l22 .cv-header,.cv-l25 .cv-header,.cv-l26 .cv-header,.cv-l27 .cv-header,.cv-l28 .cv-header,.cv-l30 .cv-header{display:flex;gap:14px;align-items:center}
+.cv-l3 .cv-profile-band{flex-direction:row-reverse}
+.cv-l5 .cv-header,.cv-l13 .cv-header,.cv-l26 .cv-header{flex-direction:row-reverse}
+.cv-l29 .crimson-head{flex-direction:row-reverse}
+.cv-l32 .peach-head{flex-direction:row-reverse}
+.cv-l7 .cv-header,.cv-l12 .cv-header{flex-direction:column;justify-content:center;text-align:center}
+.cv-l8 .cv-header,.cv-l15 .cv-header,.cv-l30 .cv-header{flex-direction:column;justify-content:center;text-align:center}
