@@ -205,3 +205,23 @@ html,body{
 .cv-l12 .skill-item .bar{height:10px;border-radius:999px;background:#ffe4e9}
 .cv-l12 .skill-item .bar span{border-radius:999px;background:linear-gradient(90deg,#fda4af,var(--cv-accent,#fb7185))}
 .cv-l12 .cv-chip{background:#fff1f2;color:#be123c;border:1.5px solid #fecdd3;border-radius:999px;box-shadow:0 3px 8px rgba(251,113,133,.15)}
+/* Phase C - distinct technical/soft-skills & languages styling, batch 3 (t13-t18) */
+.cv-l13 .skill-item .bar{height:7px;border-radius:0;background:#dbeafe}
+.cv-l13 .skill-item .bar span{border-radius:0;background:linear-gradient(90deg,#1d4ed8,#60a5fa)}
+.cv-l13 .cv-chip{background:#eff6ff;color:#1d4ed8;border:2px solid #1d4ed8;border-radius:4px;font-weight:800;box-shadow:none}
+.cv-l14 .skill-item .bar{height:2px;border-radius:0;background:#e7e5e4}
+.cv-l14 .skill-item .bar span{border-radius:0;background:#78716c}
+.cv-l14 .skill-item b{text-transform:uppercase;font-size:11px;letter-spacing:.6px;font-weight:700}
+.cv-l14 .cv-chip{background:transparent;color:#57534e;border:0;border-bottom:1px dashed #a8a29e;border-radius:0;padding:3px 1px;margin:3px 12px 3px 0;text-transform:uppercase;font-size:10px;letter-spacing:1px;box-shadow:none}
+.cv-l15 .skill-item .bar{height:9px;border-radius:999px;background:#ede9fe}
+.cv-l15 .skill-item .bar span{border-radius:999px;background:linear-gradient(90deg,#a78bfa,#ec4899)}
+.cv-l15 .cv-chip{background:#fff;color:#7c3aed;border:2px solid #c4b5fd;border-radius:999px;font-weight:700;box-shadow:0 3px 10px rgba(167,139,250,.25)}
+.cv-l16 .skill-item .bar{height:10px;border-radius:0;background:#1f2937}
+.cv-l16 .skill-item .bar span{border-radius:0;background:linear-gradient(90deg,#facc15,#fbbf24)}
+.cv-l16 .cv-chip{background:#facc15;color:#111827;border:2px solid #111827;border-radius:0;font-weight:900;text-transform:uppercase;font-size:10.5px;letter-spacing:.3px;box-shadow:2px 2px 0 #111827}
+.cv-l17 .skill-item .bar{height:6px;border-radius:999px;background:rgba(14,165,233,.15)}
+.cv-l17 .skill-item .bar span{border-radius:999px;background:#0ea5e9;box-shadow:0 0 8px #0ea5e9}
+.cv-l17 .cv-chip{background:rgba(255,255,255,.08);color:#7dd3fc;border:1px solid rgba(125,211,252,.5);border-radius:999px;font-weight:600;box-shadow:0 0 6px rgba(14,165,233,.25)}
+.cv-l18 .skill-item .bar{height:8px;border-radius:2px;background:#fde68a}
+.cv-l18 .skill-item .bar span{border-radius:2px;background:#111827}
+.cv-l18 .cv-chip{background:#111827;color:#facc15;border:1.5px solid #facc15;border-radius:2px;font-weight:800;text-transform:uppercase;font-size:10px;box-shadow:none}
