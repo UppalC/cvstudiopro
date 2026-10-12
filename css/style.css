@@ -162,3 +162,46 @@ html,body{
 .cv-l32 .peach-head{flex-direction:row-reverse}
 .cv-l7 .cv-header,.cv-l12 .cv-header{flex-direction:column;justify-content:center;text-align:center}
 .cv-l8 .cv-header,.cv-l15 .cv-header,.cv-l30 .cv-header{flex-direction:column;justify-content:center;text-align:center}
+
+/* Phase A - distinct technical/soft-skills & languages styling, batch 1 (t1-t8) */
+.cv-l1 .skill-item .bar{height:6px;border-radius:3px;background:#1f2937}
+.cv-l1 .skill-item .bar span{border-radius:3px;background:var(--cv-accent,#34d399);box-shadow:0 0 8px rgba(52,211,153,.45)}
+.cv-l1 .cv-chip{background:transparent;border:1.5px solid var(--cv-accent,#34d399);color:var(--cv-accent,#34d399);border-radius:6px;box-shadow:none}
+.cv-l2 .skill-item .bar{height:10px;border-radius:999px;background:#dcfce7}
+.cv-l2 .skill-item .bar span{border-radius:999px;background:linear-gradient(90deg,var(--cv-accent,#22c55e),#16a34a)}
+.cv-l2 .cv-chip{background:#ecfdf5;color:#166534;border:1px solid #86efac;border-radius:999px;font-weight:900;box-shadow:none}
+.cv-l3 .skill-item .bar{height:5px;border-radius:0;background:#1e293b}
+.cv-l3 .skill-item .bar span{border-radius:0;background:var(--cv-accent,#38bdf8)}
+.cv-l3 .cv-chip{background:#0f172a;color:var(--cv-accent,#38bdf8);border:1px solid var(--cv-accent,#38bdf8);border-radius:4px;font-family:'Courier New',monospace;font-size:11px;box-shadow:none}
+.cv-l4 .skill-item .bar{display:none}
+.cv-l4 .skill-item{display:inline-block;margin:0 16px 8px 0;border-bottom:2px solid var(--cv-accent,#dc2626);padding-bottom:2px}
+.cv-l4 .cv-chip{background:transparent;color:#111827;border:0;padding:2px 0;margin:0 10px 0 0;border-radius:0;font-weight:700;box-shadow:none}
+.cv-l4 .cv-chip:not(:last-child):after{content:'•';margin-left:10px;color:var(--cv-accent,#dc2626)}
+.cv-l5 .skill-item .bar{height:4px;border-radius:0;background:rgba(255,255,255,.12)}
+.cv-l5 .skill-item .bar span{background:var(--cv-accent,#facc15);box-shadow:0 0 6px rgba(250,204,21,.55)}
+.cv-l5 .cv-chip{background:rgba(250,204,21,.12);color:#facc15;border:1px solid rgba(250,204,21,.4);border-radius:3px;box-shadow:none}
+.cv-l6 .skill-item .bar{height:12px;border-radius:0;background:#111827;border:2px solid #111827}
+.cv-l6 .skill-item .bar span{background:var(--cv-accent,#d97706);border-radius:0}
+.cv-l6 .cv-chip{background:#111827;color:#facc15;border-radius:0;font-weight:900;padding:7px 12px;box-shadow:none}
+.cv-l7 .skill-item .bar{height:2px;background:#e7e5e4}
+.cv-l7 .skill-item .bar span{background:var(--cv-accent,#b45309)}
+.cv-l7 .skill-item b{font-family:Georgia,'Times New Roman',serif;letter-spacing:.3px}
+.cv-l7 .cv-chip{background:transparent;color:#44403c;border:1px solid var(--cv-accent,#b45309);border-radius:0;font-family:Georgia,serif;font-style:italic;font-size:11.5px;box-shadow:none}
+.cv-l8 .skill-item .bar{height:11px;border-radius:999px;background:#ffe8d4}
+.cv-l8 .skill-item .bar span{border-radius:999px;background:linear-gradient(90deg,#fdba74,var(--cv-accent,#fb923c))}
+.cv-l8 .cv-chip{background:#fff;color:var(--cv-accent,#fb923c);border:1.5px solid #fed7aa;border-radius:999px;box-shadow:0 3px 8px rgba(251,146,60,.15)}
+
+/* Phase B - distinct technical/soft-skills & languages styling, batch 2 (t9-t12) */
+.cv-l9 .skill-item .bar{height:7px;border-radius:999px;background:rgba(255,255,255,.18)}
+.cv-l9 .skill-item .bar span{border-radius:999px;background:linear-gradient(90deg,#5eead4,var(--cv-accent,#14b8a6))}
+.cv-l9 .cv-chip{background:rgba(255,255,255,.12);color:#99f6e4;border:1px solid rgba(153,246,228,.5);border-radius:999px;box-shadow:none}
+.cv-l10 .skill-item .bar{height:9px;border-radius:0;background:#e2e8f0}
+.cv-l10 .skill-item .bar span{border-radius:0;background:var(--cv-accent,#f59e0b)}
+.cv-l10 .cv-chip{background:#fff;color:#334155;border:1px solid #334155;border-radius:3px;font-weight:800;text-transform:uppercase;font-size:10.5px;letter-spacing:.4px;box-shadow:none}
+.cv-l11 .skill-item .bar{height:3px;border-radius:0;background:rgba(255,255,255,.2)}
+.cv-l11 .skill-item .bar span{background:var(--cv-accent,#c084fc)}
+.cv-l11 .skill-item b{font-style:italic;letter-spacing:.4px}
+.cv-l11 .cv-chip{background:transparent;color:#e9d5ff;border:0;border-bottom:1px solid rgba(233,213,255,.5);border-radius:0;padding:4px 2px;margin:3px 10px 3px 0;text-transform:uppercase;font-size:10px;letter-spacing:1px;box-shadow:none}
+.cv-l12 .skill-item .bar{height:10px;border-radius:999px;background:#ffe4e9}
+.cv-l12 .skill-item .bar span{border-radius:999px;background:linear-gradient(90deg,#fda4af,var(--cv-accent,#fb7185))}
+.cv-l12 .cv-chip{background:#fff1f2;color:#be123c;border:1.5px solid #fecdd3;border-radius:999px;box-shadow:0 3px 8px rgba(251,113,133,.15)}
