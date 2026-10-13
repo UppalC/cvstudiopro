@@ -222,6 +222,10 @@ html,body{
 .cv-l17 .skill-item .bar{height:6px;border-radius:999px;background:rgba(14,165,233,.15)}
 .cv-l17 .skill-item .bar span{border-radius:999px;background:#0ea5e9;box-shadow:0 0 8px #0ea5e9}
 .cv-l17 .cv-chip{background:rgba(255,255,255,.08);color:#7dd3fc;border:1px solid rgba(125,211,252,.5);border-radius:999px;font-weight:600;box-shadow:0 0 6px rgba(14,165,233,.25)}
+/* Bug fixes 2026-10-13: invisible name on t9/t11 header band (heading color matched header bg), t17 photo frame not centering under the arc */
+.cv-l9 .cv-header h1,.cv-l9 .cv-header h2{color:#fff}
+.cv-l11 .cv-header h1,.cv-l11 .cv-header h2{color:#fff}
+.cv-l17 .arc-head .cv-photo{margin:0 auto 12px}
 .cv-l18 .skill-item .bar{height:8px;border-radius:2px;background:#fde68a}
 .cv-l18 .skill-item .bar span{border-radius:2px;background:#111827}
 .cv-l18 .cv-chip{background:#111827;color:#facc15;border:1.5px solid #facc15;border-radius:2px;font-weight:800;text-transform:uppercase;font-size:10px;box-shadow:none}
