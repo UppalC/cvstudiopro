@@ -275,7 +275,7 @@ function renderCV(){const out=renderCVBase();const pl=state.photoPlacement;if(pl
 function renderCVBase(){document.documentElement.style.setProperty('--cv-primary',state.theme.main);document.documentElement.style.setProperty('--cv-accent',state.theme.accent);document.documentElement.style.setProperty('--cv-bg',state.theme.bg);document.documentElement.style.setProperty('--cv-text',state.theme.text);document.documentElement.style.setProperty('--cv-heading',state.theme.heading);const f=state.form,t=tpl(),s=buildSections(),head=`<h1>${esc(f.name||'Your Name')}</h1>${f.job?`<div class="cv-sub">${esc(f.job)}</div>`:''}`,person=esc(f.name||'CV');const style=cvStyle();const contentLen=[f.summary,f.exp1d,f.exp2d,f.edu1d,f.edu2d,f.projects,f.certs,f.refs,f.customBody,f.soft,f.lang].join(' ').length+state.form.tech.length*80;
 function brandHeader(label=''){return `<div class="cv-continue-head"><div>${head}${label?`<div class="cv-sub">${label}</div>`:''}</div><div class="continue-contact">${contact()}</div></div>`}
 function page(content,page,extra=''){return `<div class="cvpage ${t.cls} ${extra}" data-person="${person}" style="${style}">${content}${footer(page)}</div>`}
-if(contentLen>1500){
+if(contentLen>4000){
 const p1=page(`${brandHeader('Professional CV')}${photoFor('top',true)}${s.summary}${s.exp}`,1,'multi-premium');
  const rest=s.edu+s.tech+s.soft+s.lang;const extra=s.proj+s.cert+s.refs+s.custom;
  let more='',n=1;
