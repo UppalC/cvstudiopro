@@ -250,3 +250,35 @@ html,body{
 .cv-l24 .skill-item .bar{height:4px;border-radius:0;background:rgba(201,162,75,.2)}
 .cv-l24 .skill-item .bar span{border-radius:0;background:linear-gradient(90deg,#8a6d2b,#f5d27a,#c9a24b);box-shadow:0 0 8px rgba(201,162,75,.55)}
 .cv-l24 .cv-chip{background:rgba(201,162,75,.08);color:#c9a24b;border:1px solid #c9a24b;border-radius:0;font-weight:600;text-transform:uppercase;font-size:10px;letter-spacing:1px;box-shadow:none}
+/* Contrast fixes 2026-10-24: invisible/low-contrast text found by audit (WCAG-style ratio checks across all 33 templates) */
+.cv-l1 .cv-card .cv-sub,.cv-l1 .cv-section .cv-sub{color:#047857}
+.cv-l2 .cv-card .cv-sub,.cv-l2 .cv-section .cv-sub{color:#166534}
+.cv-l3 .cv-card .cv-sub,.cv-l3 .cv-section .cv-sub{color:#0369a1}
+.cv-l8 .cv-card .cv-sub,.cv-l8 .cv-section .cv-sub,.cv-l8 .cv-header .cv-sub{color:#c2410c}
+.cv-l8 .cv-chip{color:#c2410c}
+.cv-l9 .cv-card .cv-sub,.cv-l9 .cv-section .cv-sub{color:#0f766e}
+.cv-l9 .cv-header .cv-sub{color:#ccfbf1}
+.cv-l10 .cv-card .cv-sub,.cv-l10 .cv-section .cv-sub{color:#b45309}
+.cv-l12 .cv-header h1{color:#fff}
+.cv-l12 .cv-header .cv-sub{color:#fecdd3}
+.cv-l13 .cv-header .cv-sub{color:#1d4ed8}
+.cv-l14 .cv-sub{color:#57534e}
+.cv-l15 .cv-header{background:linear-gradient(135deg,#1e1b4b,#7c3aed);color:#fff}
+.cv-l15 .cv-header h1,.cv-l15 .cv-header .small{color:#fff}
+.cv-l15 .cv-header .cv-sub{color:#ddd6fe}
+.cv-l16 .cv-card .cv-sub,.cv-l16 .cv-section .cv-sub{color:#a16207}
+.cv-l18 .cv-card .cv-sub,.cv-l18 .cv-section .cv-sub{color:#a16207}
+.cv-side-25 .cv-sub{color:#dbeafe}
+.cv-side-25 h2{color:#bfdbfe}
+.cv-l25 .cv-side-25 .skill-item .bar{background:rgba(255,255,255,.28)}
+.cv-l25 .cv-side-25 .skill-item .bar span{background:#fff}
+.cv-l25 .cv-side-25 .cv-chip{background:rgba(255,255,255,.16);color:#fff;border:1px solid rgba(255,255,255,.55)}
+.crimson-head .cv-sub{color:#fecdd3}
+.cv-l31 .cv-card .cv-sub,.cv-l31 .cv-section .cv-sub{color:#0369a1}
+.cv-l32 .cv-sub{color:#b45309}
+.cv-l32 .cv-section h2{color:#1f2937}
+.cv-l32 .cv-chip{color:#92400e}
+.cv-l6 .cv-card .cv-sub,.cv-l6 .cv-section .cv-sub{color:#b45309}
+.cv-l13 .cv-card .cv-sub,.cv-l13 .cv-section .cv-sub{color:#1d4ed8}
+.cv-l26 .cv-sub{color:#c2410c}
+.cv-l26 .cv-chip{background:#c2410c;color:#fff}
