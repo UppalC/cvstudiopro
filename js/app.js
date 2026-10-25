@@ -34,7 +34,7 @@ async function tryUnlockAccess(){
     if(msg)msg.textContent='Unlocked! You can now export your CV.';
     setTimeout(()=>{closeOrder();fullRender()},700)
   }else{
-    if(msg)msg.textContent='Invalid or already-used code. Please check the code we sent you on WhatsApp.'
+    if(msg)msg.textContent=(result&&result.reason==='too_many')?'Too many wrong attempts. Please wait 10 minutes and try again.':'Invalid or already-used code. Please check the code we sent you on WhatsApp.'
   }
 }
 const ownerMode=sessionStorage.getItem('cvStudioOwnerVerified')==='1';
