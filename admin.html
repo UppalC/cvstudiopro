@@ -1,84 +1,198 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="robots" content="noindex,nofollow"><script>if(window.top!==window.self){document.documentElement.style.display="none"}</script><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Owner Order Tools - CV Studio Pro</title><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="css/style.css"></head><body><div class="wrap"><nav class="nav"><div class="brand">CV Studio <span>Owner</span></div><div class="links"><a href="index.html">Home</a><a href="builder.html">Builder</a></div></nav><div id="ownerLogin" style="display:none"><section class="topbar"><h1>Owner Login</h1><p>Enter your owner password to access order tools. This is checked securely on the server — nothing here is stored in the site's code.</p></section><section class="section"><div class="formsec"><label>Owner Password</label><div style="display:flex;gap:6px;align-items:center"><input id="ownerPassInput" type="password" placeholder="Enter owner password" style="flex:1"><button type="button" class="btn light" style="padding:6px 10px" onclick="togglePwd('ownerPassInput',this)">👁</button></div><div class="actions" style="margin-top:10px"><button class="btn dark" id="ownerLoginBtn" onclick="ownerLogin()">Login</button></div><p class="muted small" id="ownerLoginMsg"></p></div></section></div><div id="ownerArea" style="display:none"><section class="topbar"><h1>Owner Order Tools</h1><p>Launch version: orders come through WhatsApp. Use builder owner mode to import structured order text or order files.</p></section><section class="section"><h2>How to process an order</h2><p class="muted small">Orders can arrive two ways now:</p><ol class="muted"><li><b>Submitted Online</b> — these appear automatically in the <b>Orders</b> list below. Confirm payment has been received (checked manually, same as before), then click <b>Approve &amp; Send Code</b> — this assigns the next unused code from the <b>Codes</b> tab and emails it to the customer automatically. Nothing else to do.</li><li><b>Sent on WhatsApp</b> (older method, still works) — open your Google Sheet, go to the <b>Codes</b> tab, add a new row with a unique code (e.g. <b>CVPRO-4F82K</b>, "used" column left blank), and send that exact code to the customer on WhatsApp. Each code works <b>once only</b>.</li><li>Optional: if you want to prepare/export the CV yourself instead, click <b>Open Owner Builder</b> below (your login stays active for this browser tab), paste the structured order text into Owner Order Tools, click Import Order Text, then Export PDF/Word and send it to the customer.</li></ol><div class="actions"><a class="btn" href="builder.html">Open Owner Builder</a><button class="btn light" onclick="ownerLogout()">Log Out</button></div></section><section class="section"><h2>Orders</h2><p class="muted small">New orders submitted through the site show up here. Approve a pending order to assign the next unused code and email it to the customer automatically.</p><div class="actions" style="margin-bottom:10px"><button class="btn light" onclick="loadOrders()">Refresh Orders</button></div><div id="ordersList" class="muted">Loading...</div></section><section class="section"><h2>Change Owner Password</h2><div class="formsec"><label>Current Password</label><div style="display:flex;gap:6px;align-items:center"><input id="oldPassInput" type="password" placeholder="Current password" style="flex:1"><button type="button" class="btn light" style="padding:6px 10px" onclick="togglePwd('oldPassInput',this)">👁</button></div><label>New Password</label><div style="display:flex;gap:6px;align-items:center"><input id="newPassInput" type="password" placeholder="New password (min 4 characters)" style="flex:1"><button type="button" class="btn light" style="padding:6px 10px" onclick="togglePwd('newPassInput',this)">👁</button></div><div class="actions" style="margin-top:10px"><button class="btn dark" id="changePassBtn" onclick="changePasswordUI()">Change Password</button></div><p class="muted small" id="changePassMsg"></p></div></section></div><script src="js/app.js"></script><script>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="robots" content="noindex,nofollow"><script>if(window.top!==window.self){document.documentElement.style.display="none"}</script><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Owner Orders - CV Studio Pro</title><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="css/style.css">
+<style>
+.ad-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:0 0 16px}
+.ad-stat{border-radius:14px;padding:12px 10px;text-align:center;border:2px solid transparent;background:#f1f5f9;cursor:pointer;font:inherit;color:#0f172a}
+.ad-stat b{display:block;font-size:26px;line-height:1.1}
+.ad-stat span{font-size:12px;font-weight:700}
+.ad-stat.new{background:#fef3c7;border-color:#f59e0b}.ad-stat.sent{background:#dbeafe;border-color:#3b82f6}.ad-stat.work{background:#ede9fe;border-color:#8b5cf6}.ad-stat.done{background:#dcfce7;border-color:#22c55e}
+.ad-stat:focus-visible,.ad-btn:focus-visible,.ad-search:focus-visible{outline:3px solid #1d4ed8;outline-offset:2px}
+.ad-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 14px}
+.ad-search{flex:1;min-width:180px;padding:10px 12px;border:1px solid #cbd5e1;border-radius:10px;font:inherit}
+.ad-toast{display:none;padding:10px 14px;border-radius:10px;margin:0 0 12px;font-weight:700}
+.ad-toast.ok{display:block;background:#dcfce7;color:#14532d}.ad-toast.err{display:block;background:#fee2e2;color:#7f1d1d}.ad-toast.info{display:block;background:#dbeafe;color:#1e3a8a}
+.ad-group{margin:0 0 18px}
+.ad-group>summary,.ad-group>h2{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:17px;margin:0 0 8px;font-weight:800}
+.ad-group>summary::-webkit-details-marker{display:none}
+.ad-count{display:inline-block;min-width:26px;text-align:center;border-radius:999px;padding:2px 8px;font-size:13px;font-weight:800;color:#fff}
+.g-new .ad-count{background:#b45309}.g-sent .ad-count{background:#1d4ed8}.g-work .ad-count{background:#6d28d9}.g-done .ad-count{background:#15803d}.g-cancel .ad-count{background:#475569}
+.ad-hint{font-size:13px;color:#475569;margin:0 0 8px}
+.ad-card{background:#fff;border:1px solid #e2e8f0;border-left:6px solid #94a3b8;border-radius:12px;padding:12px 14px;margin:0 0 10px;box-shadow:0 1px 0 rgba(15,23,42,.04)}
+.g-new .ad-card{border-left-color:#f59e0b;background:#fffbeb}.g-sent .ad-card{border-left-color:#3b82f6}.g-work .ad-card{border-left-color:#8b5cf6}.g-done .ad-card{border-left-color:#22c55e}
+.ad-top{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.ad-name{font-weight:800;font-size:16px;color:#0f172a}
+.ad-meta{font-size:13px;color:#475569;margin-top:2px;word-break:break-word}
+.ad-code{display:inline-block;margin-top:6px;padding:3px 8px;border-radius:8px;background:#0f172a;color:#fff;font-family:ui-monospace,Consolas,monospace;font-size:13px}
+.ad-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.ad-btn{border:0;border-radius:10px;padding:9px 13px;font:inherit;font-weight:700;cursor:pointer;background:#e2e8f0;color:#0f172a;text-decoration:none;display:inline-block}
+.ad-btn.pri{background:#0f172a;color:#fff}.ad-btn.wa{background:#15803d;color:#fff}.ad-btn.warn{background:#fee2e2;color:#7f1d1d}
+.ad-btn[disabled]{opacity:.55;cursor:wait}
+.ad-empty{color:#64748b;font-size:14px;padding:6px 2px}
+.ad-help summary{cursor:pointer;font-weight:700}
+@media(max-width:560px){.ad-stats{grid-template-columns:repeat(2,1fr)}}
+</style></head><body><div class="wrap"><nav class="nav"><div class="brand">CV Studio <span>Owner</span></div><div class="links"><a href="index.html">Home</a><a href="builder.html">Builder</a></div></nav>
+
+<div id="ownerLogin" style="display:none"><section class="topbar"><h1>Owner Login</h1><p>Owner password daalein. Ye server par check hota hai, site ke code mein kahin save nahi.</p></section><section class="section"><div class="formsec"><label for="ownerPassInput">Owner Password</label><div style="display:flex;gap:6px;align-items:center"><input id="ownerPassInput" type="password" autocomplete="current-password" placeholder="Enter owner password" style="flex:1"><button type="button" class="btn light" style="padding:6px 10px" aria-label="Show or hide password" onclick="togglePwd('ownerPassInput',this)">👁</button></div><div class="actions" style="margin-top:10px"><button class="btn dark" id="ownerLoginBtn" onclick="ownerLogin()">Login</button></div><p class="muted small" id="ownerLoginMsg" role="status"></p></div></section></div>
+
+<div id="ownerArea" style="display:none">
+<section class="topbar"><h1>Orders</h1><p>Upar se neeche dekhein: sab se pehle <b>Naye orders</b> (aap ka action chahiye), phir baqi.</p></section>
+<section class="section">
+<div id="toast" class="ad-toast" role="status" aria-live="polite"></div>
+<div class="ad-stats" id="stats"></div>
+<div class="ad-bar"><input id="searchBox" class="ad-search" type="search" placeholder="Naam, number, email ya code se dhoondein" aria-label="Search orders"><button class="ad-btn pri" id="refreshBtn" onclick="loadOrders(true)">Refresh</button><a class="ad-btn" href="builder.html">Open Owner Builder</a><button class="ad-btn" onclick="ownerLogout()">Log Out</button></div>
+<div id="ordersList" class="muted">Loading...</div>
+</section>
+
+<section class="section"><details class="ad-help"><summary>Madad: order ka kaam kaise hota hai</summary>
+<ol class="muted"><li><b>Naya order</b> aata hai: payment check karein, phir <b>Approve &amp; Send Code</b> dabayen. Agle unused code customer ko email ho jata hai. Agar email nahi di thi to <b>WhatsApp par code bhejein</b> wala button dabayen.</li><li><b>Code bheja</b>: customer code daal kar khud CV download kar leta hai. Agar aap khud CV bana kar dena chahte hain to <b>Kaam shuru</b> dabayen.</li><li><b>Kaam jari hai</b>: jab CV de dein to <b>Mukammal</b> dabayen.</li><li>Codes khatam hon to Google Sheet ke <b>Codes</b> tab mein naye unique codes (jaise <b>CVPRO-4F82K</b>) add karein, "used" column khali rakhein.</li><li>Har status Google Sheet ke <b>Orders</b> tab mein save hota hai, isliye phone aur laptop dono par same nazar aata hai.</li></ol></details></section>
+
+<section class="section"><details class="ad-help"><summary>Owner password badlein</summary><div class="formsec"><label for="oldPassInput">Current Password</label><div style="display:flex;gap:6px;align-items:center"><input id="oldPassInput" type="password" autocomplete="current-password" placeholder="Current password" style="flex:1"><button type="button" class="btn light" style="padding:6px 10px" aria-label="Show or hide password" onclick="togglePwd('oldPassInput',this)">👁</button></div><label for="newPassInput">New Password</label><div style="display:flex;gap:6px;align-items:center"><input id="newPassInput" type="password" autocomplete="new-password" placeholder="Kam az kam 12 characters" style="flex:1"><button type="button" class="btn light" style="padding:6px 10px" aria-label="Show or hide password" onclick="togglePwd('newPassInput',this)">👁</button></div><div class="actions" style="margin-top:10px"><button class="btn dark" id="changePassBtn" onclick="changePasswordUI()">Change Password</button></div><p class="muted small" id="changePassMsg" role="status"></p></div></details></section>
+</div>
+
+<script src="js/app.js"></script><script>
+var ORDERS=[],FILTER='',TIMER=null,OPEN_DONE=false;
+var TOK_KEY='cvStudioOwnerToken';
+function $(id){return document.getElementById(id)}
+function tok(){return sessionStorage.getItem(TOK_KEY)||''}
+function showLogin(msg){
+  sessionStorage.removeItem('cvStudioOwnerVerified');sessionStorage.removeItem(TOK_KEY);sessionStorage.removeItem('cvStudioOwnerPass');
+  $('ownerArea').style.display='none';$('ownerLogin').style.display='block';
+  if(TIMER){clearInterval(TIMER);TIMER=null}
+  if(msg)$('ownerLoginMsg').textContent=msg;
+}
+function showArea(){
+  $('ownerLogin').style.display='none';$('ownerArea').style.display='block';
+  loadOrders(false);
+  if(!TIMER)TIMER=setInterval(function(){if(!document.hidden)loadOrders(false)},60000);
+}
 (function(){
-  if(sessionStorage.getItem('cvStudioOwnerVerified')==='1'){
-    document.getElementById('ownerArea').style.display='block';
-    setTimeout(loadOrders,0);
-  }else{
-    document.getElementById('ownerLogin').style.display='block';
-  }
-})();
-async function ownerLogin(){
-  const el=document.getElementById('ownerPassInput');
-  const msg=document.getElementById('ownerLoginMsg');
-  const btn=document.getElementById('ownerLoginBtn');
-  const v=(el?el.value:'').trim();
-  if(!v){if(msg)msg.textContent='Please enter the owner password.';return}
-  if(btn){btn.disabled=true;btn.textContent='Checking...'}
-  const result=await verifyWithBackend({action:'verifyOwner',password:v});
-  if(btn){btn.disabled=false;btn.textContent='Login'}
-  if(result&&result.error==='setup_incomplete'){if(msg)msg.textContent='Setup incomplete: connect the Apps Script URL first (see /apps-script/README.md).';return}
-  if(result&&result.error==='network'){if(msg)msg.textContent='Could not reach the server. Please check your internet connection and try again.';return}
-  if(result&&result.valid){
-    sessionStorage.setItem('cvStudioOwnerVerified','1');
-    sessionStorage.setItem('cvStudioOwnerPass',v);
-    document.getElementById('ownerLogin').style.display='none';
-    document.getElementById('ownerArea').style.display='block';
-    loadOrders();
-  }else{
-    if(msg)msg.textContent='Incorrect password.';
-  }
-}
-function togglePwd(id,btn){
-  const el=document.getElementById(id);
-  if(!el)return;
-  if(el.type==='password'){el.type='text';btn.textContent='🙈';}
-  else{el.type='password';btn.textContent='👁';}
-}
-function ownerLogout(){
-  sessionStorage.removeItem('cvStudioOwnerVerified');
   sessionStorage.removeItem('cvStudioOwnerPass');
-  location.reload();
+  if(sessionStorage.getItem('cvStudioOwnerVerified')==='1'&&tok()){showArea()}else{showLogin('')}
+  $('ownerPassInput').addEventListener('keydown',function(e){if(e.key==='Enter')ownerLogin()});
+  $('searchBox').addEventListener('input',function(){FILTER=this.value.trim().toLowerCase();render()});
+  $('ordersList').addEventListener('click',onListClick);
+  $('stats').addEventListener('click',function(e){var b=e.target.closest('[data-jump]');if(!b)return;var g=document.getElementById('grp-'+b.getAttribute('data-jump'));if(g){if(g.tagName==='DETAILS')g.open=true;g.scrollIntoView({behavior:'smooth',block:'start'})}});
+})();
+function toast(kind,text){var t=$('toast');t.className='ad-toast '+kind;t.textContent=text;clearTimeout(toast._t);if(kind!=='err')toast._t=setTimeout(function(){t.className='ad-toast'},9000)}
+async function ownerLogin(){
+  var el=$('ownerPassInput'),msg=$('ownerLoginMsg'),btn=$('ownerLoginBtn');
+  var v=(el?el.value:'');
+  if(!v.trim()){msg.textContent='Please enter the owner password.';return}
+  btn.disabled=true;btn.textContent='Checking...';
+  var r=await verifyWithBackend({action:'verifyOwner',password:v});
+  btn.disabled=false;btn.textContent='Login';
+  if(r&&r.error==='setup_incomplete'){msg.textContent='Setup incomplete: connect the Apps Script URL first.';return}
+  if(r&&r.error==='network'){msg.textContent='Server tak nahi pahunch saka. Internet check karein.';return}
+  if(r&&r.error==='locked'){msg.textContent='Bohat zyada galat koshishen. 15 minute baad dobara try karein.';return}
+  if(r&&r.valid&&r.token){
+    sessionStorage.setItem('cvStudioOwnerVerified','1');sessionStorage.setItem(TOK_KEY,r.token);
+    el.value='';msg.textContent='';showArea();
+  }else if(r&&r.valid){
+    msg.textContent='Server purana version hai. Naya Code.gs deploy karein (Deploy > Manage deployments > New version).';
+  }else{msg.textContent='Incorrect password.'}
 }
-async function loadOrders(){
-  const pass=sessionStorage.getItem('cvStudioOwnerPass')||'';
-  const box=document.getElementById('ordersList');
-  if(!box)return;
-  box.textContent='Loading...';
-  const result=await verifyWithBackend({action:'getOrders',password:pass});
-  if(!result||!result.valid){box.textContent='Could not load orders.';return}
-  if(!result.orders||!result.orders.length){box.textContent='No orders yet.';return}
-  box.innerHTML=result.orders.slice().reverse().map(o=>`<div class="formsec" style="margin-bottom:10px"><div><b>${esc(o.name||'(no name)')}</b> \u2014 ${esc(o.status||'')}</div><div class="muted small">${esc(o.whatsapp||'')} \u00b7 ${esc(o.email||'')} \u00b7 ${esc(o.template||'')}</div>${o.note?`<div class="muted small">Note: ${esc(o.note)}</div>`:''}${o.status==='Pending'?`<div class="actions" style="margin-top:6px"><button class="btn dark" onclick="approveOrderRow(${o.row},this)">Approve &amp; Send Code</button></div>`:''}${o.code?`<div class="muted small">Code: <b>${esc(o.code)}</b></div>`:''}</div>`).join('');
+function togglePwd(id,btn){var el=$(id);if(!el)return;if(el.type==='password'){el.type='text';btn.textContent='🙈'}else{el.type='password';btn.textContent='👁'}}
+async function ownerLogout(){
+  var t=tok();if(t){try{await verifyWithBackend({action:'logout',token:t})}catch(e){}}
+  showLogin('');location.reload();
+}
+async function api(payload){
+  payload.token=tok();
+  var r=await verifyWithBackend(payload);
+  if(r&&(r.error==='session_expired')){showLogin('Session khatam ho gaya. Dobara login karein.');return null}
+  return r;
+}
+async function loadOrders(manual){
+  var box=$('ordersList');if(!box)return;
+  var btn=$('refreshBtn');if(manual&&btn){btn.disabled=true}
+  var r=await api({action:'getOrders'});
+  if(btn)btn.disabled=false;
+  if(r===null)return;
+  if(!r||!r.valid){if(!ORDERS.length)box.textContent='Orders load nahi ho sake. Refresh karke dekhein.';else toast('err','Orders refresh nahi ho sake.');return}
+  ORDERS=(r.orders||[]).slice();
+  render();
+}
+function groupOf(o){
+  var s=String(o.status||'');
+  if(s==='Pending')return'new';
+  if(s==='Approved')return'sent';
+  if(s==='In Progress')return'work';
+  if(s==='Cancelled')return'cancel';
+  return'done';
+}
+function tplName(id){try{var t=templates.find(function(x){return x.id===id});return t?t.name:(id||'')}catch(e){return id||''}}
+function waNumber(n){var d=String(n||'').replace(/\D/g,'');if(d.indexOf('00')===0)d=d.slice(2);if(d.charAt(0)==='0')d='92'+d.slice(1);return d}
+function fmtDate(ts){var m=String(ts||'').match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);if(!m)return esc(String(ts||'').slice(0,24));var mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m[2]-1]||'';return +m[3]+' '+mo+', '+m[4]+':'+m[5]}
+function matches(o){if(!FILTER)return true;return [o.name,o.whatsapp,o.email,o.code,tplName(o.template),o.note].join(' ').toLowerCase().indexOf(FILTER)>=0}
+function card(o){
+  var g=groupOf(o),wa=waNumber(o.whatsapp),row=Number(o.row)||0;
+  var msg='Assalam o Alaikum '+(o.name||'')+'! Aap ka CV Studio Pro order approve ho gaya hai.'+(o.code?' Aap ka premium code: '+o.code+'.':'')+' Code builder page par daal kar CV download karein: '+location.href.replace(/admin\.html.*$/,'builder.html');
+  var h='<div class="ad-card"><div class="ad-top"><div><div class="ad-name">'+esc(o.name||'(no name)')+'</div>'
+   +'<div class="ad-meta">'+esc(tplName(o.template))+' &middot; '+esc(fmtDate(o.timestamp))+'</div>'
+   +'<div class="ad-meta">'+esc(o.whatsapp||'')+(o.email?' &middot; '+esc(o.email):' &middot; <b>email nahi di</b>')+'</div>'
+   +(o.note?'<div class="ad-meta">Note: '+esc(o.note)+'</div>':'')
+   +(o.code?'<div><span class="ad-code">'+esc(o.code)+'</span></div>':'')+'</div></div><div class="ad-actions">';
+  if(g==='new')h+='<button class="ad-btn pri" data-act="approve" data-row="'+row+'">Approve &amp; Send Code</button><button class="ad-btn warn" data-act="Cancelled" data-row="'+row+'">Cancel</button>';
+  if(g==='sent'){if(wa)h+='<a class="ad-btn wa" target="_blank" rel="noopener noreferrer" href="https://wa.me/'+wa+'?text='+encodeURIComponent(msg)+'">WhatsApp par code bhejein</a>';h+='<button class="ad-btn" data-act="copy" data-code="'+esc(o.code||'')+'">Code copy</button><button class="ad-btn" data-act="In Progress" data-row="'+row+'">Kaam shuru</button><button class="ad-btn pri" data-act="Completed" data-row="'+row+'">Mukammal</button>'}
+  if(g==='work'){if(wa)h+='<a class="ad-btn wa" target="_blank" rel="noopener noreferrer" href="https://wa.me/'+wa+'">WhatsApp</a>';h+='<button class="ad-btn pri" data-act="Completed" data-row="'+row+'">Mukammal</button>'}
+  if(g==='done'){if(wa)h+='<a class="ad-btn wa" target="_blank" rel="noopener noreferrer" href="https://wa.me/'+wa+'">WhatsApp</a>';h+='<button class="ad-btn" data-act="In Progress" data-row="'+row+'">Dobara kholein</button>'}
+  if(g==='cancel')h+='<button class="ad-btn" data-act="Pending" data-row="'+row+'">Dobara kholein</button>';
+  return h+'</div></div>';
+}
+function group(id,title,hint,list,open,collapsible){
+  var inner=list.length?list.map(card).join(''):'<div class="ad-empty">'+esc(hint)+'</div>';
+  var head='<span>'+esc(title)+'</span><span class="ad-count">'+list.length+'</span>';
+  if(collapsible)return '<details class="ad-group g-'+id+'" id="grp-'+id+'"'+(open?' open':'')+'><summary>'+head+'</summary>'+inner+'</details>';
+  return '<div class="ad-group g-'+id+'" id="grp-'+id+'"><h2>'+head+'</h2>'+inner+'</div>';
+}
+function render(){
+  var all={new:[],sent:[],work:[],done:[],cancel:[]},n={new:0,sent:0,work:0,done:0};
+  ORDERS.slice().reverse().forEach(function(o){var g=groupOf(o);if(g!=='cancel')n[g]++;if(matches(o))all[g].push(o)});
+  var pend=n.new;document.title=(pend?'('+pend+') ':'')+'Owner Orders - CV Studio Pro';
+  $('stats').innerHTML=[['new','Naye (action chahiye)'],['sent','Code bheja'],['work','Kaam jari'],['done','Mukammal']].map(function(x){return '<button class="ad-stat '+x[0]+'" data-jump="'+x[0]+'"><b>'+n[x[0]]+'</b><span>'+x[1]+'</span></button>'}).join('');
+  if(!ORDERS.length){$('ordersList').innerHTML='<div class="ad-empty">Abhi koi order nahi aaya.</div>';return}
+  var doneOpen=!!FILTER||OPEN_DONE;
+  $('ordersList').innerHTML=
+    group('new','Naye orders','Koi naya order nahi. Sab clear!',all.new,true,false)
+   +group('sent','Code bheja - customer ka intezar','Koi nahi.',all.sent,true,false)
+   +group('work','Kaam jari hai','Koi nahi.',all.work,true,false)
+   +group('done','Mukammal','Koi mukammal order nahi.',all.done,doneOpen,true)
+   +(all.cancel.length||FILTER?group('cancel','Cancelled','Koi nahi.',all.cancel,!!FILTER,true):'');
+  var d=document.getElementById('grp-done');if(d)d.addEventListener('toggle',function(){OPEN_DONE=d.open});
+}
+async function onListClick(e){
+  var b=e.target.closest('[data-act]');if(!b)return;
+  var act=b.getAttribute('data-act'),row=Number(b.getAttribute('data-row'))||0;
+  if(act==='copy'){var c=b.getAttribute('data-code')||'';try{await navigator.clipboard.writeText(c);toast('ok','Code copy ho gaya: '+c)}catch(err){toast('info','Code: '+c)}return}
+  if(act==='Cancelled'&&!confirm('Is order ko cancel karna hai?'))return;
+  var old=b.textContent;b.disabled=true;b.textContent='Wait...';
+  var r;
+  if(act==='approve')r=await api({action:'approveOrder',rowIndex:row});
+  else r=await api({action:'updateStatus',rowIndex:row,status:act});
+  if(r===null)return;
+  if(r&&r.valid){
+    if(act==='approve')toast(r.emailed?'ok':'info',r.emailed?'Approve ho gaya. Code customer ko email ho gaya: '+r.code:'Approve ho gaya. Email nahi thi, isliye code WhatsApp se bhejein: '+r.code);
+    else toast('ok','Status update ho gaya.');
+    await loadOrders(false);
+  }else{
+    var m={no_codes_available:'Codes khatam! Google Sheet ke Codes tab mein naye codes add karein.',not_pending:'Ye order pehle hi approve ho chuka hai. Refresh karein.',bad_status:'Ghalat status.',use_approve:'Approve ke liye Approve button istemal karein.'};
+    toast('err',(r&&m[r.error])||('Nahi ho saka: '+((r&&r.error)||'unknown error')));
+    b.disabled=false;b.textContent=old;
+  }
 }
 async function changePasswordUI(){
-  const oldEl=document.getElementById('oldPassInput');
-  const newEl=document.getElementById('newPassInput');
-  const msg=document.getElementById('changePassMsg');
-  const btn=document.getElementById('changePassBtn');
-  const oldV=(oldEl?oldEl.value:'').trim();
-  const newV=(newEl?newEl.value:'').trim();
-  if(!oldV||!newV){if(msg)msg.textContent='Please fill both fields.';return}
-  if(newV.length<4){if(msg)msg.textContent='New password should be at least 4 characters.';return}
-  if(btn){btn.disabled=true;btn.textContent='Changing...'}
-  const result=await verifyWithBackend({action:'changePassword',oldPassword:oldV,newPassword:newV});
-  if(btn){btn.disabled=false;btn.textContent='Change Password'}
-  if(result&&result.valid){
-    sessionStorage.setItem('cvStudioOwnerPass',newV);
-    if(oldEl)oldEl.value='';
-    if(newEl)newEl.value='';
-    if(msg)msg.textContent='Password changed successfully.';
-  }else{
-    if(msg)msg.textContent=(result&&result.error==='wrong_password')?'Current password is incorrect.':'Could not change password. Please try again.';
-  }
-}
-async function approveOrderRow(row,btn){
-  const pass=sessionStorage.getItem('cvStudioOwnerPass')||'';
-  if(btn){btn.disabled=true;btn.textContent='Approving...'}
-  const result=await verifyWithBackend({action:'approveOrder',password:pass,rowIndex:row});
-  if(result&&result.valid){
-    loadOrders();
-  }else{
-    alert('Could not approve: '+(result&&result.error?result.error:'unknown error'));
-    if(btn){btn.disabled=false;btn.textContent='Approve & Send Code'}
-  }
+  var oldEl=$('oldPassInput'),newEl=$('newPassInput'),msg=$('changePassMsg'),btn=$('changePassBtn');
+  var oldV=oldEl.value,newV=newEl.value.trim();
+  if(!oldV||!newV){msg.textContent='Dono fields bharein.';return}
+  if(newV.length<12){msg.textContent='Naya password kam az kam 12 characters ka hona chahiye.';return}
+  btn.disabled=true;btn.textContent='Changing...';
+  var r=await verifyWithBackend({action:'changePassword',oldPassword:oldV,newPassword:newV});
+  btn.disabled=false;btn.textContent='Change Password';
+  if(r&&r.valid){
+    if(r.token)sessionStorage.setItem(TOK_KEY,r.token);
+    oldEl.value='';newEl.value='';msg.textContent='Password badal gaya. Baqi sab devices logout ho gaye.';
+  }else if(r&&r.error==='locked'){msg.textContent='Bohat zyada galat koshishen. 15 minute baad try karein.'}
+  else if(r&&r.error==='password_too_short'){msg.textContent='Naya password kam az kam 12 characters ka hona chahiye.'}
+  else if(r&&r.error==='wrong_password'){msg.textContent='Current password galat hai.'}
+  else{msg.textContent='Password nahi badal saka. Dobara try karein.'}
 }
 </script></div></body></html>
