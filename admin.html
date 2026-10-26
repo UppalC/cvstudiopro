@@ -170,7 +170,7 @@ async function onListClick(e){
   else r=await api({action:'updateStatus',rowIndex:row,status:act});
   if(r===null)return;
   if(r&&r.valid){
-    if(act==='approve')toast(r.emailed?'ok':'info',r.emailed?'Approve ho gaya. Code customer ko email ho gaya: '+r.code:'Approve ho gaya. Email nahi thi, isliye code WhatsApp se bhejein: '+r.code);
+    if(act==='approve'){if(r.emailed)toast('ok','Approve ho gaya. Code customer ko email ho gaya: '+r.code);else if(r.emailError)toast('err','Approve ho gaya (code: '+r.code+') lekin EMAIL NAHI GAYI ('+r.emailError+'). Code WhatsApp se bhejein.');else toast('info','Approve ho gaya. Customer ki email nahi thi, isliye code WhatsApp se bhejein: '+r.code)}
     else toast('ok','Status update ho gaya.');
     await loadOrders(false);
   }else{
