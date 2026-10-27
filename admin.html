@@ -28,6 +28,14 @@
 .ad-btn[disabled]{opacity:.55;cursor:wait}
 .ad-empty{color:#64748b;font-size:14px;padding:6px 2px}
 .ad-help summary{cursor:pointer;font-weight:700}
+.ad-set label{display:block;font-weight:700;margin:10px 0 4px}
+.ad-set input[type=text],.ad-set input[type=password]{width:100%;padding:10px 12px;border:1px solid #cbd5e1;border-radius:10px;font:inherit}
+.ad-set .ad-slot{border:1px solid #cbd5e1;border-radius:12px;padding:6px 14px 14px;margin:12px 0;background:#f8fafc}
+.ad-set .ad-slot h3{margin:10px 0 0;font-size:16px}
+.ad-set .qrprev{display:block;margin-top:8px;max-width:180px;max-height:180px;border:1px solid #cbd5e1;border-radius:8px;background:#fff}
+.ad-set .chk{display:flex;gap:8px;align-items:center;font-weight:700;margin:10px 0}
+.ad-set .chk input{width:20px;height:20px}
+.ad-set .ad-hint2{font-size:13px;color:#475569;margin:2px 0 0}
 @media(max-width:560px){.ad-stats{grid-template-columns:repeat(2,1fr)}}
 </style></head><body><div class="wrap"><nav class="nav"><div class="brand">CV Studio <span>Owner</span></div><div class="links"><a href="index.html">Home</a><a href="builder.html">Builder</a></div></nav>
 
@@ -45,6 +53,27 @@
 <section class="section"><details class="ad-help"><summary>Madad: order ka kaam kaise hota hai</summary>
 <ol class="muted"><li><b>Naya order</b> aata hai: payment check karein, phir <b>Approve &amp; Send Code</b> dabayen. Agle unused code customer ko email ho jata hai. Agar email nahi di thi to <b>WhatsApp par code bhejein</b> wala button dabayen.</li><li><b>Code bheja</b>: customer code daal kar khud CV download kar leta hai. Agar aap khud CV bana kar dena chahte hain to <b>Kaam shuru</b> dabayen.</li><li><b>Kaam jari hai</b>: jab CV de dein to <b>Mukammal</b> dabayen.</li><li>Codes khatam hon to Google Sheet ke <b>Codes</b> tab mein naye unique codes (jaise <b>CVPRO-4F82K</b>) add karein, "used" column khali rakhein.</li><li>Har status Google Sheet ke <b>Orders</b> tab mein save hota hai, isliye phone aur laptop dono par same nazar aata hai.</li></ol></details></section>
 
+<section class="section ad-set"><details class="ad-help" id="siteSet"><summary>Site Settings: prices, WhatsApp number, payment details &amp; QR</summary>
+<div class="formsec">
+<h3>1. Prices (website par)</h3>
+<label class="chk"><input type="checkbox" id="setShowPrices"> Website par prices dikhayein (band hon to sirf &quot;Order&quot; / &quot;Custom&quot; likha aayega)</label>
+<label for="setPricePremium">Premium CV price (misal: Rs. 500)</label><input type="text" id="setPricePremium" maxlength="80" autocomplete="off">
+<label for="setPriceExpert">Expert CV Writing service price (misal: Rs. 1500 se shuru)</label><input type="text" id="setPriceExpert" maxlength="80" autocomplete="off">
+<label for="setPriceNote">Price ke neeche choti line (optional)</label><input type="text" id="setPriceNote" maxlength="300" autocomplete="off">
+<h3>2. Order WhatsApp number</h3>
+<label for="setWhatsapp">WhatsApp number jis par orders aayen (misal: 03001234567 ya 923001234567)</label><input type="text" id="setWhatsapp" inputmode="tel" maxlength="30" autocomplete="off">
+<label for="setEmail">Contact email (website par dikhti hai)</label><input type="text" id="setEmail" maxlength="120" autocomplete="off">
+<h3>3. Payment details (JazzCash / EasyPaisa / Bank / koi bhi)</h3>
+<p class="ad-hint2">Zyada se zyada 3 tareeqe. Khali chor dein to wo show nahi hoga. QR image PNG ya JPG ho sakti hai (khud chhoti ho jati hai).</p>
+<div id="slotsBox"></div>
+<label for="setPayNote">Payment ke baad customer ke liye hidayat (optional)</label><input type="text" id="setPayNote" maxlength="300" autocomplete="off">
+<h3>4. Save</h3>
+<label for="setPass">Tasdeeq ke liye apna Owner Password daalein</label><input type="password" id="setPass" autocomplete="current-password">
+<p class="ad-hint2">Payment/WhatsApp badalne par aap ko ek alert email bhi aati hai (hifazat ke liye).</p>
+<div class="ad-actions"><button class="ad-btn pri" id="setSaveBtn" onclick="saveSiteSettingsUI()">Settings Save karein</button></div>
+<p class="muted" id="setMsg" role="status" aria-live="polite"></p>
+</div></details></section>
+
 <section class="section"><details class="ad-help"><summary>Owner password badlein</summary><div class="formsec"><label for="oldPassInput">Current Password</label><div style="display:flex;gap:6px;align-items:center"><input id="oldPassInput" type="password" autocomplete="current-password" placeholder="Current password" style="flex:1"><button type="button" class="btn light" style="padding:6px 10px" aria-label="Show or hide password" onclick="togglePwd('oldPassInput',this)">👁</button></div><label for="newPassInput">New Password</label><div style="display:flex;gap:6px;align-items:center"><input id="newPassInput" type="password" autocomplete="new-password" placeholder="Kam az kam 12 characters" style="flex:1"><button type="button" class="btn light" style="padding:6px 10px" aria-label="Show or hide password" onclick="togglePwd('newPassInput',this)">👁</button></div><div class="actions" style="margin-top:10px"><button class="btn dark" id="changePassBtn" onclick="changePasswordUI()">Change Password</button></div><p class="muted small" id="changePassMsg" role="status"></p></div></details></section>
 </div>
 
@@ -61,7 +90,7 @@ function showLogin(msg){
 }
 function showArea(){
   $('ownerLogin').style.display='none';$('ownerArea').style.display='block';
-  loadOrders(false);
+  loadOrders(false);loadSiteSettings();
   if(!TIMER)TIMER=setInterval(function(){if(!document.hidden)loadOrders(false)},60000);
 }
 (function(){
@@ -72,6 +101,109 @@ function showArea(){
   $('ordersList').addEventListener('click',onListClick);
   $('stats').addEventListener('click',function(e){var b=e.target.closest('[data-jump]');if(!b)return;var g=document.getElementById('grp-'+b.getAttribute('data-jump'));if(g){if(g.tagName==='DETAILS')g.open=true;g.scrollIntoView({behavior:'smooth',block:'start'})}});
 })();
+
+/* ---------- Site settings ---------- */
+var SLOT_QR={1:'',2:'',3:''},SLOT_QR_DIRTY={};
+var QR_OK=/^data:image\/(png|jpeg);base64,[A-Za-z0-9+\/=]+$/;
+function buildSlots(){
+  var h='';
+  for(var n=1;n<=3;n++){
+    h+='<div class="ad-slot"><h3>Payment tareeqa '+n+'</h3>'
+     +'<label for="pay'+n+'name">Naam (JazzCash, EasyPaisa, Meezan Bank...)</label><input type="text" id="pay'+n+'name" maxlength="80" autocomplete="off">'
+     +'<label for="pay'+n+'title">Account title (naam)</label><input type="text" id="pay'+n+'title" maxlength="80" autocomplete="off">'
+     +'<label for="pay'+n+'number">Account number / IBAN</label><input type="text" id="pay'+n+'number" maxlength="80" autocomplete="off">'
+     +'<label for="pay'+n+'note">Note (optional)</label><input type="text" id="pay'+n+'note" maxlength="300" autocomplete="off">'
+     +'<label for="pay'+n+'file">QR image (optional)</label><input type="file" id="pay'+n+'file" accept="image/png,image/jpeg" data-slot="'+n+'">'
+     +'<img class="qrprev" id="pay'+n+'prev" alt="QR preview" style="display:none"><div class="ad-actions"><button class="ad-btn warn" type="button" id="pay'+n+'rm" data-rmqr="'+n+'" style="display:none">QR hata dein</button></div></div>';
+  }
+  $('slotsBox').innerHTML=h;
+}
+function setQrPreview(n){
+  var v=SLOT_QR[n],img=$('pay'+n+'prev'),rm=$('pay'+n+'rm');
+  if(v&&QR_OK.test(v)){img.src=v;img.style.display='block';rm.style.display='inline-block'}else{img.removeAttribute('src');img.style.display='none';rm.style.display='none'}
+}
+function fileToQr(file){
+  return new Promise(function(resolve,reject){
+    if(!/^image\/(png|jpeg)$/.test(file.type)){reject('Sirf PNG ya JPG image chunein.');return}
+    if(file.size>8*1024*1024){reject('Image bohat bari hai (8MB se kam chunein).');return}
+    var url=URL.createObjectURL(file),img=new Image();
+    img.onload=function(){
+      try{
+        var sizes=[480,400,340,280,220],quals=[0.9,0.8,0.7,0.6],best='';
+        outer:for(var i=0;i<sizes.length;i++){
+          var sc=Math.min(1,sizes[i]/Math.max(img.width,img.height));
+          var w=Math.max(1,Math.round(img.width*sc)),h=Math.max(1,Math.round(img.height*sc));
+          var c=document.createElement('canvas');c.width=w;c.height=h;var x=c.getContext('2d');
+          x.fillStyle='#fff';x.fillRect(0,0,w,h);x.drawImage(img,0,0,w,h);
+          for(var j=0;j<quals.length;j++){var d=c.toDataURL('image/jpeg',quals[j]);if(d.length<=44000){best=d;break outer}}
+        }
+        URL.revokeObjectURL(url);
+        if(best)resolve(best);else reject('Image compress nahi ho saki. Chhoti image chunein.');
+      }catch(e){reject('Image parhi nahi ja saki.')}
+    };
+    img.onerror=function(){URL.revokeObjectURL(url);reject('Ye image khul nahi saki.')};
+    img.src=url;
+  });
+}
+async function loadSiteSettings(){
+  buildSlots();
+  var a=await verifyWithBackend({action:'getSettings'});
+  var b=await verifyWithBackend({action:'getPayment'});
+  if(!a||!a.valid){$('setMsg').textContent='Settings load nahi ho sakin. Refresh karein.';return}
+  var S=a.settings||{};
+  $('setShowPrices').checked=String(S.show_prices||'').toLowerCase()==='true';
+  $('setPricePremium').value=S.price_premium||'';$('setPriceExpert').value=S.price_expert||'';$('setPriceNote').value=S.price_note||'';
+  $('setWhatsapp').value=S.whatsapp||'';$('setEmail').value=S.email||'';$('setPayNote').value=S.pay_note||'';
+  for(var n=1;n<=3;n++){
+    ['name','title','number','note'].forEach(function(f){$('pay'+n+f).value=S['pay'+n+'_'+f]||''});
+    SLOT_QR[n]='';SLOT_QR_DIRTY[n]=false;
+  }
+  if(b&&b.valid&&b.slots){
+    // getPayment only lists non-empty slots in order; match them back to their slot by name/number
+    var used={};
+    b.slots.forEach(function(x){
+      for(var n=1;n<=3;n++){
+        if(used[n])continue;
+        if((S['pay'+n+'_name']||'')===(x.name||'')&&(S['pay'+n+'_number']||'')===(x.number||'')&&(S['pay'+n+'_title']||'')===(x.title||'')){SLOT_QR[n]=x.qr||'';used[n]=true;break}
+      }
+    });
+  }
+  for(var m=1;m<=3;m++)setQrPreview(m);
+}
+async function saveSiteSettingsUI(){
+  var msg=$('setMsg'),btn=$('setSaveBtn'),pw=$('setPass').value;
+  if(!pw){msg.textContent='Pehle apna Owner Password daalein.';$('setPass').focus();return}
+  var wa=$('setWhatsapp').value.replace(/\D/g,'');
+  if($('setWhatsapp').value.trim()&&(wa.length<8||wa.length>15)){msg.textContent='WhatsApp number theek nahi lag raha.';return}
+  var v={show_prices:$('setShowPrices').checked?'true':'false',price_premium:$('setPricePremium').value,price_expert:$('setPriceExpert').value,price_note:$('setPriceNote').value,pay_note:$('setPayNote').value};
+  if($('setWhatsapp').value.trim())v.whatsapp=$('setWhatsapp').value;
+  if($('setEmail').value.trim())v.email=$('setEmail').value;
+  for(var n=1;n<=3;n++){
+    ['name','title','number','note'].forEach(function(f){v['pay'+n+'_'+f]=$('pay'+n+f).value});
+    v['pay'+n+'_qr']=SLOT_QR[n]||'';
+  }
+  btn.disabled=true;btn.textContent='Saving...';msg.textContent='';
+  var r=await api({action:'saveSiteSettings',password:pw,values:v});
+  btn.disabled=false;btn.textContent='Settings Save karein';
+  if(r===null)return;
+  if(r&&r.valid){
+    $('setPass').value='';
+    msg.textContent=r.changed&&r.changed.length?'Save ho gaya ('+r.changed.length+' cheezein badli). Website par 1-2 minute mein nazar aayega.':'Koi tabdeeli nahi thi.';
+    toast('ok','Site settings save ho gayin.');
+  }else{
+    var m={wrong_password:'Owner password galat hai.',locked:'Bohat zyada galat koshishen. 15 minute baad try karein.',bad_qr:'QR image theek nahi (sirf PNG/JPG, chhoti).',bad_whatsapp:'WhatsApp number theek nahi.',bad_email:'Email theek nahi.',bad_key:'Server purana version hai. Naya Code.gs deploy karein.',network:'Internet / server masla. Dobara try karein.'};
+    msg.textContent=(r&&m[r.error])||('Save nahi hua: '+((r&&r.error)||'unknown'));
+  }
+}
+document.addEventListener('change',function(e){
+  var f=e.target&&e.target.getAttribute&&e.target.getAttribute('data-slot');if(!f||!e.target.files||!e.target.files[0])return;
+  var n=Number(f);fileToQr(e.target.files[0]).then(function(d){SLOT_QR[n]=d;setQrPreview(n);$('setMsg').textContent='QR '+n+' tayyar. "Settings Save karein" dabana na bhoolein.'}).catch(function(t){$('setMsg').textContent=String(t);e.target.value=''});
+});
+document.addEventListener('click',function(e){
+  var b=e.target.closest&&e.target.closest('[data-rmqr]');if(!b)return;
+  var n=Number(b.getAttribute('data-rmqr'));SLOT_QR[n]='';var fi=$('pay'+n+'file');if(fi)fi.value='';setQrPreview(n);$('setMsg').textContent='QR hata di gayi. Save dabayen.';
+});
+
 function toast(kind,text){var t=$('toast');t.className='ad-toast '+kind;t.textContent=text;clearTimeout(toast._t);if(kind!=='err')toast._t=setTimeout(function(){t.className='ad-toast'},9000)}
 async function ownerLogin(){
   var el=$('ownerPassInput'),msg=$('ownerLoginMsg'),btn=$('ownerLoginBtn');
@@ -136,6 +268,8 @@ function card(o){
   if(g==='work'){if(wa)h+='<a class="ad-btn wa" target="_blank" rel="noopener noreferrer" href="https://wa.me/'+wa+'">WhatsApp</a>';h+='<button class="ad-btn pri" data-act="Completed" data-row="'+row+'">Mukammal</button>'}
   if(g==='done'){if(wa)h+='<a class="ad-btn wa" target="_blank" rel="noopener noreferrer" href="https://wa.me/'+wa+'">WhatsApp</a>';h+='<button class="ad-btn" data-act="In Progress" data-row="'+row+'">Dobara kholein</button>'}
   if(g==='cancel')h+='<button class="ad-btn" data-act="Pending" data-row="'+row+'">Dobara kholein</button>';
+  h+='<button class="ad-btn" data-act="editEmail" data-row="'+row+'" data-email="'+esc(o.email||'')+'">Email badlein</button>';
+  if(o.code&&o.email&&g!=='cancel')h+='<button class="ad-btn" data-act="resend" data-row="'+row+'">Code dobara email karein</button>';
   return h+'</div></div>';
 }
 function group(id,title,hint,list,open,collapsible){
@@ -163,6 +297,22 @@ async function onListClick(e){
   var b=e.target.closest('[data-act]');if(!b)return;
   var act=b.getAttribute('data-act'),row=Number(b.getAttribute('data-row'))||0;
   if(act==='copy'){var c=b.getAttribute('data-code')||'';try{await navigator.clipboard.writeText(c);toast('ok','Code copy ho gaya: '+c)}catch(err){toast('info','Code: '+c)}return}
+  if(act==='editEmail'){
+    var cur=b.getAttribute('data-email')||'';var ne=prompt('Customer ki sahi email likhein (khali chor kar OK dabane se email hat jayegi):',cur);
+    if(ne===null)return;ne=ne.trim();
+    if(ne!==''&&!/^[^\s@,;<>]+@[^\s@,;<>]+\.[^\s@,;<>]+$/.test(ne)){toast('err','Ye email theek nahi lag rahi.');return}
+    b.disabled=true;var rr=await api({action:'updateOrderEmail',rowIndex:row,email:ne});
+    if(rr===null)return;b.disabled=false;
+    if(rr&&rr.valid){toast('ok','Email badal gayi.');await loadOrders(false);
+      var oo=ORDERS.find(function(x){return Number(x.row)===row});
+      if(ne&&oo&&oo.code&&oo.status!=='Cancelled'&&confirm('Code ('+oo.code+') nayi email par bhi bhej dein?')){var r3=await api({action:'resendCode',rowIndex:row});if(r3&&r3.valid&&r3.emailed)toast('ok','Code nayi email par bhej diya.');else toast('err','Code email nahi gaya'+(r3&&r3.emailError?' ('+r3.emailError+')':'')+'.')}}
+    else toast('err','Email nahi badli: '+((rr&&rr.error)||'unknown'));
+    return}
+  if(act==='resend'){
+    if(!confirm('Code is order ki maujooda email par dobara bhejna hai?'))return;
+    b.disabled=true;var r4=await api({action:'resendCode',rowIndex:row});if(r4===null)return;b.disabled=false;
+    if(r4&&r4.valid&&r4.emailed)toast('ok','Code email kar diya gaya.');else toast('err','Email nahi gayi'+(r4&&r4.emailError?' ('+r4.emailError+')':'')+'. WhatsApp se bhejein.');
+    return}
   if(act==='Cancelled'&&!confirm('Is order ko cancel karna hai?'))return;
   var old=b.textContent;b.disabled=true;b.textContent='Wait...';
   var r;
