@@ -447,3 +447,5 @@ html,body{
 .cv-l9 .cv-side .cv-chip{color:#fff;background:rgba(0,0,0,.22)}
 .cv-l15 .cv-card .cv-sub{color:#6d28d9}
 .cv-l19 .cv-section h2,.cv-l19 .cv-sub{color:#0f766e}
+
+.paybox{max-height:92vh;overflow:auto}.payprice{margin:10px 0;font-size:18px}.payslot{border:1px solid #cbd5e1;border-radius:14px;padding:10px 12px;margin:8px 0;background:#f8fafc;overflow-wrap:anywhere}.payslot-t{font-weight:800;font-size:16px;margin-bottom:2px}.paynum{font-family:ui-monospace,Consolas,monospace;font-size:16px;user-select:all}.payqr{display:block;margin:8px 0 2px;width:200px;max-width:100%;height:auto;border-radius:8px;background:#fff}
