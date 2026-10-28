@@ -531,5 +531,9 @@ html,body{
 @media(hover:none),(prefers-reduced-motion:reduce){.fan,.why3d .card{transition:none}.hero-fan:hover .f1{transform:rotateY(24deg) rotateZ(-6deg)}.hero-fan:hover .f3{transform:rotateY(-24deg) rotateZ(6deg)}}
 
 .cv-personal{display:grid!important;grid-template-columns:max-content minmax(0,1fr);gap:4px 14px;align-items:baseline}
-.cv-personal span{opacity:.85}.cv-personal b{font-weight:700;overflow-wrap:anywhere}
+.cv-personal span,.cv-personal b{font-weight:inherit;font-size:inherit;opacity:1;overflow-wrap:anywhere}.cv-personal b{font-weight:inherit}
 .chk-line{display:flex!important;gap:8px;align-items:center;font-weight:700;margin:6px 0 10px}.chk-line input{width:auto!important}
+
+.waproof{margin:10px 0;padding:10px 12px;border-radius:12px;background:#ecfdf5;border:1px solid #a7f3d0;color:#064e3b;font-size:14px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.orderok{margin:12px 0;padding:14px 16px;border-radius:16px;background:linear-gradient(135deg,#ecfdf5,#fff);border:2px solid #22c55e;box-shadow:0 6px 0 -1px #86efac}
+.orderok h3{margin:0 0 6px;color:#14532d}.orderok ol{margin:8px 0 12px;padding-left:20px;line-height:1.5}.ordno{font-size:22px;letter-spacing:.04em;background:#14532d;color:#fff;padding:2px 10px;border-radius:8px}
