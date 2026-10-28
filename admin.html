@@ -230,8 +230,8 @@ document.addEventListener('click',function(e){
 });
 function csvCell(v){v=String(v==null?'':v);if(/^[=+\-@\t\r]/.test(v))v="'"+v;return '"'+v.replace(/"/g,'""')+'"'}
 function exportCSV(){
-  var rows=[['Row','Date','Name','WhatsApp','Email','Template','Note','Status','Code','Updated','Reminded']];
-  ORDERS.forEach(function(o){rows.push([o.row,o.timestamp,o.name,o.whatsapp,o.email,o.template,o.note,o.status,o.code,o.updated,o.reminded])});
+  var rows=[['Order No','Row','Date','Name','WhatsApp','Email','Template','Note','Status','Code','Updated','Reminded','Txn ID']];
+  ORDERS.forEach(function(o){rows.push([o.orderNo,o.row,o.timestamp,o.name,o.whatsapp,o.email,o.template,o.note,o.status,o.code,o.updated,o.reminded,o.txn])});
   var csv='\ufeff'+rows.map(function(r){return r.map(csvCell).join(',')}).join('\r\n');
   var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='cvstudio-orders.csv';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500);
 }
@@ -285,7 +285,7 @@ function groupOf(o){
 function tplName(id){try{var t=templates.find(function(x){return x.id===id});return t?t.name:(id||'')}catch(e){return id||''}}
 function waNumber(n){var d=String(n||'').replace(/\D/g,'');if(d.indexOf('00')===0)d=d.slice(2);if(d.charAt(0)==='0')d='92'+d.slice(1);return d}
 function fmtDate(ts){var m=String(ts||'').match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);if(!m)return esc(String(ts||'').slice(0,24));var mo=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m[2]-1]||'';return +m[3]+' '+mo+', '+m[4]+':'+m[5]}
-function matches(o){if(!FILTER)return true;return [o.name,o.whatsapp,o.email,o.code,tplName(o.template),o.note].join(' ').toLowerCase().indexOf(FILTER)>=0}
+function matches(o){if(!FILTER)return true;return [o.name,o.whatsapp,o.email,o.code,o.orderNo,o.txn,tplName(o.template),o.note].join(' ').toLowerCase().indexOf(FILTER)>=0}
 function card(o){
   var g=groupOf(o),wa=waNumber(o.whatsapp),row=Number(o.row)||0;
   var msg='Assalam o Alaikum '+(o.name||'')+'! Aap ka CV Studio Pro order approve ho gaya hai.'+(o.code?' Aap ka premium code: '+o.code+'.':'')+' Code builder page par daal kar CV download karein: '+location.href.replace(/admin\.html.*$/,'builder.html');
@@ -294,6 +294,7 @@ function card(o){
    +'<div class="ad-meta">'+esc(o.whatsapp||'')+(o.email?' &middot; '+esc(o.email):' &middot; <b>email nahi di</b>')+'</div>'
    +(g==='new'?'<div class="ad-meta">Aaya: '+esc(ageText(o.timestamp).t)+(ageText(o.timestamp).old?'<span class="ad-age">payment ka intezar</span>':'')+(o.reminded?' &middot; Reminder bheja: '+esc(fmtDate(o.reminded)):'')+'</div>':'')
    +(o.note?'<div class="ad-meta">Note: '+esc(o.note)+'</div>':'')
+   +'<div class="ad-meta"><b>'+esc(o.orderNo||'')+'</b>'+(o.txn?' &middot; Txn ID: <b>'+esc(o.txn)+'</b>':(g==='new'?' &middot; Txn ID: nahi diya':''))+'</div>'
    +(o.code?'<div><span class="ad-code">'+esc(o.code)+'</span></div>':'')+'</div></div><div class="ad-actions">';
   var rmsg='Assalam o Alaikum '+(o.name||'')+'! Aap ka CV Studio Pro order mil gaya hai lekin payment abhi tak nahi mili. Payment bhej kar screenshot yahan send kar dein, phir hum aap ka code/CV bhej denge. Shukriya!';
   if(g==='new'){if(o.email)h+='<button class="ad-btn rem" data-act="remindEmail" data-row="'+row+'">Payment reminder (email)</button>';if(wa)h+='<a class="ad-btn rem" data-remwa="'+row+'" target="_blank" rel="noopener noreferrer" href="https://wa.me/'+wa+'?text='+encodeURIComponent(rmsg)+'">Payment reminder (WhatsApp)</a>'}
