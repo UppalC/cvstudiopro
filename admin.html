@@ -85,6 +85,7 @@
 <label for="setOfferEnds">Offer kab khatam hogi (is tareekh ke baad banner khud ghayab)</label><input type="date" id="setOfferEnds" style="width:100%;padding:10px 12px;border:1px solid #cbd5e1;border-radius:10px;font:inherit">
 <label for="setOfferStyle">Banner ka rang</label><select id="setOfferStyle" style="width:100%;padding:10px 12px;border:1px solid #cbd5e1;border-radius:10px;font:inherit"><option value="gold">Sunehri (gold)</option><option value="purple">Jamni (purple)</option><option value="green">Hara (green)</option><option value="red">Surkh (red)</option><option value="blue">Neela (blue)</option></select>
 <p class="ad-hint2"><b>Preview (website par aisa dikhega):</b></p><div id="offerPreview"></div>
+<label for="setTrialEnds">Free trial kab khatam hogi (is tareekh ke baad free trial khud band ho jayegi)</label><input type="date" id="setTrialEnds" style="width:100%;padding:10px 12px;border:1px solid #cbd5e1;border-radius:10px;font:inherit;margin-bottom:8px">
 <label class="chk"><input type="checkbox" id="setFreeTrial"> <span><b style="color:#b91c1c">Free trial mode:</b> ON karne se SAB premium templates SAB ke liye mufat khul jate hain. Sirf tab ON karein jab aap jaan boojh kar free dena chahte hon.</span></label>
 <h3>5. Save</h3>
 <label for="setPass">Tasdeeq ke liye apna Owner Password daalein</label><input type="password" id="setPass" autocomplete="current-password">
@@ -176,7 +177,7 @@ async function loadSiteSettings(){
   var S=a.settings||{};
   $('setShowPrices').checked=String(S.show_prices||'').toLowerCase()==='true';
   $('setPricePremium').value=S.price_premium||'';$('setPriceExpert').value=S.price_expert||'';$('setPriceNote').value=S.price_note||'';
-  $('setOfferOn').checked=String(S.offer_enabled||'').toLowerCase()==='true';$('setOfferText').value=S.offer_text||'';$('setOfferBadge').value=S.offer_badge||'';$('setPriceOld').value=S.price_old||'';$('setOfferEnds').value=S.offer_ends||'';$('setOfferStyle').value=S.offer_style||'gold';$('setFreeTrial').checked=String(S.free_trial_mode||'').toLowerCase()==='true';FREE_INIT=$('setFreeTrial').checked;
+  $('setOfferOn').checked=String(S.offer_enabled||'').toLowerCase()==='true';$('setOfferText').value=S.offer_text||'';$('setOfferBadge').value=S.offer_badge||'';$('setPriceOld').value=S.price_old||'';$('setOfferEnds').value=S.offer_ends||'';$('setOfferStyle').value=S.offer_style||'gold';$('setFreeTrial').checked=String(S.free_trial_mode||'').toLowerCase()==='true';FREE_INIT=$('setFreeTrial').checked;$('setTrialEnds').value=S.free_trial_ends||'';
   $('setWhatsapp').value=S.whatsapp||'';$('setEmail').value=S.email||'';$('setPayNote').value=S.pay_note||'';
   for(var n=1;n<=3;n++){
     ['name','title','number','note'].forEach(function(f){$('pay'+n+f).value=S['pay'+n+'_'+f]||''});
@@ -200,7 +201,8 @@ async function saveSiteSettingsUI(){
   if(!pw){msg.textContent='Pehle apna Owner Password daalein.';$('setPass').focus();return}
   var wa=$('setWhatsapp').value.replace(/\D/g,'');
   if($('setWhatsapp').value.trim()&&(wa.length<8||wa.length>15)){msg.textContent='WhatsApp number theek nahi lag raha.';return}
-  var v={show_prices:$('setShowPrices').checked?'true':'false',price_premium:$('setPricePremium').value,price_expert:$('setPriceExpert').value,price_note:$('setPriceNote').value,pay_note:$('setPayNote').value,offer_enabled:$('setOfferOn').checked?'true':'false',offer_text:$('setOfferText').value,offer_badge:$('setOfferBadge').value,price_old:$('setPriceOld').value,offer_ends:$('setOfferEnds').value,offer_style:$('setOfferStyle').value,free_trial_mode:$('setFreeTrial').checked?'true':'false'};
+  var v={show_prices:$('setShowPrices').checked?'true':'false',price_premium:$('setPricePremium').value,price_expert:$('setPriceExpert').value,price_note:$('setPriceNote').value,pay_note:$('setPayNote').value,offer_enabled:$('setOfferOn').checked?'true':'false',offer_text:$('setOfferText').value,offer_badge:$('setOfferBadge').value,price_old:$('setPriceOld').value,offer_ends:$('setOfferEnds').value,offer_style:$('setOfferStyle').value,free_trial_mode:$('setFreeTrial').checked?'true':'false',free_trial_ends:$('setTrialEnds').value};
+  if($('setFreeTrial').checked&&!$('setTrialEnds').value&&!confirm('Free trial ki akhri tareekh nahi di. Bina tareekh ke ye khud band nahi hogi. Phir bhi ON karna hai?'))return;
   if($('setFreeTrial').checked&&!FREE_INIT&&!confirm('Free trial mode ON hone se SAB premium templates SAB ke liye free ho jayenge. Kya waqai ON karna hai?'))return;
   if($('setWhatsapp').value.trim())v.whatsapp=$('setWhatsapp').value;
   if($('setEmail').value.trim())v.email=$('setEmail').value;
