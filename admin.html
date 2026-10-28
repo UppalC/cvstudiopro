@@ -76,8 +76,15 @@
 <div id="slotsBox"></div>
 <label for="setPayNote">Payment ke baad customer ke liye hidayat (optional)</label><input type="text" id="setPayNote" maxlength="300" autocomplete="off">
 <h3>4. Offer banner &amp; free trial</h3>
+<p class="ad-hint2"><b>Zaroori:</b> kati hui "purani price" sirf tab likhein jab pehle waqai wo price thi. Jhooti discount qanooni aur Google AdSense ke liye khatarnak hai. Nayi price upar "Premium CV price" mein likhein.</p>
 <label class="chk"><input type="checkbox" id="setOfferOn"> Website ke upar offer banner dikhayein</label>
+<p class="ad-hint2">Tayyar offers (click karein, phir apni price aur akhri tareekh likhein):</p><div class="ad-actions" id="presetBox"></div>
+<label for="setOfferBadge">Chhota label (misal: EID SPECIAL)</label><input type="text" id="setOfferBadge" maxlength="30" autocomplete="off">
 <label for="setOfferText">Offer ki line</label><input type="text" id="setOfferText" maxlength="300" autocomplete="off">
+<label for="setPriceOld">Purani price (kati hui dikhegi, misal: Rs. 500). Khali = koi kati hui price nahi</label><input type="text" id="setPriceOld" maxlength="80" autocomplete="off">
+<label for="setOfferEnds">Offer kab khatam hogi (is tareekh ke baad banner khud ghayab)</label><input type="date" id="setOfferEnds" style="width:100%;padding:10px 12px;border:1px solid #cbd5e1;border-radius:10px;font:inherit">
+<label for="setOfferStyle">Banner ka rang</label><select id="setOfferStyle" style="width:100%;padding:10px 12px;border:1px solid #cbd5e1;border-radius:10px;font:inherit"><option value="gold">Sunehri (gold)</option><option value="purple">Jamni (purple)</option><option value="green">Hara (green)</option><option value="red">Surkh (red)</option><option value="blue">Neela (blue)</option></select>
+<p class="ad-hint2"><b>Preview (website par aisa dikhega):</b></p><div id="offerPreview"></div>
 <label class="chk"><input type="checkbox" id="setFreeTrial"> <span><b style="color:#b91c1c">Free trial mode:</b> ON karne se SAB premium templates SAB ke liye mufat khul jate hain. Sirf tab ON karein jab aap jaan boojh kar free dena chahte hon.</span></label>
 <h3>5. Save</h3>
 <label for="setPass">Tasdeeq ke liye apna Owner Password daalein</label><input type="password" id="setPass" autocomplete="current-password">
@@ -162,14 +169,14 @@ function fileToQr(file){
   });
 }
 async function loadSiteSettings(){
-  buildSlots();
+  buildSlots();buildPresets();
   var a=await verifyWithBackend({action:'getSettings'});
   var b=await verifyWithBackend({action:'getPayment'});
   if(!a||!a.valid){$('setMsg').textContent='Settings load nahi ho sakin. Refresh karein.';return}
   var S=a.settings||{};
   $('setShowPrices').checked=String(S.show_prices||'').toLowerCase()==='true';
   $('setPricePremium').value=S.price_premium||'';$('setPriceExpert').value=S.price_expert||'';$('setPriceNote').value=S.price_note||'';
-  $('setOfferOn').checked=String(S.offer_enabled||'').toLowerCase()==='true';$('setOfferText').value=S.offer_text||'';$('setFreeTrial').checked=String(S.free_trial_mode||'').toLowerCase()==='true';FREE_INIT=$('setFreeTrial').checked;
+  $('setOfferOn').checked=String(S.offer_enabled||'').toLowerCase()==='true';$('setOfferText').value=S.offer_text||'';$('setOfferBadge').value=S.offer_badge||'';$('setPriceOld').value=S.price_old||'';$('setOfferEnds').value=S.offer_ends||'';$('setOfferStyle').value=S.offer_style||'gold';$('setFreeTrial').checked=String(S.free_trial_mode||'').toLowerCase()==='true';FREE_INIT=$('setFreeTrial').checked;
   $('setWhatsapp').value=S.whatsapp||'';$('setEmail').value=S.email||'';$('setPayNote').value=S.pay_note||'';
   for(var n=1;n<=3;n++){
     ['name','title','number','note'].forEach(function(f){$('pay'+n+f).value=S['pay'+n+'_'+f]||''});
@@ -186,13 +193,14 @@ async function loadSiteSettings(){
     });
   }
   for(var m=1;m<=3;m++)setQrPreview(m);
+  previewOffer();
 }
 async function saveSiteSettingsUI(){
   var msg=$('setMsg'),btn=$('setSaveBtn'),pw=$('setPass').value;
   if(!pw){msg.textContent='Pehle apna Owner Password daalein.';$('setPass').focus();return}
   var wa=$('setWhatsapp').value.replace(/\D/g,'');
   if($('setWhatsapp').value.trim()&&(wa.length<8||wa.length>15)){msg.textContent='WhatsApp number theek nahi lag raha.';return}
-  var v={show_prices:$('setShowPrices').checked?'true':'false',price_premium:$('setPricePremium').value,price_expert:$('setPriceExpert').value,price_note:$('setPriceNote').value,pay_note:$('setPayNote').value,offer_enabled:$('setOfferOn').checked?'true':'false',offer_text:$('setOfferText').value,free_trial_mode:$('setFreeTrial').checked?'true':'false'};
+  var v={show_prices:$('setShowPrices').checked?'true':'false',price_premium:$('setPricePremium').value,price_expert:$('setPriceExpert').value,price_note:$('setPriceNote').value,pay_note:$('setPayNote').value,offer_enabled:$('setOfferOn').checked?'true':'false',offer_text:$('setOfferText').value,offer_badge:$('setOfferBadge').value,price_old:$('setPriceOld').value,offer_ends:$('setOfferEnds').value,offer_style:$('setOfferStyle').value,free_trial_mode:$('setFreeTrial').checked?'true':'false'};
   if($('setFreeTrial').checked&&!FREE_INIT&&!confirm('Free trial mode ON hone se SAB premium templates SAB ke liye free ho jayenge. Kya waqai ON karna hai?'))return;
   if($('setWhatsapp').value.trim())v.whatsapp=$('setWhatsapp').value;
   if($('setEmail').value.trim())v.email=$('setEmail').value;
@@ -209,7 +217,7 @@ async function saveSiteSettingsUI(){
     msg.textContent=r.changed&&r.changed.length?'Save ho gaya ('+r.changed.length+' cheezein badli). Website par 1-2 minute mein nazar aayega.':'Koi tabdeeli nahi thi.';
     toast('ok','Site settings save ho gayin.');
   }else{
-    var m={wrong_password:'Owner password galat hai.',locked:'Bohat zyada galat koshishen. 15 minute baad try karein.',bad_qr:'QR image theek nahi (sirf PNG/JPG, chhoti).',bad_whatsapp:'WhatsApp number theek nahi.',bad_email:'Email theek nahi.',bad_key:'Server purana version hai. Naya Code.gs deploy karein.',network:'Internet / server masla. Dobara try karein.'};
+    var m={wrong_password:'Owner password galat hai.',locked:'Bohat zyada galat koshishen. 15 minute baad try karein.',bad_qr:'QR image theek nahi (sirf PNG/JPG, chhoti).',bad_whatsapp:'WhatsApp number theek nahi.',bad_date:'Akhri tareekh theek nahi.',bad_email:'Email theek nahi.',bad_key:'Server purana version hai. Naya Code.gs deploy karein.',network:'Internet / server masla. Dobara try karein.'};
     msg.textContent=(r&&m[r.error])||('Save nahi hua: '+((r&&r.error)||'unknown'));
   }
 }
@@ -235,6 +243,34 @@ function exportCSV(){
   var csv='\ufeff'+rows.map(function(r){return r.map(csvCell).join(',')}).join('\r\n');
   var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='cvstudio-orders.csv';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500);
 }
+
+var PRESETS=[
+ {n:'Eid Special',b:'EID SPECIAL',t:'Eid special: get your premium CV at a festive price',s:'green'},
+ {n:'Ramadan',b:'RAMADAN KAREEM',t:'Ramadan special: premium CV at a reduced price',s:'gold'},
+ {n:'Independence Day',b:'14 AUGUST',t:'Independence Day offer: premium CV at a special price',s:'green'},
+ {n:'New Year',b:'NEW YEAR',t:'New year, new career: premium CV at a special price',s:'purple'},
+ {n:'Student Offer',b:'STUDENTS',t:'Student special: get a premium CV for less',s:'blue'},
+ {n:'Job Season',b:'HIRING SEASON',t:'Hiring season: stand out with a premium CV',s:'red'},
+ {n:'Weekend Flash',b:'THIS WEEKEND',t:'Weekend offer on premium CVs, for a limited time',s:'red'},
+ {n:'Launch Offer',b:'LAUNCH OFFER',t:'Launch offer: premium CV at an introductory price',s:'purple'}
+];
+function buildPresets(){
+  $('presetBox').innerHTML=PRESETS.map(function(p,i){return '<button type="button" class="ad-btn" data-preset="'+i+'">'+esc(p.n)+'</button>'}).join('');
+}
+function offerCfg(){return {enabled:true,text:$('setOfferText').value||'Special offer',badge:$('setOfferBadge').value,old:$('setPriceOld').value,ends:$('setOfferEnds').value,style:$('setOfferStyle').value}}
+function previewOffer(){
+  var pr={show:$('setShowPrices').checked,premium:$('setPricePremium').value};
+  $('offerPreview').innerHTML=offerHTML(offerCfg(),pr,true);
+}
+document.addEventListener('click',function(e){
+  var b=e.target.closest&&e.target.closest('[data-preset]');if(!b)return;
+  var p=PRESETS[Number(b.getAttribute('data-preset'))];if(!p)return;
+  $('setOfferBadge').value=p.b;$('setOfferText').value=p.t;$('setOfferStyle').value=p.s;$('setOfferOn').checked=true;previewOffer();
+  $('setMsg').textContent='Offer tayyar. Ab apni price aur akhri tareekh likhein, phir Save dabayen.';
+});
+document.addEventListener('input',function(e){if(e.target&&e.target.id&&/^set(Offer|Price|ShowPrices)/.test(e.target.id))previewOffer()});
+document.addEventListener('change',function(e){if(e.target&&e.target.id&&/^set(Offer|Price|ShowPrices)/.test(e.target.id))previewOffer()});
+
 function toast(kind,text){var t=$('toast');t.className='ad-toast '+kind;t.textContent=text;clearTimeout(toast._t);if(kind!=='err')toast._t=setTimeout(function(){t.className='ad-toast'},9000)}
 async function ownerLogin(){
   var el=$('ownerPassInput'),msg=$('ownerLoginMsg'),btn=$('ownerLoginBtn');
