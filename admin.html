@@ -28,6 +28,14 @@
 .ad-btn[disabled]{opacity:.55;cursor:wait}
 .ad-empty{color:#64748b;font-size:14px;padding:6px 2px}
 .ad-help summary{cursor:pointer;font-weight:700}
+.ad-h2{font-size:20px;margin:0 0 10px}
+.ad-stats{grid-template-columns:repeat(5,1fr)}
+.ad-stat.cancel{background:#f1f5f9;border-color:#94a3b8}.ad-stat.settings{background:#fce7f3;border-color:#ec4899}
+.ad-stat.on{outline:4px solid #0f172a;outline-offset:2px}
+.ad-age{display:inline-block;margin-left:6px;font-size:12px;font-weight:800;padding:2px 8px;border-radius:999px;background:#fee2e2;color:#7f1d1d}
+.ad-age.ok{background:#dcfce7;color:#14532d}
+.ad-btn.rem{background:#fde68a;color:#78350f}
+@media(max-width:700px){.ad-stats{grid-template-columns:repeat(2,1fr)}}
 .ad-set label{display:block;font-weight:700;margin:10px 0 4px}
 .ad-set input[type=text],.ad-set input[type=password]{width:100%;padding:10px 12px;border:1px solid #cbd5e1;border-radius:10px;font:inherit}
 .ad-set .ad-slot{border:1px solid #cbd5e1;border-radius:12px;padding:6px 14px 14px;margin:12px 0;background:#f8fafc}
@@ -36,24 +44,24 @@
 .ad-set .chk{display:flex;gap:8px;align-items:center;font-weight:700;margin:10px 0}
 .ad-set .chk input{width:20px;height:20px}
 .ad-set .ad-hint2{font-size:13px;color:#475569;margin:2px 0 0}
-@media(max-width:560px){.ad-stats{grid-template-columns:repeat(2,1fr)}}
+
 </style></head><body><div class="wrap"><nav class="nav"><div class="brand">CV Studio <span>Owner</span></div><div class="links"><a href="index.html">Home</a><a href="builder.html">Builder</a></div></nav>
 
 <div id="ownerLogin" style="display:none"><section class="topbar"><h1>Owner Login</h1><p>Owner password daalein. Ye server par check hota hai, site ke code mein kahin save nahi.</p></section><section class="section"><div class="formsec"><label for="ownerPassInput">Owner Password</label><div style="display:flex;gap:6px;align-items:center"><input id="ownerPassInput" type="password" autocomplete="current-password" placeholder="Enter owner password" style="flex:1"><button type="button" class="btn light" style="padding:6px 10px" aria-label="Show or hide password" onclick="togglePwd('ownerPassInput',this)">👁</button></div><div class="actions" style="margin-top:10px"><button class="btn dark" id="ownerLoginBtn" onclick="ownerLogin()">Login</button></div><p class="muted small" id="ownerLoginMsg" role="status"></p></div></section></div>
 
 <div id="ownerArea" style="display:none">
-<section class="topbar"><h1>Orders</h1><p>Upar se neeche dekhein: sab se pehle <b>Naye orders</b> (aap ka action chahiye), phir baqi.</p></section>
+<section class="topbar"><h1 id="tabTitle">Orders</h1><p id="tabHint"></p></section>
 <section class="section">
 <div id="toast" class="ad-toast" role="status" aria-live="polite"></div>
-<div class="ad-stats" id="stats"></div>
-<div class="ad-bar"><input id="searchBox" class="ad-search" type="search" placeholder="Naam, number, email ya code se dhoondein" aria-label="Search orders"><button class="ad-btn pri" id="refreshBtn" onclick="loadOrders(true)">Refresh</button><a class="ad-btn" href="builder.html">Open Owner Builder</a><button class="ad-btn" onclick="ownerLogout()">Log Out</button></div>
+<div class="ad-stats" id="stats" role="tablist" aria-label="Orders ke hisse"></div>
+<div id="panelOrders">
+<div class="ad-bar"><input id="searchBox" class="ad-search" type="search" placeholder="Naam, number, email ya code se dhoondein" aria-label="Search orders"><button class="ad-btn pri" id="refreshBtn" onclick="loadOrders(true)">Refresh</button><a class="ad-btn" href="builder.html">Owner Builder (print/PDF)</a><button class="ad-btn" onclick="ownerLogout()">Log Out</button></div>
 <div id="ordersList" class="muted">Loading...</div>
+</div>
 </section>
-
-<section class="section"><details class="ad-help"><summary>Madad: order ka kaam kaise hota hai</summary>
-<ol class="muted"><li><b>Naya order</b> aata hai: payment check karein, phir <b>Approve &amp; Send Code</b> dabayen. Agle unused code customer ko email ho jata hai. Agar email nahi di thi to <b>WhatsApp par code bhejein</b> wala button dabayen.</li><li><b>Code bheja</b>: customer code daal kar khud CV download kar leta hai. Agar aap khud CV bana kar dena chahte hain to <b>Kaam shuru</b> dabayen.</li><li><b>Kaam jari hai</b>: jab CV de dein to <b>Mukammal</b> dabayen.</li><li>Codes khatam hon to Google Sheet ke <b>Codes</b> tab mein naye unique codes (jaise <b>CVPRO-4F82K</b>) add karein, "used" column khali rakhein.</li><li>Har status Google Sheet ke <b>Orders</b> tab mein save hota hai, isliye phone aur laptop dono par same nazar aata hai.</li></ol></details></section>
-
-<section class="section ad-set"><details class="ad-help" id="siteSet"><summary>Site Settings: prices, WhatsApp number, payment details &amp; QR</summary>
+<div id="panelSettings" style="display:none">
+<section class="section ad-set"><h2 class="ad-h2">Codes</h2><div class="formsec"><p id="codesLeftTxt" class="muted">Codes: ...</p><p class="ad-hint2">Codes khatam hon to approve karte waqt naya code khud ban jata hai. Pehle se bana kar rakhna chahein to yahan se banayen.</p><div class="ad-actions"><button class="ad-btn" data-gen="5">+5 codes</button><button class="ad-btn" data-gen="20">+20 codes</button><button class="ad-btn" data-gen="50">+50 codes</button></div></div></section>
+<section class="section ad-set"><div id="siteSet"><h2 class="ad-h2">Site Settings: prices, WhatsApp, payment details &amp; QR</h2>
 <div class="formsec">
 <h3>1. Prices (website par)</h3>
 <label class="chk"><input type="checkbox" id="setShowPrices"> Website par prices dikhayein (band hon to sirf &quot;Order&quot; / &quot;Custom&quot; likha aayega)</label>
@@ -67,18 +75,26 @@
 <p class="ad-hint2">Zyada se zyada 3 tareeqe. Khali chor dein to wo show nahi hoga. QR image PNG ya JPG ho sakti hai (khud chhoti ho jati hai).</p>
 <div id="slotsBox"></div>
 <label for="setPayNote">Payment ke baad customer ke liye hidayat (optional)</label><input type="text" id="setPayNote" maxlength="300" autocomplete="off">
-<h3>4. Save</h3>
+<h3>4. Offer banner &amp; free trial</h3>
+<label class="chk"><input type="checkbox" id="setOfferOn"> Website ke upar offer banner dikhayein</label>
+<label for="setOfferText">Offer ki line</label><input type="text" id="setOfferText" maxlength="300" autocomplete="off">
+<label class="chk"><input type="checkbox" id="setFreeTrial"> <span><b style="color:#b91c1c">Free trial mode:</b> ON karne se SAB premium templates SAB ke liye mufat khul jate hain. Sirf tab ON karein jab aap jaan boojh kar free dena chahte hon.</span></label>
+<h3>5. Save</h3>
 <label for="setPass">Tasdeeq ke liye apna Owner Password daalein</label><input type="password" id="setPass" autocomplete="current-password">
 <p class="ad-hint2">Payment/WhatsApp badalne par aap ko ek alert email bhi aati hai (hifazat ke liye).</p>
 <div class="ad-actions"><button class="ad-btn pri" id="setSaveBtn" onclick="saveSiteSettingsUI()">Settings Save karein</button></div>
 <p class="muted" id="setMsg" role="status" aria-live="polite"></p>
-</div></details></section>
-
-<section class="section"><details class="ad-help"><summary>Owner password badlein</summary><div class="formsec"><label for="oldPassInput">Current Password</label><div style="display:flex;gap:6px;align-items:center"><input id="oldPassInput" type="password" autocomplete="current-password" placeholder="Current password" style="flex:1"><button type="button" class="btn light" style="padding:6px 10px" aria-label="Show or hide password" onclick="togglePwd('oldPassInput',this)">👁</button></div><label for="newPassInput">New Password</label><div style="display:flex;gap:6px;align-items:center"><input id="newPassInput" type="password" autocomplete="new-password" placeholder="Kam az kam 12 characters" style="flex:1"><button type="button" class="btn light" style="padding:6px 10px" aria-label="Show or hide password" onclick="togglePwd('newPassInput',this)">👁</button></div><div class="actions" style="margin-top:10px"><button class="btn dark" id="changePassBtn" onclick="changePasswordUI()">Change Password</button></div><p class="muted small" id="changePassMsg" role="status"></p></div></details></section>
+</div></div></section>
+<section class="section ad-set"><h2 class="ad-h2">Orders ka backup</h2><div class="formsec"><p class="ad-hint2">Saare orders ki CSV file (Excel mein khulti hai) download karein.</p><div class="ad-actions"><button class="ad-btn" id="csvBtn" onclick="exportCSV()">Orders CSV download</button></div></div></section>
+<section class="section"><div><h2 class="ad-h2">Owner password badlein</h2><div class="formsec"><label for="oldPassInput">Current Password</label><div style="display:flex;gap:6px;align-items:center"><input id="oldPassInput" type="password" autocomplete="current-password" placeholder="Current password" style="flex:1"><button type="button" class="btn light" style="padding:6px 10px" aria-label="Show or hide password" onclick="togglePwd('oldPassInput',this)">👁</button></div><label for="newPassInput">New Password</label><div style="display:flex;gap:6px;align-items:center"><input id="newPassInput" type="password" autocomplete="new-password" placeholder="Kam az kam 12 characters" style="flex:1"><button type="button" class="btn light" style="padding:6px 10px" aria-label="Show or hide password" onclick="togglePwd('newPassInput',this)">👁</button></div><div class="actions" style="margin-top:10px"><button class="btn dark" id="changePassBtn" onclick="changePasswordUI()">Change Password</button></div><p class="muted small" id="changePassMsg" role="status"></p></div></div></section>
+</div>
+<div id="helpBox"><section class="section"><details class="ad-help"><summary>Madad: order ka kaam kaise hota hai</summary>
+<ol class="muted"><li><b>Naya order</b> aata hai: payment check karein, phir <b>Approve &amp; Send Code</b> dabayen. Agle unused code customer ko email ho jata hai. Agar email nahi di thi to <b>WhatsApp par code bhejein</b> wala button dabayen.</li><li><b>Code bheja</b>: customer code daal kar khud CV download kar leta hai. Agar aap khud CV bana kar dena chahte hain to <b>Kaam shuru</b> dabayen.</li><li><b>Kaam jari hai</b>: jab CV de dein to <b>Mukammal</b> dabayen.</li><li>Codes khatam hon to <b>khud naye ban jate hain</b> (approve karte waqt). Chahein to Settings tab se pehle se bhi bana sakte hain.</li><li>Har status Google Sheet ke <b>Orders</b> tab mein save hota hai, isliye phone aur laptop dono par same nazar aata hai.</li></ol></details></section></div>
 </div>
 
 <script src="js/app.js"></script><script>
-var ORDERS=[],FILTER='',TIMER=null,OPEN_DONE=false;
+var ORDERS=[],FILTER='',TIMER=null,TAB='new',CODES_LEFT=null;
+var TABS=['new','active','done','cancel','settings'];
 var TOK_KEY='cvStudioOwnerToken';
 function $(id){return document.getElementById(id)}
 function tok(){return sessionStorage.getItem(TOK_KEY)||''}
@@ -90,7 +106,7 @@ function showLogin(msg){
 }
 function showArea(){
   $('ownerLogin').style.display='none';$('ownerArea').style.display='block';
-  loadOrders(false);loadSiteSettings();
+  var h=(location.hash||'').replace('#','');setTab(TABS.indexOf(h)>=0?h:'new');loadOrders(false);loadSiteSettings();
   if(!TIMER)TIMER=setInterval(function(){if(!document.hidden)loadOrders(false)},60000);
 }
 (function(){
@@ -99,11 +115,11 @@ function showArea(){
   $('ownerPassInput').addEventListener('keydown',function(e){if(e.key==='Enter')ownerLogin()});
   $('searchBox').addEventListener('input',function(){FILTER=this.value.trim().toLowerCase();render()});
   $('ordersList').addEventListener('click',onListClick);
-  $('stats').addEventListener('click',function(e){var b=e.target.closest('[data-jump]');if(!b)return;var g=document.getElementById('grp-'+b.getAttribute('data-jump'));if(g){if(g.tagName==='DETAILS')g.open=true;g.scrollIntoView({behavior:'smooth',block:'start'})}});
+  $('stats').addEventListener('click',function(e){var b=e.target.closest('[data-tab]');if(b)setTab(b.getAttribute('data-tab'))});
 })();
 
 /* ---------- Site settings ---------- */
-var SLOT_QR={1:'',2:'',3:''},SLOT_QR_DIRTY={};
+var FREE_INIT=false,SLOT_QR={1:'',2:'',3:''},SLOT_QR_DIRTY={};
 var QR_OK=/^data:image\/(png|jpeg);base64,[A-Za-z0-9+\/=]+$/;
 function buildSlots(){
   var h='';
@@ -153,6 +169,7 @@ async function loadSiteSettings(){
   var S=a.settings||{};
   $('setShowPrices').checked=String(S.show_prices||'').toLowerCase()==='true';
   $('setPricePremium').value=S.price_premium||'';$('setPriceExpert').value=S.price_expert||'';$('setPriceNote').value=S.price_note||'';
+  $('setOfferOn').checked=String(S.offer_enabled||'').toLowerCase()==='true';$('setOfferText').value=S.offer_text||'';$('setFreeTrial').checked=String(S.free_trial_mode||'').toLowerCase()==='true';FREE_INIT=$('setFreeTrial').checked;
   $('setWhatsapp').value=S.whatsapp||'';$('setEmail').value=S.email||'';$('setPayNote').value=S.pay_note||'';
   for(var n=1;n<=3;n++){
     ['name','title','number','note'].forEach(function(f){$('pay'+n+f).value=S['pay'+n+'_'+f]||''});
@@ -175,7 +192,8 @@ async function saveSiteSettingsUI(){
   if(!pw){msg.textContent='Pehle apna Owner Password daalein.';$('setPass').focus();return}
   var wa=$('setWhatsapp').value.replace(/\D/g,'');
   if($('setWhatsapp').value.trim()&&(wa.length<8||wa.length>15)){msg.textContent='WhatsApp number theek nahi lag raha.';return}
-  var v={show_prices:$('setShowPrices').checked?'true':'false',price_premium:$('setPricePremium').value,price_expert:$('setPriceExpert').value,price_note:$('setPriceNote').value,pay_note:$('setPayNote').value};
+  var v={show_prices:$('setShowPrices').checked?'true':'false',price_premium:$('setPricePremium').value,price_expert:$('setPriceExpert').value,price_note:$('setPriceNote').value,pay_note:$('setPayNote').value,offer_enabled:$('setOfferOn').checked?'true':'false',offer_text:$('setOfferText').value,free_trial_mode:$('setFreeTrial').checked?'true':'false'};
+  if($('setFreeTrial').checked&&!FREE_INIT&&!confirm('Free trial mode ON hone se SAB premium templates SAB ke liye free ho jayenge. Kya waqai ON karna hai?'))return;
   if($('setWhatsapp').value.trim())v.whatsapp=$('setWhatsapp').value;
   if($('setEmail').value.trim())v.email=$('setEmail').value;
   for(var n=1;n<=3;n++){
@@ -204,6 +222,19 @@ document.addEventListener('click',function(e){
   var n=Number(b.getAttribute('data-rmqr'));SLOT_QR[n]='';var fi=$('pay'+n+'file');if(fi)fi.value='';setQrPreview(n);$('setMsg').textContent='QR hata di gayi. Save dabayen.';
 });
 
+document.addEventListener('click',function(e){
+  var a=e.target.closest&&e.target.closest('[data-remwa]');
+  if(a){var rw=Number(a.getAttribute('data-remwa'));api({action:'sendReminder',rowIndex:rw,via:'whatsapp'}).then(function(){loadOrders(false)});return}
+  var g=e.target.closest&&e.target.closest('[data-gen]');
+  if(g){var c=Number(g.getAttribute('data-gen'));g.disabled=true;api({action:'generateCodes',count:c}).then(function(r){g.disabled=false;if(r&&r.valid){CODES_LEFT=r.codesLeft;render();toast('ok',r.made+' naye codes ban gaye.')}else if(r)toast('err','Codes nahi ban sake.')})}
+});
+function csvCell(v){v=String(v==null?'':v);if(/^[=+\-@\t\r]/.test(v))v="'"+v;return '"'+v.replace(/"/g,'""')+'"'}
+function exportCSV(){
+  var rows=[['Row','Date','Name','WhatsApp','Email','Template','Note','Status','Code','Updated','Reminded']];
+  ORDERS.forEach(function(o){rows.push([o.row,o.timestamp,o.name,o.whatsapp,o.email,o.template,o.note,o.status,o.code,o.updated,o.reminded])});
+  var csv='\ufeff'+rows.map(function(r){return r.map(csvCell).join(',')}).join('\r\n');
+  var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='cvstudio-orders.csv';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500);
+}
 function toast(kind,text){var t=$('toast');t.className='ad-toast '+kind;t.textContent=text;clearTimeout(toast._t);if(kind!=='err')toast._t=setTimeout(function(){t.className='ad-toast'},9000)}
 async function ownerLogin(){
   var el=$('ownerPassInput'),msg=$('ownerLoginMsg'),btn=$('ownerLoginBtn');
@@ -240,7 +271,7 @@ async function loadOrders(manual){
   if(btn)btn.disabled=false;
   if(r===null)return;
   if(!r||!r.valid){if(!ORDERS.length)box.textContent='Orders load nahi ho sake. Refresh karke dekhein.';else toast('err','Orders refresh nahi ho sake.');return}
-  ORDERS=(r.orders||[]).slice();
+  ORDERS=(r.orders||[]).slice();if(typeof r.codesLeft==='number')CODES_LEFT=r.codesLeft;
   render();
 }
 function groupOf(o){
@@ -261,8 +292,11 @@ function card(o){
   var h='<div class="ad-card"><div class="ad-top"><div><div class="ad-name">'+esc(o.name||'(no name)')+'</div>'
    +'<div class="ad-meta">'+esc(tplName(o.template))+' &middot; '+esc(fmtDate(o.timestamp))+'</div>'
    +'<div class="ad-meta">'+esc(o.whatsapp||'')+(o.email?' &middot; '+esc(o.email):' &middot; <b>email nahi di</b>')+'</div>'
+   +(g==='new'?'<div class="ad-meta">Aaya: '+esc(ageText(o.timestamp).t)+(ageText(o.timestamp).old?'<span class="ad-age">payment ka intezar</span>':'')+(o.reminded?' &middot; Reminder bheja: '+esc(fmtDate(o.reminded)):'')+'</div>':'')
    +(o.note?'<div class="ad-meta">Note: '+esc(o.note)+'</div>':'')
    +(o.code?'<div><span class="ad-code">'+esc(o.code)+'</span></div>':'')+'</div></div><div class="ad-actions">';
+  var rmsg='Assalam o Alaikum '+(o.name||'')+'! Aap ka CV Studio Pro order mil gaya hai lekin payment abhi tak nahi mili. Payment bhej kar screenshot yahan send kar dein, phir hum aap ka code/CV bhej denge. Shukriya!';
+  if(g==='new'){if(o.email)h+='<button class="ad-btn rem" data-act="remindEmail" data-row="'+row+'">Payment reminder (email)</button>';if(wa)h+='<a class="ad-btn rem" data-remwa="'+row+'" target="_blank" rel="noopener noreferrer" href="https://wa.me/'+wa+'?text='+encodeURIComponent(rmsg)+'">Payment reminder (WhatsApp)</a>'}
   if(g==='new')h+='<button class="ad-btn pri" data-act="approve" data-row="'+row+'">Approve &amp; Send Code</button><button class="ad-btn warn" data-act="Cancelled" data-row="'+row+'">Cancel</button>';
   if(g==='sent'){if(wa)h+='<a class="ad-btn wa" target="_blank" rel="noopener noreferrer" href="https://wa.me/'+wa+'?text='+encodeURIComponent(msg)+'">WhatsApp par code bhejein</a>';h+='<button class="ad-btn" data-act="copy" data-code="'+esc(o.code||'')+'">Code copy</button><button class="ad-btn" data-act="In Progress" data-row="'+row+'">Kaam shuru</button><button class="ad-btn pri" data-act="Completed" data-row="'+row+'">Mukammal</button>'}
   if(g==='work'){if(wa)h+='<a class="ad-btn wa" target="_blank" rel="noopener noreferrer" href="https://wa.me/'+wa+'">WhatsApp</a>';h+='<button class="ad-btn pri" data-act="Completed" data-row="'+row+'">Mukammal</button>'}
@@ -272,26 +306,44 @@ function card(o){
   if(o.code&&o.email&&g!=='cancel')h+='<button class="ad-btn" data-act="resend" data-row="'+row+'">Code dobara email karein</button>';
   return h+'</div></div>';
 }
-function group(id,title,hint,list,open,collapsible){
+function group(id,title,hint,list){
   var inner=list.length?list.map(card).join(''):'<div class="ad-empty">'+esc(hint)+'</div>';
-  var head='<span>'+esc(title)+'</span><span class="ad-count">'+list.length+'</span>';
-  if(collapsible)return '<details class="ad-group g-'+id+'" id="grp-'+id+'"'+(open?' open':'')+'><summary>'+head+'</summary>'+inner+'</details>';
-  return '<div class="ad-group g-'+id+'" id="grp-'+id+'"><h2>'+head+'</h2>'+inner+'</div>';
+  return '<div class="ad-group g-'+id+'" id="grp-'+id+'"><h2>'+esc(title)+' <span class="ad-count">'+list.length+'</span></h2>'+inner+'</div>';
+}
+var TAB_INFO={
+  new:['Naye Orders','Ye wo orders hain jin par aap ka action chahiye. Payment check karein, phir Approve dabayen. Payment nahi aayi to Reminder bhejein.'],
+  active:['Jari Orders','Jin ko code ja chuka hai ya jin ka kaam chal raha hai.'],
+  done:['Mukammal Orders','Ye orders poore ho chuke hain. Inhein dobara kholna ho to "Dobara kholein" dabayen.'],
+  cancel:['Cancelled Orders','Cancel kiye hue orders.'],
+  settings:['Settings','Prices, WhatsApp number, payment details aur QR yahan se badlein.']
+};
+function setTab(t){
+  if(TABS.indexOf(t)<0)t='new';TAB=t;
+  try{history.replaceState(null,'','#'+t)}catch(e){}
+  $('panelOrders').style.display=(t==='settings')?'none':'block';
+  $('panelSettings').style.display=(t==='settings')?'block':'none';
+  $('tabTitle').textContent=TAB_INFO[t][0];$('tabHint').textContent=TAB_INFO[t][1];
+  render();
+}
+function ageText(ts){
+  var m=String(ts||'').match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);if(!m)return {t:'',old:false};
+  var d=new Date(+m[1],+m[2]-1,+m[3],+m[4],+m[5]);var h=Math.max(0,Math.round((Date.now()-d.getTime())/3600000));
+  var t=h<1?'abhi abhi':(h<24?h+' ghante pehle':Math.floor(h/24)+' din pehle');return {t:t,old:h>=6};
 }
 function render(){
-  var all={new:[],sent:[],work:[],done:[],cancel:[]},n={new:0,sent:0,work:0,done:0};
-  ORDERS.slice().reverse().forEach(function(o){var g=groupOf(o);if(g!=='cancel')n[g]++;if(matches(o))all[g].push(o)});
+  var all={new:[],sent:[],work:[],done:[],cancel:[]},n={new:0,sent:0,work:0,done:0,cancel:0};
+  ORDERS.slice().reverse().forEach(function(o){var g=groupOf(o);n[g]++;if(matches(o))all[g].push(o)});
   var pend=n.new;document.title=(pend?'('+pend+') ':'')+'Owner Orders - CV Studio Pro';
-  $('stats').innerHTML=[['new','Naye (action chahiye)'],['sent','Code bheja'],['work','Kaam jari'],['done','Mukammal']].map(function(x){return '<button class="ad-stat '+x[0]+'" data-jump="'+x[0]+'"><b>'+n[x[0]]+'</b><span>'+x[1]+'</span></button>'}).join('');
+  var tiles=[['new','Naye (action chahiye)',n.new],['active','Jari',n.sent+n.work],['done','Mukammal',n.done],['cancel','Cancelled',n.cancel],['settings','Settings','⚙']];
+  $('stats').innerHTML=tiles.map(function(x){return '<button class="ad-stat '+x[0]+(TAB===x[0]?' on':'')+'" role="tab" aria-selected="'+(TAB===x[0])+'" data-tab="'+x[0]+'"><b>'+x[2]+'</b><span>'+x[1]+'</span></button>'}).join('');
+  if(TAB==='settings'){var cl=$('codesLeftTxt');if(cl&&CODES_LEFT!==null)cl.textContent='Abhi unused codes: '+CODES_LEFT;return}
   if(!ORDERS.length){$('ordersList').innerHTML='<div class="ad-empty">Abhi koi order nahi aaya.</div>';return}
-  var doneOpen=!!FILTER||OPEN_DONE;
-  $('ordersList').innerHTML=
-    group('new','Naye orders','Koi naya order nahi. Sab clear!',all.new,true,false)
-   +group('sent','Code bheja - customer ka intezar','Koi nahi.',all.sent,true,false)
-   +group('work','Kaam jari hai','Koi nahi.',all.work,true,false)
-   +group('done','Mukammal','Koi mukammal order nahi.',all.done,doneOpen,true)
-   +(all.cancel.length||FILTER?group('cancel','Cancelled','Koi nahi.',all.cancel,!!FILTER,true):'');
-  var d=document.getElementById('grp-done');if(d)d.addEventListener('toggle',function(){OPEN_DONE=d.open});
+  var h='';
+  if(TAB==='new')h=group('new','Naye orders','Koi naya order nahi. Sab clear!',all.new);
+  else if(TAB==='active')h=group('sent','Code bheja - customer ka intezar','Koi nahi.',all.sent)+group('work','Kaam jari hai','Koi nahi.',all.work);
+  else if(TAB==='done')h=group('done','Mukammal','Koi mukammal order nahi.',all.done);
+  else h=group('cancel','Cancelled','Koi nahi.',all.cancel);
+  $('ordersList').innerHTML=h;
 }
 async function onListClick(e){
   var b=e.target.closest('[data-act]');if(!b)return;
@@ -308,6 +360,13 @@ async function onListClick(e){
       if(ne&&oo&&oo.code&&oo.status!=='Cancelled'&&confirm('Code ('+oo.code+') nayi email par bhi bhej dein?')){var r3=await api({action:'resendCode',rowIndex:row});if(r3&&r3.valid&&r3.emailed)toast('ok','Code nayi email par bhej diya.');else toast('err','Code email nahi gaya'+(r3&&r3.emailError?' ('+r3.emailError+')':'')+'.')}}
     else toast('err','Email nahi badli: '+((rr&&rr.error)||'unknown'));
     return}
+  if(act==='remindEmail'){
+    b.disabled=true;var rr2=await api({action:'sendReminder',rowIndex:row});if(rr2===null)return;b.disabled=false;
+    if(rr2&&rr2.valid&&rr2.emailed){toast('ok','Payment reminder email bhej diya gaya.');await loadOrders(false)}
+    else if(rr2&&rr2.error==='too_soon')toast('info','Is customer ko abhi hi reminder gaya hai. 6 ghante baad dobara bhejein.');
+    else if(rr2&&rr2.error==='no_email')toast('err','Is order par email nahi hai. WhatsApp reminder istemal karein.');
+    else toast('err','Reminder nahi gaya'+(rr2&&rr2.emailError?' ('+rr2.emailError+')':'')+'.');
+    return}
   if(act==='resend'){
     if(!confirm('Code is order ki maujooda email par dobara bhejna hai?'))return;
     b.disabled=true;var r4=await api({action:'resendCode',rowIndex:row});if(r4===null)return;b.disabled=false;
@@ -320,11 +379,11 @@ async function onListClick(e){
   else r=await api({action:'updateStatus',rowIndex:row,status:act});
   if(r===null)return;
   if(r&&r.valid){
-    if(act==='approve'){if(r.emailed)toast('ok','Approve ho gaya. Code customer ko email ho gaya: '+r.code);else if(r.emailError)toast('err','Approve ho gaya (code: '+r.code+') lekin EMAIL NAHI GAYI ('+r.emailError+'). Code WhatsApp se bhejein.');else toast('info','Approve ho gaya. Customer ki email nahi thi, isliye code WhatsApp se bhejein: '+r.code)}
+    if(act==='approve'){if(r.emailed)toast('ok','Approve ho gaya. Code customer ko email ho gaya: '+r.code+(r.autoGenerated?' (naya code khud ban gaya)':''));else if(r.emailError)toast('err','Approve ho gaya (code: '+r.code+') lekin EMAIL NAHI GAYI ('+r.emailError+'). Code WhatsApp se bhejein.');else toast('info','Approve ho gaya. Customer ki email nahi thi, isliye code WhatsApp se bhejein: '+r.code)}
     else toast('ok','Status update ho gaya.');
     await loadOrders(false);
   }else{
-    var m={no_codes_available:'Codes khatam! Google Sheet ke Codes tab mein naye codes add karein.',not_pending:'Ye order pehle hi approve ho chuka hai. Refresh karein.',bad_status:'Ghalat status.',use_approve:'Approve ke liye Approve button istemal karein.'};
+    var m={no_codes_available:'Code nahi ban saka. Dobara try karein.',not_pending:'Ye order pehle hi approve ho chuka hai. Refresh karein.',bad_status:'Ghalat status.',use_approve:'Approve ke liye Approve button istemal karein.'};
     toast('err',(r&&m[r.error])||('Nahi ho saka: '+((r&&r.error)||'unknown error')));
     b.disabled=false;b.textContent=old;
   }
