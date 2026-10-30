@@ -45,6 +45,16 @@
 .ad-set .chk input{width:20px;height:20px}
 .ad-set .ad-hint2{font-size:13px;color:#475569;margin:2px 0 0}
 
+
+.ad-check{border:1px solid #bfdbfe;background:linear-gradient(135deg,#eff6ff,#fff);border-radius:16px;padding:14px 16px;margin:0 0 14px}
+.ad-check h2{margin:0 0 6px}.ad-prog{height:12px;border-radius:99px;background:#e2e8f0;overflow:hidden;margin:8px 0 12px}.ad-prog span{display:block;height:100%;background:linear-gradient(90deg,#16a34a,#22c55e);transition:width .3s}
+.ad-ci{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid #e2e8f0}.ad-ci:first-of-type{border-top:0}
+.ad-ci .ico{flex:0 0 26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;color:#fff;background:#94a3b8}
+.ad-ci.ok .ico{background:#16a34a}.ad-ci.warn .ico{background:#dc2626}.ad-ci.opt .ico{background:#f59e0b}
+.ad-ci .tx{flex:1;min-width:0}.ad-ci .tx b{display:block}.ad-ci .tx span{display:block;color:#475569;font-size:13px;line-height:1.5}
+.ad-ci .go{flex:0 0 auto;border:1px solid #1d4ed8;color:#1d4ed8;background:#fff;border-radius:10px;padding:6px 10px;font-weight:800;font-size:13px;cursor:pointer}
+.ad-ci label{display:flex;gap:10px;align-items:flex-start;cursor:pointer;flex:1}.ad-ci label input{width:22px;height:22px;margin-top:2px;flex:0 0 auto}
+.ad-guide summary{cursor:pointer;font-weight:900}.ad-guide ol,.ad-guide ul{line-height:1.75;color:#334155;padding-left:20px}
 </style></head><body><div class="wrap"><nav class="nav"><div class="brand">CV Studio <span>Owner</span></div><div class="links"><a href="index.html">Home</a><a href="builder.html">Builder</a></div></nav>
 
 <div id="ownerLogin" style="display:none"><section class="topbar"><h1>Owner Login</h1><p>Owner password daalein. Ye server par check hota hai, site ke code mein kahin save nahi.</p></section><section class="section"><div class="formsec"><label for="ownerPassInput">Owner Password</label><div style="display:flex;gap:6px;align-items:center"><input id="ownerPassInput" type="password" autocomplete="current-password" placeholder="Enter owner password" style="flex:1"><button type="button" class="btn light" style="padding:6px 10px" aria-label="Show or hide password" onclick="togglePwd('ownerPassInput',this)">👁</button></div><div class="actions" style="margin-top:10px"><button class="btn dark" id="ownerLoginBtn" onclick="ownerLogin()">Login</button></div><p class="muted small" id="ownerLoginMsg" role="status"></p></div></section></div>
@@ -60,21 +70,32 @@
 </div>
 </section>
 <div id="panelSettings" style="display:none">
+<section class="section ad-set"><div class="ad-check" id="setupCheck" aria-live="polite"><h2 class="ad-h2">Setup checklist</h2><div id="setupProg" class="muted">Loading...</div></div>
+<details class="ad-help ad-guide"><summary>Settings kaise bharein (step by step)</summary>
+<ol><li><b>WhatsApp number:</b> wo number likhein jis par aap orders lena chahte hain. <code>0300...</code> ya <code>92300...</code> dono chalte hain, save par khud sahi format ban jata hai.</li>
+<li><b>Contact email:</b> sirf website par dikhane ke liye hai. Customer ko jo emails jati hain wo us Google account se jati hain jis ne Apps Script banaya hai, is address se nahi.</li>
+<li><b>Prices:</b> &quot;Premium CV price&quot; mein wo qeemat likhein jo customer ko abhi deni hai (jaise <code>Rs. 700</code>). Purani qeemat tab hi likhein jab wo waqai pehle thi.</li>
+<li><b>Payment tareeqe (1 se 3):</b> har tareeqe mein naam (JazzCash, EasyPaisa ya bank ka naam), account par likha naam, number ya IBAN aur chhoti hidayat likhein. Number do dafa khud check karein: customer yahi number dekh kar paise bhejta hai.</li>
+<li><b>QR (optional):</b> apni payment app mein se QR ki screenshot ya image save karein (jahan apni app mein QR dikhta hai) aur yahan PNG ya JPG upload karein. Image khud chhoti ho jati hai. App ke menu ke naam badalte rehte hain, is liye apni app mein &quot;QR&quot; ya &quot;receive money&quot; jaisa option dhoondein.</li>
+<li><b>Offer / Free trial:</b> offer ke saath <b>khatam hone ki tareekh</b> zaroor daalein. Free trial ON karne se saare premium free ho jate hain, is liye iski bhi tareekh rakhein.</li>
+<li><b>Save:</b> sab se neeche apna Owner Password daal kar &quot;Settings Save karein&quot; dabayen. Payment ya WhatsApp badalne par aap ko hifazat ke liye alert email bhi aayegi.</li>
+<li>Save ke baad <b>apne dusre number ya email se aik test order</b> bhej kar poora raasta dekh lein (order, payment page, approve, code).</li></ol></details>
+</section>
 <section class="section ad-set"><h2 class="ad-h2">Codes</h2><div class="formsec"><p id="codesLeftTxt" class="muted">Codes: ...</p><p class="ad-hint2">Codes khatam hon to approve karte waqt naya code khud ban jata hai. Pehle se bana kar rakhna chahein to yahan se banayen.</p><div class="ad-actions"><button class="ad-btn" data-gen="5">+5 codes</button><button class="ad-btn" data-gen="20">+20 codes</button><button class="ad-btn" data-gen="50">+50 codes</button></div></div></section>
 <section class="section ad-set"><div id="siteSet"><h2 class="ad-h2">Site Settings: prices, WhatsApp, payment details &amp; QR</h2>
 <div class="formsec">
 <h3>1. Prices (website par)</h3>
 <label class="chk"><input type="checkbox" id="setShowPrices"> Website par prices dikhayein (band hon to sirf &quot;Order&quot; / &quot;Custom&quot; likha aayega)</label>
-<label for="setPricePremium">Premium CV price (misal: Rs. 500)</label><input type="text" id="setPricePremium" maxlength="80" autocomplete="off">
-<label for="setPriceExpert">Expert CV Writing service price (misal: Rs. 1500 se shuru)</label><input type="text" id="setPriceExpert" maxlength="80" autocomplete="off">
-<label for="setPriceNote">Price ke neeche choti line (optional)</label><input type="text" id="setPriceNote" maxlength="300" autocomplete="off">
+<label for="setPricePremium">Premium CV price (misal: Rs. 500)</label><input type="text" id="setPricePremium" maxlength="80" autocomplete="off" placeholder="Rs. ...">
+<label for="setPriceExpert">Expert CV Writing service price (misal: Rs. 1500 se shuru)</label><input type="text" id="setPriceExpert" maxlength="80" autocomplete="off" placeholder="Rs. ... se shuru">
+<label for="setPriceNote">Price ke neeche choti line (optional)</label><input type="text" id="setPriceNote" maxlength="300" autocomplete="off" placeholder="Ek dafa payment, koi monthly fee nahi">
 <h3>2. Order WhatsApp number</h3>
-<label for="setWhatsapp">WhatsApp number jis par orders aayen (misal: 03001234567 ya 923001234567)</label><input type="text" id="setWhatsapp" inputmode="tel" maxlength="30" autocomplete="off">
-<label for="setEmail">Contact email (website par dikhti hai)</label><input type="text" id="setEmail" maxlength="120" autocomplete="off">
+<label for="setWhatsapp">WhatsApp number jis par orders aayen (misal: 03001234567 ya 923001234567)</label><input type="text" id="setWhatsapp" inputmode="tel" maxlength="30" autocomplete="off" placeholder="03XXXXXXXXX">
+<label for="setEmail">Contact email (website par dikhti hai)</label><input type="text" id="setEmail" maxlength="120" autocomplete="off" placeholder="aap@example.com">
 <h3>3. Payment details (JazzCash / EasyPaisa / Bank / koi bhi)</h3>
 <p class="ad-hint2">Zyada se zyada 3 tareeqe. Khali chor dein to wo show nahi hoga. QR image PNG ya JPG ho sakti hai (khud chhoti ho jati hai).</p>
 <div id="slotsBox"></div>
-<label for="setPayNote">Payment ke baad customer ke liye hidayat (optional)</label><input type="text" id="setPayNote" maxlength="300" autocomplete="off">
+<label for="setPayNote">Payment ke baad customer ke liye hidayat (optional)</label><input type="text" id="setPayNote" maxlength="300" autocomplete="off" placeholder="Payment ke baad Transaction ID zaroor likhein">
 <h3>4. Offer banner &amp; free trial</h3>
 <p class="ad-hint2"><b>Zaroori:</b> kati hui "purani price" sirf tab likhein jab pehle waqai wo price thi. Jhooti discount qanooni aur Google AdSense ke liye khatarnak hai. Nayi price upar "Premium CV price" mein likhein.</p>
 <label class="chk"><input type="checkbox" id="setOfferOn"> Website ke upar offer banner dikhayein</label>
@@ -103,6 +124,13 @@
 <script src="js/app.js"></script><script>
 var ORDERS=[],FILTER='',TIMER=null,TAB='new',CODES_LEFT=null;
 var TABS=['new','active','done','cancel','settings'];
+var TAB_INFO={
+  new:['Naye Orders','Ye wo orders hain jin par aap ka action chahiye. Payment check karein, phir Approve dabayen. Payment nahi aayi to Reminder bhejein.'],
+  active:['Jari Orders','Jin ko code ja chuka hai ya jin ka kaam chal raha hai.'],
+  done:['Mukammal Orders','Ye orders poore ho chuke hain. Inhein dobara kholna ho to "Dobara kholein" dabayen.'],
+  cancel:['Cancelled Orders','Cancel kiye hue orders.'],
+  settings:['Settings','Prices, WhatsApp number, payment details aur QR yahan se badlein.']
+};
 var TOK_KEY='cvStudioOwnerToken';
 function $(id){return document.getElementById(id)}
 function tok(){return sessionStorage.getItem(TOK_KEY)||''}
@@ -117,14 +145,14 @@ function showArea(){
   var h=(location.hash||'').replace('#','');setTab(TABS.indexOf(h)>=0?h:'new');loadOrders(false);loadSiteSettings();
   if(!TIMER)TIMER=setInterval(function(){if(!document.hidden)loadOrders(false)},60000);
 }
-(function(){
+function adminBoot(){
   sessionStorage.removeItem('cvStudioOwnerPass');
   if(sessionStorage.getItem('cvStudioOwnerVerified')==='1'&&tok()){showArea()}else{showLogin('')}
   $('ownerPassInput').addEventListener('keydown',function(e){if(e.key==='Enter')ownerLogin()});
   $('searchBox').addEventListener('input',function(){FILTER=this.value.trim().toLowerCase();render()});
   $('ordersList').addEventListener('click',onListClick);
   $('stats').addEventListener('click',function(e){var b=e.target.closest('[data-tab]');if(b)setTab(b.getAttribute('data-tab'))});
-})();
+}
 
 /* ---------- Site settings ---------- */
 var FREE_INIT=false,SLOT_QR={1:'',2:'',3:''},SLOT_QR_DIRTY={};
@@ -133,10 +161,10 @@ function buildSlots(){
   var h='';
   for(var n=1;n<=3;n++){
     h+='<div class="ad-slot"><h3>Payment tareeqa '+n+'</h3>'
-     +'<label for="pay'+n+'name">Naam (JazzCash, EasyPaisa, Meezan Bank...)</label><input type="text" id="pay'+n+'name" maxlength="80" autocomplete="off">'
-     +'<label for="pay'+n+'title">Account title (naam)</label><input type="text" id="pay'+n+'title" maxlength="80" autocomplete="off">'
-     +'<label for="pay'+n+'number">Account number / IBAN</label><input type="text" id="pay'+n+'number" maxlength="80" autocomplete="off">'
-     +'<label for="pay'+n+'note">Note (optional)</label><input type="text" id="pay'+n+'note" maxlength="300" autocomplete="off">'
+     +'<label for="pay'+n+'name">Naam (JazzCash, EasyPaisa, bank ka naam...)</label><input type="text" id="pay'+n+'name" maxlength="80" autocomplete="off" placeholder="'+(n===1?'JazzCash':n===2?'EasyPaisa':'Bank ka naam')+'">'
+     +'<label for="pay'+n+'title">Account title (account par likha hua naam)</label><input type="text" id="pay'+n+'title" maxlength="80" autocomplete="off" placeholder="Account holder ka naam">'
+     +'<label for="pay'+n+'number">Account number / IBAN</label><input type="text" id="pay'+n+'number" maxlength="80" autocomplete="off" placeholder="'+(n===3?'IBAN ya account number':'Mobile account number')+'">'
+     +'<label for="pay'+n+'note">Note (optional)</label><input type="text" id="pay'+n+'note" maxlength="300" autocomplete="off" placeholder="Misal: payment ke baad screenshot bhej dein">'
      +'<label for="pay'+n+'file">QR image (optional)</label><input type="file" id="pay'+n+'file" accept="image/png,image/jpeg" data-slot="'+n+'">'
      +'<img class="qrprev" id="pay'+n+'prev" alt="QR preview" style="display:none"><div class="ad-actions"><button class="ad-btn warn" type="button" id="pay'+n+'rm" data-rmqr="'+n+'" style="display:none">QR hata dein</button></div></div>';
   }
@@ -169,6 +197,46 @@ function fileToQr(file){
     img.src=url;
   });
 }
+
+var CHK_KEY='cvStudioSetupChecks';
+function chkGet(){try{return JSON.parse(localStorage.getItem(CHK_KEY)||'{}')||{}}catch(e){return {}}}
+function chkSet(k,v){var o=chkGet();o[k]=v;try{localStorage.setItem(CHK_KEY,JSON.stringify(o))}catch(e){}}
+function val(id){var e=$(id);return e?String(e.value||'').trim():''}
+function renderChecklist(){
+  var box=$('setupProg');if(!box)return;
+  var wa=val('setWhatsapp').replace(/\D/g,''),em=val('setEmail');
+  var slotsOk=0,slotsPart=0,qrAny=false;
+  for(var n=1;n<=3;n++){var a=val('pay'+n+'name'),b=val('pay'+n+'title'),c=val('pay'+n+'number');if(a&&b&&c)slotsOk++;else if(a||b||c)slotsPart++;if(SLOT_QR[n]&&QR_OK.test(SLOT_QR[n]))qrAny=true}
+  var offerOn=$('setOfferOn')&&$('setOfferOn').checked,trialOn=$('setFreeTrial')&&$('setFreeTrial').checked;
+  var items=[
+   {t:'WhatsApp number',ok:wa.length>=10&&wa.length<=15,d:'Customer is number par aap se baat karega. Format: 03XXXXXXXXX.',f:'setWhatsapp'},
+   {t:'Contact email',ok:/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em),d:'Website ke Contact page par dikhti hai.',f:'setEmail'},
+   {t:'Premium CV ki price',ok:!!val('setPricePremium'),d:'Pricing page aur order page par yahi qeemat dikhti hai.',f:'setPricePremium'},
+   {t:'Kam az kam aik payment tareeqa mukammal',ok:slotsOk>0,warn:slotsPart>0&&slotsOk===0,d:slotsPart>0&&slotsOk===0?'Aik tareeqa adhoora hai: naam, account title aur number teeno chahiye.':'Naam, account title aur number likhein, warna customer paise nahi bhej sakta.',f:'pay1name'},
+   {t:'Payment QR (behtar hai, zaroori nahi)',ok:qrAny,opt:true,d:'QR hone se customer ka kaam aasaan hota hai.',f:'pay1file'},
+   {t:'Offer ki tareekh',ok:!offerOn||!!val('setOfferEnds'),warn:offerOn&&!val('setOfferEnds'),d:offerOn?'Offer ON hai: khatam hone ki tareekh zaroor daalein.':'Abhi koi offer ON nahi hai.',f:'setOfferEnds',hide:false},
+   {t:'Free trial mode',ok:!trialOn||!!val('setTrialEnds'),warn:trialOn&&!val('setTrialEnds'),d:trialOn?(val('setTrialEnds')?'Free trial ON hai aur uski tareekh lagi hai.':'Free trial ON hai magar tareekh nahi: saare premium hamesha free rahenge!'):'Free trial band hai (theek hai).',f:'setFreeTrial'},
+   {t:'Unused codes maujood',ok:CODES_LEFT===null||CODES_LEFT>0,warn:CODES_LEFT===0,d:CODES_LEFT===null?'Orders load hone ke baad pata chalega.':(CODES_LEFT>0?('Abhi '+CODES_LEFT+' codes tayyar hain.'):'Koi code nahi bacha. Approve karte waqt naya code khud ban jata hai, ya upar se codes bana lein.'),f:'codesLeftTxt'}
+  ];
+  var man=[
+   {k:'test',t:'Aik test order bhej kar poora raasta dekh liya',d:'Apne dusre number/email se builder mein order bhejein, payment page dekhein, approve karke code lein.'},
+   {k:'pass',t:'Owner password badal liya (12 ya zyada characters)',d:'Neeche "Owner password badlein" se. Purana password kisi ko na batayen.'},
+   {k:'2fa',t:'Google aur GitHub par 2-step verification on kar li',d:'Ye aap ke paise aur data ki sab se bari hifazat hai.'},
+   {k:'legal',t:'Privacy, Terms aur Refund pages parh kar manzoor kar liye',d:'Refund 7 din, Pakistan ka qanoon wagera aap ki marzi ke mutabiq hon. Zaroorat ho to kisi vakeel se parhwa lein.'}
+  ];
+  var chk=chkGet(),done=0,total=items.length+man.length,h='';
+  items.forEach(function(it){if(it.ok)done++;var cls=it.warn?'warn':(it.ok?'ok':(it.opt?'opt':''));var ico=it.ok?'✓':(it.warn?'!':(it.opt?'?':'•'));
+    h+='<div class="ad-ci '+cls+'"><div class="ico" aria-hidden="true">'+ico+'</div><div class="tx"><b>'+it.t+'</b><span>'+it.d+'</span></div>'+(it.ok&&!it.warn?'':'<button type="button" class="go" data-focus="'+it.f+'">Bharein</button>')+'</div>'});
+  man.forEach(function(m){var on=!!chk[m.k];if(on)done++;h+='<div class="ad-ci '+(on?'ok':'')+'"><label><input type="checkbox" data-chk="'+m.k+'" '+(on?'checked':'')+'><span class="tx"><b>'+m.t+'</b><span>'+m.d+'</span></span></label></div>'});
+  var pct=Math.round(done*100/total);
+  box.innerHTML='<div><b>'+done+' / '+total+' mukammal</b> <span class="muted">('+pct+'%)</span></div><div class="ad-prog" role="progressbar" aria-valuenow="'+pct+'" aria-valuemin="0" aria-valuemax="100"><span style="width:'+pct+'%"></span></div>'+h+'<p class="ad-hint2">Neeche waale 4 nishan (checkbox) aap khud tick karte hain, ye sirf is device ke browser mein yaad rehte hain.</p>';
+}
+(function(){
+  document.addEventListener('click',function(e){var g=e.target.closest&&e.target.closest('[data-focus]');if(!g)return;var el=$(g.getAttribute('data-focus'));if(!el)return;if(TAB!=='settings')setTab('settings');el.scrollIntoView({behavior:'smooth',block:'center'});try{el.focus({preventScroll:true})}catch(x){}});
+  document.addEventListener('change',function(e){var c=e.target&&e.target.getAttribute&&e.target.getAttribute('data-chk');if(c){chkSet(c,e.target.checked);renderChecklist()}});
+  var tmr;document.addEventListener('input',function(e){if(e.target.closest&&e.target.closest('#siteSet')){clearTimeout(tmr);tmr=setTimeout(renderChecklist,250)}});
+  document.addEventListener('change',function(e){if(e.target.closest&&e.target.closest('#siteSet'))setTimeout(renderChecklist,50)});
+})();
 async function loadSiteSettings(){
   buildSlots();buildPresets();
   var a=await verifyWithBackend({action:'getSettings'});
@@ -194,7 +262,7 @@ async function loadSiteSettings(){
     });
   }
   for(var m=1;m<=3;m++)setQrPreview(m);
-  previewOffer();
+  previewOffer();renderChecklist();
 }
 async function saveSiteSettingsUI(){
   var msg=$('setMsg'),btn=$('setSaveBtn'),pw=$('setPass').value;
@@ -349,13 +417,7 @@ function group(id,title,hint,list){
   var inner=list.length?list.map(card).join(''):'<div class="ad-empty">'+esc(hint)+'</div>';
   return '<div class="ad-group g-'+id+'" id="grp-'+id+'"><h2>'+esc(title)+' <span class="ad-count">'+list.length+'</span></h2>'+inner+'</div>';
 }
-var TAB_INFO={
-  new:['Naye Orders','Ye wo orders hain jin par aap ka action chahiye. Payment check karein, phir Approve dabayen. Payment nahi aayi to Reminder bhejein.'],
-  active:['Jari Orders','Jin ko code ja chuka hai ya jin ka kaam chal raha hai.'],
-  done:['Mukammal Orders','Ye orders poore ho chuke hain. Inhein dobara kholna ho to "Dobara kholein" dabayen.'],
-  cancel:['Cancelled Orders','Cancel kiye hue orders.'],
-  settings:['Settings','Prices, WhatsApp number, payment details aur QR yahan se badlein.']
-};
+
 function setTab(t){
   if(TABS.indexOf(t)<0)t='new';TAB=t;
   try{history.replaceState(null,'','#'+t)}catch(e){}
@@ -375,7 +437,7 @@ function render(){
   var pend=n.new;document.title=(pend?'('+pend+') ':'')+'Owner Orders - CV Studio Pro';
   var tiles=[['new','Naye (action chahiye)',n.new],['active','Jari',n.sent+n.work],['done','Mukammal',n.done],['cancel','Cancelled',n.cancel],['settings','Settings','⚙']];
   $('stats').innerHTML=tiles.map(function(x){return '<button class="ad-stat '+x[0]+(TAB===x[0]?' on':'')+'" role="tab" aria-selected="'+(TAB===x[0])+'" data-tab="'+x[0]+'"><b>'+x[2]+'</b><span>'+x[1]+'</span></button>'}).join('');
-  if(TAB==='settings'){var cl=$('codesLeftTxt');if(cl&&CODES_LEFT!==null)cl.textContent='Abhi unused codes: '+CODES_LEFT;return}
+  if(TAB==='settings'){var cl=$('codesLeftTxt');if(cl&&CODES_LEFT!==null)cl.textContent='Abhi unused codes: '+CODES_LEFT;renderChecklist();return}
   if(!ORDERS.length){$('ordersList').innerHTML='<div class="ad-empty">Abhi koi order nahi aaya.</div>';return}
   var h='';
   if(TAB==='new')h=group('new','Naye orders','Koi naya order nahi. Sab clear!',all.new);
@@ -443,4 +505,6 @@ async function changePasswordUI(){
   else if(r&&r.error==='wrong_password'){msg.textContent='Current password galat hai.'}
   else{msg.textContent='Password nahi badal saka. Dobara try karein.'}
 }
+
+adminBoot();
 </script></div></body></html>
