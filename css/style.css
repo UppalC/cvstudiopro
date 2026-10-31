@@ -559,3 +559,90 @@ html,body{
 .cvpage.pg-cont{display:block!important}
 /* batch 13: FAQ */
 .faq h2{margin-bottom:14px}.faq-list{display:grid;gap:10px}.faq-item{border:1px solid #e5e7eb;border-radius:16px;background:#f8fafc;padding:0 16px}.faq-item summary{cursor:pointer;font-weight:800;padding:14px 0;list-style:none;position:relative;padding-right:28px}.faq-item summary::-webkit-details-marker{display:none}.faq-item summary:after{content:'+';position:absolute;right:0;top:50%;transform:translateY(-50%);font-size:22px;font-weight:900;color:#1d4ed8}.faq-item[open] summary:after{content:'\2212'}.faq-item p{margin:0 0 14px;color:#475569;line-height:1.7}.faq-item summary:focus-visible{outline:3px solid #1d4ed8;outline-offset:2px;border-radius:8px}
+
+/* ===== Batch 16 (t42-t46): profession-style, structurally different templates ===== */
+/* t42 Blue Wave Header */
+.cv-l42{background:#fff;color:#0f172a}
+.wv-head{display:flex;align-items:center;gap:18px;padding:22px 24px 34px;margin-bottom:16px;background:linear-gradient(135deg,#0369a1,#0ea5e9);border-radius:14px 14px 50% 50%/14px 14px 30px 30px}
+.wv-head>*{min-width:0}.wv-id{flex:1}
+.cv-l42 .wv-head h1,.cv-l42 .wv-head .cv-sub,.cv-l42 .wv-head .small{color:#fff}
+.cv-l42 .wv-head .cv-photo{width:100px;height:100px;border-radius:50%;border:4px solid #fff}
+.wv-grid{display:grid;grid-template-columns:1.7fr 1fr;gap:20px}.wv-grid>*{min-width:0}
+.cv-l42 .cv-section h2{color:#0369a1;text-transform:uppercase;letter-spacing:1.5px;font-size:12px;border-bottom:2px solid #bae6fd;padding-bottom:4px;margin:0 0 8px;background:none}
+.cv-l42 .cv-card{background:transparent;border:0;border-left:2px solid #bae6fd;border-radius:0;padding:0 0 8px 12px;margin:0 0 4px;position:relative}
+.cv-l42 .cv-card:before{content:'';position:absolute;left:-6px;top:3px;width:10px;height:10px;border-radius:50%;background:#0ea5e9;border:2px solid #fff;box-shadow:0 0 0 1px #0ea5e9}
+.cv-l42 .cv-sub{color:#0369a1}
+.cv-l42 .cv-chip{background:#e0f2fe;color:#075985;border-radius:999px}
+.cv-l42 .skill-item .bar{height:8px;border-radius:0;background:radial-gradient(circle,#bae6fd 3px,transparent 3.6px) 0 0/12px 8px repeat-x}
+.cv-l42 .skill-item .bar span{display:block;height:8px;border-radius:0;background:radial-gradient(circle,#0369a1 3px,transparent 3.6px) 0 0/12px 8px repeat-x}
+/* t43 Lavender Soft Cards */
+.cv-l43{background:#faf7ff;color:#1f2937}
+.lv-head{text-align:center;padding:18px 16px 14px;margin-bottom:14px;background:linear-gradient(180deg,#ede9fe,#faf7ff);border:1px solid #ddd6fe;border-radius:18px}
+.lv-head .cv-photo{margin:0 auto 6px;border:4px solid #fff;box-shadow:0 0 0 2px #c4b5fd}
+.cv-l43 .lv-head h1{font-family:Georgia,'Times New Roman',serif;color:#5b21b6;letter-spacing:1px;margin:4px 0 2px}
+.cv-l43 .lv-head .cv-sub{color:#7c3aed;letter-spacing:2px;text-transform:uppercase;font-size:12px}
+.lv-head .small{margin-top:6px;color:#4b5563}
+.lv-duo{display:grid;grid-template-columns:1fr 1fr;gap:12px}.lv-duo>*{min-width:0}
+.cv-l43 .cv-section{background:#fff;border:1px solid #ddd6fe;border-radius:14px;padding:10px 14px 6px;margin-bottom:12px}
+.cv-l43 .cv-section h2{font-family:Georgia,'Times New Roman',serif;font-style:italic;color:#6d28d9;font-size:15px;margin:0 0 6px;padding-bottom:4px;border-bottom:1px dotted #c4b5fd;background:none;text-transform:none;letter-spacing:0}
+.cv-l43 .cv-card{background:transparent;border:0;border-radius:0;padding:0 0 8px;margin:0}
+.cv-l43 .cv-sub{color:#7c3aed}
+.cv-l43 .cv-chip{background:#f5f3ff;color:#5b21b6;border:1px solid #ddd6fe;border-radius:999px}
+.cv-l43 .skill-item .bar{height:8px;border-radius:0;background:radial-gradient(circle,#ddd6fe 3px,transparent 3.6px) 0 0/12px 8px repeat-x}
+.cv-l43 .skill-item .bar span{display:block;height:8px;border-radius:0;background:radial-gradient(circle,#7c3aed 3px,transparent 3.6px) 0 0/12px 8px repeat-x}
+/* t44 Ledger Classic */
+.cv-l44{background:#fbf5e6;color:#292524;font-family:Georgia,'Times New Roman',serif;outline:2px solid #92400e;outline-offset:-12px}
+.lg-head{display:flex;align-items:center;gap:18px;padding-bottom:12px;margin-bottom:12px;border-bottom:4px double #92400e}
+.lg-head>*{min-width:0}.lg-id{flex:1}
+.cv-l44 .lg-head h1{font-family:Georgia,'Times New Roman',serif;font-variant:small-caps;letter-spacing:3px;color:#451a03;font-size:30px;margin:0 0 2px}
+.cv-l44 .lg-head .cv-sub{color:#92400e;letter-spacing:2px;text-transform:uppercase;font-size:12px}
+.lg-head .cv-photo{border:3px double #92400e;border-radius:4px}
+.cv-l44 .cv-section{display:flow-root;border-top:1px solid #92400e;padding:9px 0 3px;margin:0}
+.cv-l44 .cv-section h2{float:left;width:112px;margin:0;padding:0;background:none;color:#92400e;font-variant:small-caps;font-size:14px;letter-spacing:1px;text-transform:none;border:0}
+.cv-l44 .cv-section>*:not(h2){margin-left:126px}
+.cv-l44 .cv-card{background:transparent;border:0;border-radius:0;padding:0 0 7px;margin-bottom:0;border-bottom:1px dotted #d6c7a1}
+.cv-l44 .cv-card:last-child{border-bottom:0}
+.cv-l44 .cv-sub{color:#92400e;font-style:italic}
+.cv-l44 .cv-chip{background:transparent;color:#451a03;border:1px solid #92400e;border-radius:0;font-style:italic}
+.cv-l44 .skill-item .bar{height:4px;background:#e7d9b5;border-radius:0}
+.cv-l44 .skill-item .bar span{background:#92400e;border-radius:0}
+/* t45 Architect Grid ATS */
+.cv-l45{background:#fff;color:#111827}
+.ar-head{display:flex;align-items:flex-end;gap:18px;padding-bottom:12px;margin-bottom:14px;border-bottom:3px solid #111827}
+.ar-head>*{min-width:0}.ar-id{flex:1}
+.cv-l45 .ar-head h1{font-size:38px;line-height:1;text-transform:uppercase;font-weight:900;letter-spacing:-1px;color:#111827;margin:0 0 6px}
+.cv-l45 .ar-head .cv-sub{font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:2px;color:#dc2626;font-size:12px}
+.ar-head .small{font-family:'Courier New',monospace;color:#374151;margin-top:6px}
+.ar-head .cv-photo{border-radius:0;border:2px solid #111827}
+.ar-grid{display:grid;grid-template-columns:1.9fr 1fr;gap:0}.ar-grid>*{min-width:0}
+.ar-grid>div:first-child{padding-right:18px;border-right:1px solid #111827}
+.ar-grid>div:last-child{padding-left:18px}
+.cv-l45 .cv-section h2{font-family:'Courier New',monospace;text-transform:uppercase;letter-spacing:2px;font-size:12px;color:#111827;margin:0 0 7px;padding:0 0 4px 12px;border-bottom:1px solid #111827;position:relative;background:none}
+.cv-l45 .cv-section h2:before{content:'';position:absolute;left:0;top:1px;width:7px;height:7px;background:#dc2626}
+.cv-l45 .cv-card{background:transparent;border:0;border-radius:0;padding:0 0 8px;margin:0}
+.cv-l45 .cv-sub{color:#dc2626}
+.cv-l45 .cv-chip{background:#fff;color:#111827;border:1px solid #111827;border-radius:0;font-family:'Courier New',monospace;font-size:11px}
+.cv-l45 .skill-item .bar{height:4px;background:#e5e7eb;border-radius:0}
+.cv-l45 .skill-item .bar span{background:#111827;border-radius:0}
+/* t46 Orange Impact Panel */
+.cv-l46{background:#fff;color:#111827}
+.oi-head{display:flex;align-items:center;gap:18px;padding:20px 24px;margin-bottom:16px;background:#f97316;border-radius:0 0 0 40px}
+.oi-head>*{min-width:0}.oi-id{flex:1}
+.cv-l46 .oi-head h1{font-size:34px;line-height:1.05;text-transform:uppercase;font-weight:900;color:#fff;margin:0 0 4px}
+.cv-l46 .oi-head .cv-sub,.cv-l46 .oi-head .small{color:#fff}
+.cv-l46 .oi-head .cv-sub{font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.cv-l46 .oi-head .cv-photo{width:100px;height:100px;border-radius:50%;border:5px solid #111827}
+.oi-grid{display:grid;grid-template-columns:1.7fr 1fr;gap:18px}.oi-grid>*{min-width:0}
+.oi-panel{background:#111827;color:#f9fafb;border-radius:14px;padding:14px 14px 6px}
+.cv-l46 .cv-section h2{color:#c2410c;text-transform:uppercase;font-size:13px;letter-spacing:1.5px;margin:0 0 7px;padding:0 0 4px;border-bottom:3px solid #f97316;background:none;display:inline-block}
+.cv-l46 .cv-card{background:transparent;border:0;border-radius:0;padding:0 0 8px;margin:0}
+.cv-l46 .cv-sub{color:#c2410c;font-weight:600}
+.cv-l46 .oi-panel .cv-section h2{color:#fdba74;border-bottom-color:#f97316}
+.cv-l46 .oi-panel,.cv-l46 .oi-panel p,.cv-l46 .oi-panel li,.cv-l46 .oi-panel .skill-item b,.cv-l46 .oi-panel .cv-card{color:#f9fafb}
+.cv-l46 .oi-panel .cv-chip{background:#1f2937;color:#fed7aa;border:1px solid #f97316;border-radius:6px}
+.cv-l46 .cv-chip{background:#ffedd5;color:#9a3412;border-radius:6px}
+.cv-l46 .skill-item .bar{height:8px;background:#374151;border-radius:4px}
+.cv-l46 .skill-item .bar span{background:#f97316;border-radius:4px}
+.cv-l46 .oi-panel .cv-footer{color:#9ca3af}
+@media print{.cv-l42,.cv-l43,.cv-l44,.cv-l45,.cv-l46{-webkit-print-color-adjust:exact;print-color-adjust:exact}.wv-grid,.lv-duo,.ar-grid,.oi-grid{display:grid!important;align-items:start!important}.cv-l42 .cv-section,.cv-l43 .cv-section,.cv-l44 .cv-section,.cv-l45 .cv-section,.cv-l46 .cv-section{break-inside:auto}}
+.wv-grid,.lv-duo,.ar-grid,.oi-grid{align-items:start}
