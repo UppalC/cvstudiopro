@@ -530,7 +530,7 @@ html,body{
 @media(max-width:560px){.hero-fan{height:240px}.home3d .cta .btn{flex:1 1 100%}}
 @media(hover:none),(prefers-reduced-motion:reduce){.fan,.why3d .card{transition:none}.hero-fan:hover .f1{transform:rotateY(24deg) rotateZ(-6deg)}.hero-fan:hover .f3{transform:rotateY(-24deg) rotateZ(6deg)}}
 
-.cv-personal{display:grid!important;grid-template-columns:max-content minmax(0,1fr);gap:4px 14px;align-items:baseline}
+.cv-personal{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:4px 18px;align-items:start}.cv-personal .pi-row{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:0 10px;align-items:baseline;min-width:0}
 .cv-personal span,.cv-personal b{font-weight:inherit;font-size:inherit;opacity:1;overflow-wrap:anywhere}.cv-personal b{font-weight:inherit}
 .chk-line{display:flex!important;gap:8px;align-items:center;font-weight:700;margin:6px 0 10px}.chk-line input{width:auto!important}
 
