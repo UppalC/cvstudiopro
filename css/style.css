@@ -646,3 +646,9 @@ html,body{
 .cv-l46 .oi-panel .cv-footer{color:#9ca3af}
 @media print{.cv-l42,.cv-l43,.cv-l44,.cv-l45,.cv-l46{-webkit-print-color-adjust:exact;print-color-adjust:exact}.wv-grid,.lv-duo,.ar-grid,.oi-grid{display:grid!important;align-items:start!important}.cv-l42 .cv-section,.cv-l43 .cv-section,.cv-l44 .cv-section,.cv-l45 .cv-section,.cv-l46 .cv-section{break-inside:auto}}
 .wv-grid,.lv-duo,.ar-grid,.oi-grid{align-items:start}
+
+/* CV Health Check */
+.hc-bar{height:8px;border-radius:999px;background:#e2e8f0;overflow:hidden;margin:6px 0 10px}.hc-bar span{display:block;height:100%;background:#16a34a;border-radius:999px}
+.hc-list{list-style:none;margin:0 0 10px;padding:0;display:grid;gap:7px}.hc-list li{display:flex;gap:9px;align-items:flex-start;font-size:13px;line-height:1.35}
+.hc-ico{flex:0 0 20px;height:20px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;margin-top:1px}
+.hc-ok .hc-ico{background:#16a34a}.hc-todo .hc-ico{background:#d97706}
