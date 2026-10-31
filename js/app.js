@@ -347,7 +347,7 @@ function buildSections(){const f=state.form;const exp=[{t:f.exp1t,c:f.exp1c,d:f.
 function cvStyle(){return `--cv-bg:${safeColor(state.theme.bg,'#ffffff')};--cv-text:${safeColor(state.theme.text,'#111827')};--cv-heading:${safeColor(state.theme.heading,'#0f172a')};--cv-accent:${safeColor(state.theme.accent,'#2563eb')};--cv-main:${safeColor(state.theme.main,'#1e3a8a')};--section-radius:${state.theme.corner==='sharp'?'0':'12px'};--section-pad:${state.theme.spacing==='compact'?'7px':state.theme.spacing==='airy'?'14px':'10px'};--section-gap:${state.theme.spacing==='compact'?'8px':state.theme.spacing==='airy'?'18px':'12px'};--section-bg:${state.theme.section==='clean'?'transparent':'rgba(226,232,240,.35)'};--section-border:${state.theme.section==='clean'?'0':'4px solid var(--cv-accent)'}`}
 function footer(page){const watermark=(!customerUnlocked()&&!ownerMode)?' · Made with CV Studio Pro':'';return `<div class="cv-footer">${esc(state.form.name||'CV')} · Page ${page}${page>1?' · continued':''}${watermark}</div>`}
 function nameSizeClass(){const n=String(state.form.name||'').trim().length;return n>=26?'longname2':n>=18?'longname':''}
-function paginateCV(html){
+function paginateCVShort(html){
  if(typeof document==='undefined'||html.indexOf('multipage')>-1||html.indexOf('class="cvbook')<0)return html;
  let host=null;
  try{
@@ -382,6 +382,54 @@ function paginateCV(html){
   return host.innerHTML;
  }catch(e){return html}finally{if(host&&host.parentNode)host.parentNode.removeChild(host)}
 }
+function paginateCVLong(html){
+ if(typeof document==='undefined'||html.indexOf('multipage')>-1||html.indexOf('class="cvbook')<0)return html;
+ let host=null;
+ try{
+  host=document.createElement('div');host.id='cvPaginateHost';host.style.cssText='position:absolute;left:-10000px;top:0;width:210mm;visibility:hidden;pointer-events:none';host.innerHTML=html;(document.getElementById('cvPreview')||document.body).appendChild(host);
+  const book=host.querySelector('.cvbook'),first=book&&book.querySelector('.cvpage');if(!first)return html;
+  /* limit = A4 height minus bottom padding minus a 5mm safety gap (print layout is slightly taller than screen layout) */
+  const mm=first.offsetWidth/210,limit=(297-15-11)*mm+1,skip=/^summary$/i,isCard=c=>c.classList&&c.classList.contains('cv-card');
+  /* importance: what stays on page 1 first. Lower number = more important. Unknown (custom) sections and Personal Information go last. */
+  const PR={'experience':1,'education':2,'technical skills':3,'soft skills':4,'languages':5,'certifications':6,'projects':7,'references':8};
+  const secTitle=sec=>{const h=sec.querySelector(':scope > h2');return h?h.textContent.replace(/ \(continued\)$/,'').trim():''};
+  const prioOfSec=sec=>{const p=PR[secTitle(sec).toLowerCase()];return p||9};
+  const secOf=e=>e.classList.contains('cv-section')?e:(e.closest('.cv-section')||e);
+  const hasBg=e=>{const c=getComputedStyle(e);return (c.backgroundImage&&c.backgroundImage!=='none')||!/rgba?\(\s*\d+,\s*\d+,\s*\d+,\s*0\s*\)|transparent/.test(c.backgroundColor)};
+  function inPlain(el,pg){let e=el.parentNode;while(e&&e!==pg){if(hasBg(e)&&!e.classList.contains('cv-section'))return false;e=e.parentNode}return true}
+  const hidden=e=>e.getAttribute('data-hid')==='1';
+  const hide=e=>{e.setAttribute('data-hid','1');e.style.display='none'};
+  const show=e=>{e.removeAttribute('data-hid');e.style.display=''};
+  let seq=0;first.querySelectorAll('.cv-section,.cv-card').forEach(e=>{e.setAttribute('data-po',seq++)});
+  /* bottom edge of the real content (text, images, bars), ignoring stretched backgrounds and the footer */
+  function contentBottom(pg){const top=pg.getBoundingClientRect().top;let m=0;pg.querySelectorAll('*').forEach(el=>{if(el.children.length)return;if(el.closest('.cv-footer'))return;const r=el.getBoundingClientRect();if(!r.height||!r.width)return;if(!(el.tagName==='IMG'||(el.textContent||'').trim()||el.parentNode.classList.contains('bar')))return;const b=r.bottom-top;if(b>m)m=b});return m}
+  const over=pg=>contentBottom(pg)>limit;
+  function units(pg){const out=[];pg.querySelectorAll('.cv-section').forEach(sec=>{if(hidden(sec))return;if(sec.parentNode.closest&&sec.parentNode.closest('.cv-section'))return;const t=secTitle(sec);if(skip.test(t))return;const cs=[...sec.children].filter(c=>isCard(c)&&!hidden(c));const allCs=[...sec.children].filter(isCard);if(allCs.length){if(!inPlain(sec,pg))return;cs.forEach(c=>out.push({el:c,sec,last:cs.length===1}))}else out.push({el:sec,sec,last:false,whole:true})});return out}
+  const bottomOf=(el,pg)=>el.getBoundingClientRect().bottom-pg.getBoundingClientRect().top;
+  function fit(pg){const ent=[];
+   /* step 1: nothing is lost, but the least important sections (certifications, projects, references, personal info, custom) start on the next page */
+   pg.querySelectorAll('.cv-section').forEach(sec=>{if(hidden(sec))return;if(sec.parentNode.closest&&sec.parentNode.closest('.cv-section'))return;const t=secTitle(sec);if(skip.test(t))return;if(prioOfSec(sec)>=6){hide(sec);ent.push(sec)}});
+   /* step 2: if the important sections still overflow, move the lowest items to the next page */
+   for(let i=0;i<200;i++){if(!over(pg))break;const us=units(pg);if(!us.length)break;let best=null,bb=-1;us.forEach(u=>{const b=bottomOf(u.el,pg);if(b>bb){bb=b;best=u}});if(!best||bb<=limit)break;
+    const tg=(best.last&&!best.whole)?best.sec:best.el;hide(tg);ent.push(tg)}
+   /* step 3: bring items back in order of importance while they still fit; stop at the first one that does not fit, so page 1 never holds something less important than what is on page 2 */
+   ent.sort((x,y)=>{const a=prioOfSec(secOf(x)),b=prioOfSec(secOf(y));return a!==b?a-b:(+x.getAttribute('data-po'))-(+y.getAttribute('data-po'))});
+   let k=0;if(!over(pg)){for(;k<ent.length;k++){show(ent[k]);if(over(pg)){hide(ent[k]);break}}}
+   const out=ent.slice(k);return out.sort((x,y)=>(+x.getAttribute('data-po'))-(+y.getAttribute('data-po')))}
+  const pages=[first];let moved=fit(first),n=1,guard=0;
+  while(moved.length&&guard++<10){
+    n++;const np=document.createElement('div');np.className=first.className+' cv-cont pg-cont';np.setAttribute('data-person',first.getAttribute('data-person')||'');np.setAttribute('style',first.getAttribute('style')||'');
+    const map=new Map();
+    moved.forEach(e=>{if(e.classList.contains('cv-section')){e.querySelectorAll('[data-hid]').forEach(show);show(e);np.appendChild(e);map.set(e,e)}else{const sec=e.closest('.cv-section')||e.parentNode;let tg=map.get(sec);if(!tg){tg=document.createElement('div');tg.className='cv-section';const h=document.createElement('h2');h.textContent=secTitle(sec)+' (continued)';tg.appendChild(h);np.appendChild(tg);map.set(sec,tg)}show(e);tg.appendChild(e)}});
+    const ft=first.querySelector('.cv-footer');const f2=document.createElement('div');f2.className='cv-footer';f2.textContent=(ft?ft.textContent:'').replace(/Page 1/,'Page '+n+' · continued');np.appendChild(f2);
+    book.appendChild(np);pages.push(np);moved=fit(np);
+  }
+  host.querySelectorAll('[data-hid]').forEach(e=>e.parentNode&&e.parentNode.removeChild(e));
+  return host.innerHTML;
+ }catch(e){return html}finally{if(host&&host.parentNode)host.parentNode.removeChild(host)}
+}
+/* short CVs (up to 2 pages) keep the original layout; longer CVs use importance-ordered pages so Experience stays before certificates, references and personal details */
+function paginateCV(html){const a=paginateCVShort(html);const cnt=(a.match(/class="cvpage /g)||[]).length;if(cnt<=2)return a;const b=paginateCVLong(html);return (b.match(/class="cvpage /g)||[]).length<=cnt?b:a}
 function renderCV(){return paginateCV(renderCV0())}
 function renderCV0(){const nc=nameSizeClass();let out=renderCVBase();if(nc)out=out.replace(/class="cvpage /g,'class="cvpage '+nc+' ');const pl=state.photoPlacement;if(pl&&pl!=='auto'&&pl!=='none'&&out.indexOf('cv-photo')<0){state.photoPlacement='auto';try{const o2=renderCVBase();return nc?o2.replace(/class="cvpage /g,'class="cvpage '+nc+' '):o2}finally{state.photoPlacement=pl}}return out}
 function renderCVBase(){document.documentElement.style.setProperty('--cv-primary',state.theme.main);document.documentElement.style.setProperty('--cv-accent',state.theme.accent);document.documentElement.style.setProperty('--cv-bg',state.theme.bg);document.documentElement.style.setProperty('--cv-text',state.theme.text);document.documentElement.style.setProperty('--cv-heading',state.theme.heading);const f=state.form,t=tpl(),s=buildSections(),head=`<h1>${esc(f.name||'Your Name').split(' ').map(w=>w&&w.length<=18?'<span style="white-space:nowrap">'+w+'</span>':w).join(' ')}</h1>${f.job?`<div class="cv-sub">${esc(f.job)}</div>`:''}`,person=esc(f.name||'CV');const style=cvStyle();const contentLen=[f.summary,f.exp1d,f.exp2d,f.edu1d,f.edu2d,(f.expMore||[]).map(x=>(x.t||'')+(x.c||'')+(x.d||'')).join(' '),(f.eduMore||[]).map(x=>(x.t||'')+(x.c||'')+(x.d||'')).join(' '),f.projects,f.certs,f.refs,f.customBody,f.soft,f.lang].join(' ').length+state.form.tech.length*80;
