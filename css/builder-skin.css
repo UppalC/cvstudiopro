@@ -1,0 +1,21 @@
+/* Builder page skin (builder.html only): same warm paper + teal look as the home page. Colours and fonts only, no layout changes.
+   Fonts are self-hosted (Fraunces, SIL Open Font License 1.1). The CV preview (.cvpage) is never restyled here. */
+@font-face{font-family:'Fraunces';font-style:normal;font-weight:100 900;font-display:swap;src:url(../fonts/fraunces-latin-wght-normal.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+body.bskin{--b-ink:#14302d;--b-paper:#f7f1e6;--b-paper2:#efe6d3;--b-line:#dccfb4;--b-amber:#d98a1f;background:var(--b-paper)}
+.bskin .brand,.bskin .formsec h3,.bskin .preview-toolbar h2,.bskin .preview-toolbar h3{font-family:Fraunces,Georgia,'Times New Roman',serif;color:var(--b-ink);letter-spacing:-.01em}
+.bskin .brand{font-weight:700}.bskin .brand span{color:#a8650a;font-style:italic}
+.bskin .nav{border-bottom:1px solid var(--b-line)}
+.bskin .links a{background:var(--b-paper2);border:1px solid var(--b-line);color:var(--b-ink)}
+.bskin .links a:hover{background:#fff}
+.bskin .formpanel,.bskin .formsec,.bskin .preview-toolbar{background:#fffdf8;border-color:var(--b-line)}
+.bskin .previewpanel{border-color:var(--b-line)}
+.bskin .photo-tools{background:var(--b-paper2);border-color:var(--b-line)}
+.bskin .btn{background:var(--b-ink);color:#fff}
+.bskin .btn:hover{background:#0e2422}
+.bskin .btn.light{background:var(--b-paper2);color:var(--b-ink);border:1px solid var(--b-line)}
+.bskin .btn.orange{background:var(--b-amber);color:#1c1917}
+.bskin .btn.green{background:#15803d}.bskin .btn.danger{background:#b91c1c}.bskin .btn.dark{background:#111827}.bskin .btn.pink{background:#be185d}
+.bskin .step{background:var(--b-paper2);color:var(--b-ink)}
+.bskin .step.active{background:var(--b-ink);color:#fff}
+.bskin .formsec input:focus,.bskin .formsec textarea:focus,.bskin .formsec select:focus{outline:2px solid var(--b-amber);outline-offset:1px}
+.bskin a:focus-visible,.bskin button:focus-visible{outline:3px solid var(--b-amber);outline-offset:2px}
