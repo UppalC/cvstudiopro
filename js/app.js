@@ -38,10 +38,10 @@ async function tryUnlockAccess(){
   if(result&&result.error==='network'){if(msg)msg.textContent='Could not reach the server. Please check your internet connection and try again.';return}
   if(result&&result.valid){
     localStorage.setItem('cvStudioUnlocked','1');
-    if(msg)msg.textContent='Unlocked! You can now export your CV.';
-    setTimeout(()=>{closeOrder();fullRender()},700)
+    if(msg)msg.textContent='Unlocked! You can now export your CV. Your unlock is saved in this browser, so please do not clear your browser data.';
+    setTimeout(()=>{closeOrder();fullRender()},2600)
   }else{
-    if(msg)msg.textContent=(result&&result.reason==='too_many')?'Too many wrong attempts. Please wait 10 minutes and try again.':'Invalid or already-used code. Please check the code we sent you on WhatsApp.'
+    if(msg)msg.textContent=(result&&result.reason==='too_many')?'Too many wrong attempts. Please wait 10 minutes and try again.':'Invalid or already-used code. Each code unlocks one device. If this is your own code and you cleared your browser data or changed your phone, please contact us with your order number and we will help you.'
   }
 }
 const ownerMode=sessionStorage.getItem('cvStudioOwnerVerified')==='1';
