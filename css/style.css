@@ -898,3 +898,19 @@ html,body{
 .cv-l1 .cv-section[data-sec="cert"]>h2:before,.cv-l3 .cv-section[data-sec="cert"]>h2:before,.cv-l5 .cv-section[data-sec="cert"]>h2:before,.cv-l8 .cv-section[data-sec="cert"]>h2:before,.cv-l10 .cv-section[data-sec="cert"]>h2:before,.cv-l11 .cv-section[data-sec="cert"]>h2:before,.cv-l13 .cv-section[data-sec="cert"]>h2:before,.cv-l14 .cv-section[data-sec="cert"]>h2:before,.cv-l16 .cv-section[data-sec="cert"]>h2:before,.cv-l18 .cv-section[data-sec="cert"]>h2:before,.cv-l24 .cv-section[data-sec="cert"]>h2:before,.cv-l31 .cv-section[data-sec="cert"]>h2:before,.cv-l32 .cv-section[data-sec="cert"]>h2:before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23111827' stroke-width='2.200' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='9' r='6'/%3E%3Cpath d='M8.500 14L7 21l5-3 5 3-1.500-7'/%3E%3C/svg%3E")}
 .cv-l1 .cv-section[data-sec="refs"]>h2:before,.cv-l3 .cv-section[data-sec="refs"]>h2:before,.cv-l5 .cv-section[data-sec="refs"]>h2:before,.cv-l8 .cv-section[data-sec="refs"]>h2:before,.cv-l10 .cv-section[data-sec="refs"]>h2:before,.cv-l11 .cv-section[data-sec="refs"]>h2:before,.cv-l13 .cv-section[data-sec="refs"]>h2:before,.cv-l14 .cv-section[data-sec="refs"]>h2:before,.cv-l16 .cv-section[data-sec="refs"]>h2:before,.cv-l18 .cv-section[data-sec="refs"]>h2:before,.cv-l24 .cv-section[data-sec="refs"]>h2:before,.cv-l31 .cv-section[data-sec="refs"]>h2:before,.cv-l32 .cv-section[data-sec="refs"]>h2:before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23111827' stroke-width='2.200' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='9' cy='8' r='3.500'/%3E%3Cpath d='M2 20c0-3.500 3-6 7-6s7 2.500 7 6M16 4.500a3.500 3.500 0 0 1 0 7M18 14.500c2.500.8 4 2.800 4 5.500'/%3E%3C/svg%3E")}
 .cv-l1 .cv-section[data-sec="ach"]>h2:before,.cv-l3 .cv-section[data-sec="ach"]>h2:before,.cv-l5 .cv-section[data-sec="ach"]>h2:before,.cv-l8 .cv-section[data-sec="ach"]>h2:before,.cv-l10 .cv-section[data-sec="ach"]>h2:before,.cv-l11 .cv-section[data-sec="ach"]>h2:before,.cv-l13 .cv-section[data-sec="ach"]>h2:before,.cv-l14 .cv-section[data-sec="ach"]>h2:before,.cv-l16 .cv-section[data-sec="ach"]>h2:before,.cv-l18 .cv-section[data-sec="ach"]>h2:before,.cv-l24 .cv-section[data-sec="ach"]>h2:before,.cv-l31 .cv-section[data-sec="ach"]>h2:before,.cv-l32 .cv-section[data-sec="ach"]>h2:before{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23111827' stroke-width='2.200' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 3l2.700 5.600 6.100.9-4.400 4.300 1 6.100L12 17l-5.400 2.900 1-6.100L3.200 9.500l6.100-.9z'/%3E%3C/svg%3E")}
+
+/* Auto-fit: when a short CV only just overflows onto a second page, paginateCV tries class fit1 (tighter spacing) and keeps it only if the CV then fits on one page */
+.cvpage.fit1{padding-top:10mm!important;padding-bottom:10mm!important}
+.cvpage.fit1 .cv-section{margin-bottom:7px!important;padding-top:7px!important;padding-bottom:7px!important}
+.cvpage.fit1 h2{margin-top:8px!important;margin-bottom:5px!important}
+.cvpage.fit1 .cv-card{padding-bottom:4px!important;margin-bottom:0!important}
+.cvpage.fit1 .cv-bullets li{margin-bottom:1px!important}
+.cvpage.fit1 .d3-head,.cvpage.fit1 .emb-head{margin-bottom:10px!important}
+.cvpage.fit1 .skill-item{margin:4px 0!important}
+.cvpage.fit1 .cv-card p,.cvpage.fit1 .cv-section>p{margin:5px 0!important}
+.cvpage.fit1 .pi-row{margin:0!important}
+.cvpage.fit2{font-size:14px!important}
+.cvpage.fit2 .cv-section{padding-top:5px!important;padding-bottom:5px!important;margin-bottom:5px!important}
+.cvpage.fit2 h1{font-size:26px!important}
+/* Printing: keep the page a hair under 297mm so browsers that round up (Firefox) do not add a blank page */
+@media print{.cvpage{min-height:296.8mm!important}}
