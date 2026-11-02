@@ -341,7 +341,8 @@ function photoFor(pos,circle=false){
   return `<div class="cv-photo ${cls}" style="${extraStyle}">${state.photo?`<img src="${state.photo}" alt="profile" style="${imgStyle}">`:'Profile Photo'}</div>`;
 }
 function contact(){const f=state.form;return `<div class="small">${[f.phone,f.email,f.address].filter(Boolean).map(esc).join('<br>')}</div>`}
-function section(title,inner){return inner?`<div class="cv-section"><h2>${esc(title)}</h2>${inner}</div>`:''}
+const SEC_KEYS={'Summary':'sum','Experience':'exp','Education':'edu','Technical Skills':'tech','Soft Skills':'soft','Languages':'lang','Projects':'proj','Certifications':'cert','References':'refs','Key Achievements':'ach'};
+function section(title,inner){const k=SEC_KEYS[title];return inner?`<div class="cv-section"${k?` data-sec="${k}"`:''}><h2>${esc(title)}</h2>${inner}</div>`:''}
 function bulletBlock(v){const lines=String(v||'').split(/\n+/).map(x=>x.trim()).filter(Boolean);if(!lines.length)return'';if(lines.length===1)return `<p>${esc(lines[0])}</p>`;return `<ul class="cv-bullets">${lines.map(l=>`<li>${esc(l)}</li>`).join('')}</ul>`}
 function cards(items){return items.map(x=>`<div class="cv-card"><div class="cv-title">${esc(x.t)}</div>${x.c?`<div class="cv-sub">${esc(x.c)}</div>`:''}${x.d?bulletBlock(x.d):''}</div>`).join('')}
 function chips(v){const arr=splitList(v);return arr.length?`<div>${arr.map(x=>`<span class="cv-chip">${esc(x)}</span>`).join('')}</div>`:''}
@@ -392,7 +393,7 @@ function paginateCVShort(html){
   while(moved.length&&guard++<10){
     n++;const np=document.createElement('div');np.className=first.className+' cv-cont pg-cont';np.setAttribute('data-person',first.getAttribute('data-person')||'');np.setAttribute('style',first.getAttribute('style')||'');
     const map=new Map();
-    moved.forEach(e=>{if(e.classList.contains('cv-section')){e.querySelectorAll('[data-hid]').forEach(show);show(e);np.appendChild(e);map.set(e,e)}else{const sec=e.closest('.cv-section')||e.parentNode;let tg=map.get(sec);if(!tg){tg=document.createElement('div');tg.className='cv-section';const h=document.createElement('h2');h.textContent=secTitle(sec)+' (continued)';tg.appendChild(h);np.appendChild(tg);map.set(sec,tg)}show(e);tg.appendChild(e)}});
+    moved.forEach(e=>{if(e.classList.contains('cv-section')){e.querySelectorAll('[data-hid]').forEach(show);show(e);np.appendChild(e);map.set(e,e)}else{const sec=e.closest('.cv-section')||e.parentNode;let tg=map.get(sec);if(!tg){tg=document.createElement('div');tg.className='cv-section';{const ds=sec.getAttribute&&sec.getAttribute('data-sec');if(ds)tg.setAttribute('data-sec',ds)}const h=document.createElement('h2');h.textContent=secTitle(sec)+' (continued)';tg.appendChild(h);np.appendChild(tg);map.set(sec,tg)}show(e);tg.appendChild(e)}});
     const ft=first.querySelector('.cv-footer');const f2=document.createElement('div');f2.className='cv-footer';f2.textContent=(ft?ft.textContent:'').replace(/Page 1/,'Page '+n+' · continued');np.appendChild(f2);
     book.appendChild(np);pages.push(np);moved=fit(np);
   }
@@ -438,7 +439,7 @@ function paginateCVLong(html){
   while(moved.length&&guard++<10){
     n++;const np=document.createElement('div');np.className=first.className+' cv-cont pg-cont';np.setAttribute('data-person',first.getAttribute('data-person')||'');np.setAttribute('style',first.getAttribute('style')||'');
     const map=new Map();
-    moved.forEach(e=>{if(e.classList.contains('cv-section')){e.querySelectorAll('[data-hid]').forEach(show);show(e);np.appendChild(e);map.set(e,e)}else{const sec=e.closest('.cv-section')||e.parentNode;let tg=map.get(sec);if(!tg){tg=document.createElement('div');tg.className='cv-section';const h=document.createElement('h2');h.textContent=secTitle(sec)+' (continued)';tg.appendChild(h);np.appendChild(tg);map.set(sec,tg)}show(e);tg.appendChild(e)}});
+    moved.forEach(e=>{if(e.classList.contains('cv-section')){e.querySelectorAll('[data-hid]').forEach(show);show(e);np.appendChild(e);map.set(e,e)}else{const sec=e.closest('.cv-section')||e.parentNode;let tg=map.get(sec);if(!tg){tg=document.createElement('div');tg.className='cv-section';{const ds=sec.getAttribute&&sec.getAttribute('data-sec');if(ds)tg.setAttribute('data-sec',ds)}const h=document.createElement('h2');h.textContent=secTitle(sec)+' (continued)';tg.appendChild(h);np.appendChild(tg);map.set(sec,tg)}show(e);tg.appendChild(e)}});
     const ft=first.querySelector('.cv-footer');const f2=document.createElement('div');f2.className='cv-footer';f2.textContent=(ft?ft.textContent:'').replace(/Page 1/,'Page '+n+' · continued');np.appendChild(f2);
     book.appendChild(np);pages.push(np);moved=fit(np);
   }
