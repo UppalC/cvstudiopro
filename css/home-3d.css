@@ -1,0 +1,62 @@
+/* Home page 3D layer (index.html only). Loaded after home.css; remove the <link> to go back to the flat look.
+   Motion is disabled for people who prefer reduced motion. */
+.home2 .hero.home3d{position:relative;overflow:hidden;margin-top:18px;padding:60px 48px 56px;border-radius:30px;color:#d4e6e1;
+ background:radial-gradient(760px 460px at 84% 12%,rgba(246,179,74,.30),transparent 62%),radial-gradient(640px 460px at 2% 108%,rgba(45,212,191,.20),transparent 62%),linear-gradient(135deg,#0e2422,#14302d 58%,#0a1a18);
+ box-shadow:0 34px 60px -28px rgba(14,36,34,.75),0 2px 0 rgba(255,255,255,.08) inset}
+.home2 .hero.home3d:before{display:block;content:'';position:absolute;inset:0;pointer-events:none;opacity:.5;
+ background:repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0 1px,transparent 1px 44px),repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 1px,transparent 1px 44px);
+ -webkit-mask-image:radial-gradient(ellipse at 70% 40%,#000 25%,transparent 75%);mask-image:radial-gradient(ellipse at 70% 40%,#000 25%,transparent 75%)}
+.home2 .hero .hero-grid{position:relative;z-index:1}
+.home2 .hero-kicker{color:#f6b34a}.home2 .hero-kicker:before{background:#f6b34a}
+.home2 .hero h1{color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.25),0 12px 30px rgba(0,0,0,.35)}
+.home2 .hero h1 .hl{color:#f6b34a;background:linear-gradient(100deg,#ffd98a 0%,#f59e0b 40%,#ffd98a 80%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:h3dShine 7s linear infinite;text-shadow:none}
+.home2 .hero p{color:#cfe3de}
+.home2 .hero-points li{color:#e6f2ef}.home2 .hero-points b{color:#fff}
+.home2 .hero-points li:before{border-color:#f6b34a}
+/* 3D buttons */
+.home2 .hero .btn{border:0;border-radius:12px;padding:14px 24px;font-weight:800;color:#1b1305;background:linear-gradient(180deg,#ffc860,#e8921f);box-shadow:0 5px 0 #96560a,0 14px 24px rgba(0,0,0,.38);transition:transform .12s,box-shadow .12s,filter .12s}
+.home2 .hero .btn:hover{transform:translateY(-2px);box-shadow:0 7px 0 #96560a,0 20px 30px rgba(0,0,0,.42);background:linear-gradient(180deg,#ffd072,#ee9a26);color:#1b1305}
+.home2 .hero .btn:active{transform:translateY(4px);box-shadow:0 1px 0 #96560a,0 6px 10px rgba(0,0,0,.4)}
+.home2 .hero .btn.light{color:#fff;background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.06));box-shadow:0 5px 0 rgba(0,0,0,.35),0 0 0 1.5px rgba(255,255,255,.35) inset,0 14px 24px rgba(0,0,0,.3)}
+.home2 .hero .btn.light:hover{background:linear-gradient(180deg,rgba(255,255,255,.24),rgba(255,255,255,.1));color:#fff}
+.home2 .hero .btn.pink{background:none;box-shadow:none;color:#f6b34a;padding-left:6px;padding-right:6px;text-decoration:underline;text-underline-offset:5px}
+.home2 .hero .btn.pink:hover{transform:none;box-shadow:none;background:none;color:#fff}
+/* 3D stage with floating template cards (uses the real 3D template previews) */
+.home2 .hero-fan{position:relative;height:480px;perspective:1100px;perspective-origin:50% 40%}
+.home2 .hero-fan .stage{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(var(--rx,7deg)) rotateY(var(--ry,-16deg));transition:transform .18s ease-out}
+.home2 .hero-fan .stage:after{content:'';position:absolute;left:8%;right:8%;bottom:-6px;height:34px;border-radius:50%;background:radial-gradient(ellipse,rgba(0,0,0,.55),transparent 70%);transform:translateZ(-120px);filter:blur(6px)}
+.home2 .hero-fan .fan{position:absolute;width:58%;height:auto;border:0;border-radius:6px;background:#fff;box-shadow:0 40px 46px -22px rgba(0,0,0,.75),0 0 0 1px rgba(255,255,255,.16),0 2px 0 rgba(255,255,255,.35) inset;transform:none;backface-visibility:hidden}
+.home2 .hero-fan .f1{left:0;top:70px;rotate:-7deg;translate:0 0 -70px;animation:h3dFloat 7s ease-in-out infinite}
+.home2 .hero-fan .f3{right:0;top:86px;rotate:7deg;translate:0 0 -40px;animation:h3dFloat 8s ease-in-out -2s infinite}
+.home2 .hero-fan .f2{left:21%;top:6px;z-index:2;rotate:1deg;translate:0 0 90px;animation:h3dFloat 6s ease-in-out -1s infinite}
+.home2 .float-chip{position:absolute;translate:0 0 160px;padding:9px 14px;border-radius:999px;font-weight:800;font-size:13px;color:#fff;background:linear-gradient(180deg,rgba(255,255,255,.2),rgba(255,255,255,.08));box-shadow:0 0 0 1px rgba(255,255,255,.28) inset,0 12px 22px rgba(0,0,0,.35);animation:h3dFloat 6.5s ease-in-out infinite}
+.home2 .float-chip b{color:#ffd98a}
+.home2 .float-chip.c1{left:-6px;top:6px;animation-delay:-1.5s}
+.home2 .float-chip.c2{right:-4px;bottom:34px;animation-delay:-3s}
+.home2 .float-chip.c3{left:2%;bottom:10px;animation-delay:-4.5s}
+@keyframes h3dFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes h3dShine{to{background-position:-220% 0}}
+/* sections: raised tiles */
+.home2 .template-card,.home2 .tpl3d{border-radius:16px;box-shadow:0 6px 0 var(--paper2),0 16px 26px -18px rgba(20,48,45,.45);transition:transform .25s,box-shadow .25s,border-color .25s;transform-style:preserve-3d}
+.home2 .tpl3d:hover{transform:perspective(900px) rotateX(4deg) translateY(-8px);border-color:var(--amber);box-shadow:0 10px 0 var(--paper2),0 30px 40px -22px rgba(20,48,45,.6)}
+.home2 .steps3d li{background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px 22px;box-shadow:0 8px 0 var(--paper2),0 20px 30px -20px rgba(20,48,45,.45);transition:transform .25s,box-shadow .25s}
+.home2 .steps3d li:hover{transform:translateY(-6px);box-shadow:0 12px 0 var(--paper2),0 28px 36px -20px rgba(20,48,45,.55)}
+.home2 .steps3d li:before{display:flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:50%;font-size:28px;font-weight:700;color:#1b1305;background:linear-gradient(180deg,#ffc860,#e8921f);box-shadow:0 5px 0 #96560a,0 12px 18px -6px rgba(150,86,10,.55);margin-bottom:16px}
+.home2 .why3d .card{background:#fff;border:1px solid var(--line);border-top:4px solid var(--amber);border-radius:16px;padding:20px 22px;box-shadow:0 8px 0 var(--paper2),0 20px 30px -20px rgba(20,48,45,.45);transition:transform .25s,box-shadow .25s}
+.home2 .why3d .card:hover{transform:translateY(-6px);box-shadow:0 12px 0 var(--paper2),0 28px 36px -20px rgba(20,48,45,.55)}
+.home2 .final-cta{position:relative;overflow:hidden;border-radius:30px;padding:60px 28px;background:radial-gradient(600px 300px at 80% 0,rgba(246,179,74,.3),transparent 62%),radial-gradient(500px 300px at 0 100%,rgba(45,212,191,.2),transparent 62%),linear-gradient(135deg,#0e2422,#14302d);box-shadow:0 34px 60px -28px rgba(14,36,34,.75)}
+.home2 .final-cta .btn.orange{border:0;border-radius:14px;padding:16px 34px;font-size:18px;font-weight:800;background:linear-gradient(180deg,#ffc860,#e8921f);color:#1b1305;box-shadow:0 6px 0 #96560a,0 16px 26px rgba(0,0,0,.4);transition:transform .12s,box-shadow .12s}
+.home2 .final-cta .btn.orange:hover{transform:translateY(-2px);box-shadow:0 8px 0 #96560a,0 22px 32px rgba(0,0,0,.45);background:linear-gradient(180deg,#ffd072,#ee9a26)}
+.home2 .final-cta .btn.orange:active{transform:translateY(4px);box-shadow:0 2px 0 #96560a}
+@media(max-width:860px){
+ .home2 .hero.home3d{padding:34px 20px 30px;border-radius:22px}
+ .home2 .hero-fan{height:360px;max-width:460px;margin:8px auto 0;width:100%}
+ .home2 .hero-fan .stage{transform:rotateX(5deg) rotateY(-10deg)}
+ .home2 .float-chip{font-size:12px;padding:7px 11px}
+ .home2 .float-chip.c3{display:none}
+}
+@media(prefers-reduced-motion:reduce){
+ .home2 .hero-fan .fan,.home2 .float-chip,.home2 .hero h1 .hl{animation:none!important}
+ .home2 .hero-fan .stage{transition:none}
+ .home2 .tpl3d:hover,.home2 .steps3d li:hover,.home2 .why3d .card:hover{transform:none}
+}
