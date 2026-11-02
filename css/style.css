@@ -842,3 +842,6 @@ html,body{
 .cv-l57 .cv-footer{color:#99f6e4;border-top-color:rgba(255,255,255,.25)}
 .cv-l54 .cv-section .cv-sub{color:#fb923c}
 .cv-l55 .cv-card,.cv-l52 .cv-card,.cv-l53 .cv-card,.cv-l54 .cv-card,.cv-l56 .cv-card,.cv-l57 .cv-card{box-shadow:none}
+
+/* Skill percentage next to bars */
+.skill-item .sk-pct{float:right;font-weight:700;font-size:.9em;opacity:.85}
