@@ -912,5 +912,14 @@ html,body{
 .cvpage.fit2{font-size:14px!important}
 .cvpage.fit2 .cv-section{padding-top:5px!important;padding-bottom:5px!important;margin-bottom:5px!important}
 .cvpage.fit2 h1{font-size:26px!important}
+.cvpage.fit3{font-size:13px!important;padding-top:8mm!important;padding-bottom:8mm!important;line-height:1.35!important}
+.cvpage.fit3 .cv-section{padding-top:4px!important;padding-bottom:4px!important;margin-bottom:4px!important}
+.cvpage.fit3 h1{font-size:24px!important}
+.cvpage.fit3{--section-gap:6px!important;--section-pad:6px!important}
+.cvpage.fit3 .peach-head{margin-bottom:12px!important}
+.cvpage.fit3.cv-l32 .cv-section>*:not(h2){margin-top:6px!important;margin-bottom:6px!important}
+.cvpage.fit3.cv-l32 .cv-section h2{padding-top:5px!important;padding-bottom:5px!important}
+.cvpage.fit3 .cv-photo{width:74px!important;height:74px!important;margin-bottom:4px!important}
+.cvpage.fit3 .cv-card,.cvpage.fit3 .cv-card p,.cvpage.fit3 .cv-section>p{line-height:1.35!important}
 /* Printing: keep the page a hair under 297mm so browsers that round up (Firefox) do not add a blank page */
 @media print{.cvpage{min-height:296.8mm!important}}
