@@ -336,7 +336,7 @@ html,body{
 .cv-l36 .skill-item .bar span{background:#f97316;border-radius:3px}
 /* t37 Emerald Heritage */
 .cv-l37{background:#fbf8f1;font-family:Georgia,'Times New Roman',serif}
-.her-frame{border:3px double #14532d;padding:16px 20px;min-height:262mm;box-sizing:border-box;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.her-frame{border:3px double #14532d;padding:16px 20px;min-height:250mm;box-sizing:border-box;-webkit-box-decoration-break:clone;box-decoration-break:clone}
 .her-head{text-align:center;margin-bottom:14px}
 .her-head h1{color:#14532d;font-size:32px;letter-spacing:3px;font-variant:small-caps;margin:6px 0 2px}
 .her-head .cv-sub{color:#7c5a1a;letter-spacing:2px;text-transform:uppercase;font-size:12px}
@@ -922,4 +922,4 @@ html,body{
 .cvpage.fit3 .cv-photo{width:74px!important;height:74px!important;margin-bottom:4px!important}
 .cvpage.fit3 .cv-card,.cvpage.fit3 .cv-card p,.cvpage.fit3 .cv-section>p{line-height:1.35!important}
 /* Printing: keep the page a hair under 297mm so browsers that round up (Firefox) do not add a blank page */
-@media print{.cvpage{min-height:296.8mm!important}}
+@media print{.cvpage{min-height:296mm!important}}
