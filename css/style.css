@@ -531,7 +531,7 @@ html,body{
 @media(hover:none),(prefers-reduced-motion:reduce){.fan,.why3d .card{transition:none}.hero-fan:hover .f1{transform:rotateY(24deg) rotateZ(-6deg)}.hero-fan:hover .f3{transform:rotateY(-24deg) rotateZ(6deg)}}
 
 .cv-personal{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:4px 18px;align-items:start}.cv-personal .pi-row{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:0 10px;align-items:baseline;min-width:0}
-.cv-personal span,.cv-personal b{font-weight:inherit;font-size:inherit;opacity:1;overflow-wrap:anywhere}.cv-personal b{font-weight:inherit}
+.cv-personal span,.cv-personal b{font-weight:inherit;font-size:inherit;opacity:1;overflow-wrap:break-word;word-break:normal}.cv-personal b{font-weight:inherit}
 .chk-line{display:flex!important;gap:8px;align-items:center;font-weight:700;margin:6px 0 10px}.chk-line input{width:auto!important}
 
 .waproof{margin:10px 0;padding:10px 12px;border-radius:12px;background:#ecfdf5;border:1px solid #a7f3d0;color:#064e3b;font-size:14px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
@@ -923,3 +923,13 @@ html,body{
 .cvpage.fit3 .cv-card,.cvpage.fit3 .cv-card p,.cvpage.fit3 .cv-section>p{line-height:1.35!important}
 /* Printing: keep the page a hair under 297mm so browsers that round up (Firefox) do not add a blank page */
 @media print{.cvpage{min-height:296mm!important}}
+/* Batch 40: contrast + readability fixes */
+.cv-l46 .oi-head{background:#c2410c}
+.cv-l9 .cv-section .cv-chip{background:#ccfbf1;color:#115e59;border:1px solid #14b8a6}
+.cv-l9 .cv-side .cv-section .cv-chip{color:#fff;background:rgba(0,0,0,.22);border-color:rgba(153,246,228,.5)}
+.cv-l11.cv-cont{background:#fff!important}
+.cv-l29 .crimson-head{box-sizing:border-box;width:calc(100% + 30mm);max-width:none}.cv-l29.fit1 .crimson-head,.cv-l29.fit2 .crimson-head,.cv-l29.fit3 .crimson-head{width:calc(100% + 30mm)}
+/* Batch 40: Personal Information rows - value drops under its label instead of breaking mid-word */
+.cv-personal .pi-row{display:flex!important;flex-wrap:wrap;gap:0 8px;align-items:baseline}
+.cv-personal .pi-row>span{flex:0 0 auto}
+.cv-personal .pi-row>b{flex:1 1 auto;min-width:0}
