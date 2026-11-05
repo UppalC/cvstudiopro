@@ -928,8 +928,11 @@ html,body{
 .cv-l9 .cv-section .cv-chip{background:#ccfbf1;color:#115e59;border:1px solid #14b8a6}
 .cv-l9 .cv-side .cv-section .cv-chip{color:#fff;background:rgba(0,0,0,.22);border-color:rgba(153,246,228,.5)}
 .cv-l11.cv-cont{background:#fff!important}
-.cv-l29 .crimson-head{box-sizing:border-box;width:calc(100% + 30mm);max-width:none}.cv-l29.fit1 .crimson-head,.cv-l29.fit2 .crimson-head,.cv-l29.fit3 .crimson-head{width:calc(100% + 30mm)}
+
 /* Batch 40: Personal Information rows - value drops under its label instead of breaking mid-word */
 .cv-personal .pi-row{display:flex!important;flex-wrap:wrap;gap:0 8px;align-items:baseline}
 .cv-personal .pi-row>span{flex:0 0 auto}
 .cv-personal .pi-row>b{flex:1 1 auto;min-width:0}
+
+/* Batch 41: full-width header bands (the global .cvpage div{max-width:100%!important} rule used to cut them 15mm short on the right) */
+.cvpage .geo-band,.cvpage .crimson-head,.cvpage.cv-l29 .cv-header{max-width:none!important;box-sizing:border-box}
