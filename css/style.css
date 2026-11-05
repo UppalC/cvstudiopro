@@ -936,3 +936,5 @@ html,body{
 
 /* Batch 41: full-width header bands (the global .cvpage div{max-width:100%!important} rule used to cut them 15mm short on the right) */
 .cvpage .geo-band,.cvpage .crimson-head,.cvpage.cv-l29 .cv-header{max-width:none!important;box-sizing:border-box}
+/* Batch 43: photo-on-right headers - name/contact text starts at the left edge (was pushed to the centre) */
+.cv-l3 .cv-profile-band>div:not(.cv-photo),.cv-l13 .cv-header>div:not(.cv-photo),.cv-l26 .cv-header>div:not(.cv-photo),.cv-l29 .crimson-head>div:not(.cv-photo){flex:1 1 0;min-width:0;text-align:left}
