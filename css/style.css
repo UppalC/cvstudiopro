@@ -1021,3 +1021,8 @@ html,body{
 .cvpage .cv-chip:after{content:"";position:absolute;left:0;right:0;top:0;height:50%;background:linear-gradient(rgba(255,255,255,.28),rgba(255,255,255,0));border-radius:inherit;pointer-events:none}
 .cvpage .cv-photo{position:relative}
 .cvpage .cv-photo.has-img:after{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(120% 90% at 20% 8%,rgba(255,255,255,.22),rgba(255,255,255,0) 55%);pointer-events:none}
+
+/* ===== Batch 48: t59 band must not be clipped by the global div max-width rule; wider layout on large screens ===== */
+.cvpage .ar-band{max-width:none!important;box-sizing:border-box}
+@media (min-width:1500px){.wrap{max-width:1480px}}
+@media (min-width:1900px){.wrap{max-width:1700px}}
