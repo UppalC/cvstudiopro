@@ -1013,3 +1013,11 @@ html,body{
 .cv-l61 .cv-section[data-sec="tech"],.cv-l61 .cv-section[data-sec="soft"],.cv-l61 .cv-section[data-sec="lang"],.cv-l61 .cv-section[data-sec="cert"],.cv-l61 .cv-section[data-sec="refs"],.cv-l61 .cv-section[data-sec="pers"]{background:#141416}
 .cv-l61 .cv-section[data-sec="sum"],.cv-l61 .cv-section[data-sec="pers"],.cv-l61 .cv-section[data-sec="proj"]{background:transparent}
 .cv-l58 .cv-side .cv-section,.cv-l60 .cv-side .cv-section{margin-top:14px}
+
+/* ===== Batch 47: subtle gloss on CV elements (print-safe, no layout impact) ===== */
+.cvpage .skill-item .bar span{position:relative;display:block;overflow:hidden}
+.cvpage .skill-item .bar span:after{content:'';position:absolute;left:0;right:0;top:0;height:52%;background:linear-gradient(rgba(255,255,255,.42),rgba(255,255,255,0));border-radius:inherit;pointer-events:none}
+.cvpage .cv-chip{position:relative}
+.cvpage .cv-chip:after{content:"";position:absolute;left:0;right:0;top:0;height:50%;background:linear-gradient(rgba(255,255,255,.28),rgba(255,255,255,0));border-radius:inherit;pointer-events:none}
+.cvpage .cv-photo{position:relative}
+.cvpage .cv-photo.has-img:after{content:'';position:absolute;inset:0;border-radius:inherit;background:radial-gradient(120% 90% at 20% 8%,rgba(255,255,255,.22),rgba(255,255,255,0) 55%);pointer-events:none}

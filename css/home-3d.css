@@ -62,3 +62,12 @@
  .home2 .hero-fan .stage{transition:none}
  .home2 .tpl3d:hover,.home2 .steps3d li:hover,.home2 .why3d .card:hover{transform:none}
 }
+
+/* ===== Batch 47: hero shine ===== */
+.hero.home3d{position:relative;overflow:hidden}
+.hero.home3d:before{content:'';position:absolute;left:50%;top:50%;width:160%;height:260%;margin:-130% 0 0 -80%;background:conic-gradient(from 0deg,transparent 0 70%,rgba(255,205,110,.10) 82%,transparent 95%);animation:heroSpin 22s linear infinite;pointer-events:none}
+.hero.home3d>*{position:relative;z-index:1}
+.hero .hl{background:linear-gradient(90deg,#ffc860,#fff1c4,#ffb23e,#ffc860);background-size:260% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;animation:hlShimmer 7s linear infinite}
+@keyframes heroSpin{to{transform:rotate(360deg)}}
+@keyframes hlShimmer{to{background-position:260% 0}}
+@media (prefers-reduced-motion:reduce){.hero.home3d:before,.hero .hl{animation:none}}

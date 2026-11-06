@@ -126,3 +126,11 @@ body.home2 .pp-card h2,body.home2 .pp-price{color:var(--ink)}
 body.home2 .pp-card .pp-sub{color:var(--muted)}
 .home2 .legal{max-width:760px}
 .home2 .legal h2{font-size:24px;margin:28px 0 8px}
+
+/* ===== Batch 47: shine + motion (disabled for reduced-motion) ===== */
+.btn{position:relative;overflow:hidden;isolation:isolate}
+.btn:after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.42) 50%,transparent 65%);transform:translateX(-130%);transition:transform .7s ease;pointer-events:none;z-index:-1}
+.btn:hover:after,.btn:focus-visible:after{transform:translateX(130%)}
+.card{transition:transform .25s ease,box-shadow .25s ease}
+.card:hover{transform:translateY(-5px);box-shadow:0 22px 44px rgba(15,23,42,.16)}
+@media (prefers-reduced-motion:reduce){.btn:after{display:none}.card,.card:hover{transition:none;transform:none}}
