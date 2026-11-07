@@ -167,7 +167,7 @@ function adminBoot(){
   $('ownerPassInput').addEventListener('keydown',function(e){if(e.key==='Enter')ownerLogin()});
   $('searchBox').addEventListener('input',function(){FILTER=this.value.trim().toLowerCase();render()});
   $('ordersList').addEventListener('click',onListClick);
-  $('stats').addEventListener('click',function(e){var b=e.target.closest('[data-tab]');if(b)setTab(b.getAttribute('data-tab'))});
+  $('stats').addEventListener('click',function(e){var b=e.target.closest('[data-tab]');if(!b)return;var t=b.getAttribute('data-tab');if(t===TAB){var l=$('ordersList');if(l&&l.scrollIntoView)l.scrollIntoView({behavior:'smooth',block:'start'});return}setTab(t)});
 }
 
 /* ---------- Site settings ---------- */
@@ -406,7 +406,7 @@ function beep(){try{var C=window.AudioContext||window.webkitAudioContext;if(!C)r
 function toggleAlerts(){
   ALERTS_ON=!ALERTS_ON;try{localStorage.setItem('cvOwnerAlerts',ALERTS_ON?'1':'0')}catch(e){}
   alertBtnText();
-  if(ALERTS_ON){beep();try{if('Notification' in window&&Notification.permission==='default')Notification.requestPermission()}catch(e){}toast('ok','Alerts ON: naya order aane par awaz aaye gi. Yeh page khula rakhein.')}
+  if(ALERTS_ON){beep();try{if(navigator.vibrate)navigator.vibrate([300,150,300,150,300])}catch(e){}try{if('Notification' in window&&Notification.permission==='default')Notification.requestPermission()}catch(e){}toast('ok','Alerts ON: awaz tab aaye gi jab yeh page khula ho aur screen on ho. Phone silent ho ya screen lock ho to awaz nahi aati.')}
   else toast('info','Alerts OFF.');
 }
 function checkAlerts(){
@@ -415,7 +415,7 @@ function checkAlerts(){
   if(bn){if(old>0){bn.hidden=false;bn.textContent='⚠ '+old+' order ka payment/approval abhi tak baqi hai. "Naye" tab mein dekhein.'}else bn.hidden=true}
   if(PREV_NEW!==null&&nNew>PREV_NEW){
     var add=nNew-PREV_NEW;
-    if(ALERTS_ON){beep();try{if('Notification' in window&&Notification.permission==='granted')new Notification('Naya order aaya!',{body:add+' naya order. Approve ke liye admin page kholein.'})}catch(e){}}
+    if(ALERTS_ON){beep();try{if(navigator.vibrate)navigator.vibrate([300,150,300,150,300])}catch(e){}try{if('Notification' in window&&Notification.permission==='granted')new Notification('Naya order aaya!',{body:add+' naya order. Approve ke liye admin page kholein.'})}catch(e){}}
     toast('info','Naya order aaya: '+add);
   }
   PREV_NEW=nNew;
@@ -477,7 +477,7 @@ function render(){
   ORDERS.slice().reverse().forEach(function(o){var g=groupOf(o);n[g]++;if(matches(o))all[g].push(o)});
   var pend=n.new;document.title=(pend?'('+pend+') ':'')+'Owner Orders - CV Studio Pro';
   var tiles=[['new','Naye (action chahiye)',n.new],['active','Jari',n.sent+n.work],['done','Mukammal',n.done],['cancel','Cancelled',n.cancel],['settings','Settings','⚙']];
-  $('stats').innerHTML=tiles.map(function(x){return '<button class="ad-stat '+x[0]+(TAB===x[0]?' on':'')+'" role="tab" aria-selected="'+(TAB===x[0])+'" data-tab="'+x[0]+'"><b>'+x[2]+'</b><span>'+x[1]+'</span></button>'}).join('');
+  var __st=tiles.map(function(x){return '<button class="ad-stat '+x[0]+(TAB===x[0]?' on':'')+'" role="tab" aria-selected="'+(TAB===x[0])+'" data-tab="'+x[0]+'"><b>'+x[2]+'</b><span>'+x[1]+'</span></button>'}).join('');if($('stats').getAttribute('data-h')!==__st){$('stats').innerHTML=__st;$('stats').setAttribute('data-h',__st)}
   if(TAB==='settings'){var cl=$('codesLeftTxt');if(cl&&CODES_LEFT!==null)cl.textContent='Abhi unused codes: '+CODES_LEFT;renderChecklist();return}
   if(!ORDERS.length){$('ordersList').innerHTML='<div class="ad-empty">Abhi koi order nahi aaya.</div>';return}
   var h='';
@@ -485,7 +485,7 @@ function render(){
   else if(TAB==='active')h=group('sent','Code bheja - customer ka intezar','Koi nahi.',all.sent)+group('work','Kaam jari hai','Koi nahi.',all.work);
   else if(TAB==='done')h=group('done','Mukammal','Koi mukammal order nahi.',all.done);
   else h=group('cancel','Cancelled','Koi nahi.',all.cancel);
-  $('ordersList').innerHTML=h;
+  if($('ordersList').getAttribute('data-h')!==h){$('ordersList').innerHTML=h;$('ordersList').setAttribute('data-h',h)}
 }
 async function onListClick(e){
   var b=e.target.closest('[data-act]');if(!b)return;
