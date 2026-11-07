@@ -1137,3 +1137,12 @@ html,body{
 .pay-pane .unlockbox{border-top:0;margin-top:0;padding-top:0}
 @media (max-width:520px){.paywall{padding:8px}.paybox{padding:14px;border-radius:18px}.pay-head h2{font-size:19px}.pay-steps button{font-size:12px}}
 .tab small{opacity:.7;font-weight:700;margin-left:2px}
+/* Batch 55: download / unlock boxes */
+.dl-design{font-size:15px;margin:0 0 8px}.dl-price{margin:8px 0;font-size:16px}
+.dl-steps{list-style:none;counter-reset:dl;margin:10px 0 14px;padding:0;display:grid;gap:8px}
+.dl-steps li{counter-increment:dl;display:grid;grid-template-columns:32px 1fr;column-gap:10px;align-items:start;background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:10px 12px}
+.dl-steps li:before{content:counter(dl);grid-row:1/3;width:30px;height:30px;border-radius:50%;background:linear-gradient(145deg,#1c8a7e,#0f4f4a);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 0 #0a3a36}
+.dl-steps li b{font-size:15px}.dl-steps li span{font-size:13px;color:#64748b;line-height:1.4}
+.btn.big{font-size:17px;padding:14px 20px;flex:1 1 100%}
+.linkbtn{border:0;background:none;color:#0f766e;text-decoration:underline;font:inherit;font-weight:700;cursor:pointer;padding:0}
+.dl-help{margin-top:12px}.dl-help summary{cursor:pointer;font-weight:700;font-size:13px;color:#475569}
