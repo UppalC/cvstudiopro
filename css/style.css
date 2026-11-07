@@ -1136,3 +1136,4 @@ html,body{
 .pay-pane .txnbox input,.pay-pane .unlockbox input{width:100%}
 .pay-pane .unlockbox{border-top:0;margin-top:0;padding-top:0}
 @media (max-width:520px){.paywall{padding:8px}.paybox{padding:14px;border-radius:18px}.pay-head h2{font-size:19px}.pay-steps button{font-size:12px}}
+.tab small{opacity:.7;font-weight:700;margin-left:2px}
