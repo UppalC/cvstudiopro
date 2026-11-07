@@ -138,3 +138,8 @@ body.home2 .pp-card .pp-sub{color:var(--muted)}
 /* ===== Batch 48: use more of large screens ===== */
 @media (min-width:1500px){.home2 .wrap{max-width:1400px}.home2 .sitefoot-in{max-width:1400px}}
 @media (min-width:1900px){.home2 .wrap{max-width:1640px}.home2 .sitefoot-in{max-width:1640px}}
+
+/* ===== Batch 50: bigger brand with CV badge ===== */
+.brand{font-size:32px;display:inline-flex;align-items:center;gap:10px;line-height:1}
+.brand:before{content:'CV';display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,#0f4f4a,#16796f);color:#fff;font-family:Inter,system-ui,sans-serif;font-size:16px;font-weight:800;font-style:normal;letter-spacing:.5px;box-shadow:0 4px 10px rgba(15,79,74,.35),inset 0 1px 0 rgba(255,255,255,.3);flex-shrink:0}
+@media (max-width:600px){.brand{font-size:25px;gap:8px}.brand:before{width:34px;height:34px;font-size:14px;border-radius:10px}}
