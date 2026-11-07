@@ -1122,3 +1122,17 @@ html,body{
 .formsec.box .sw-row,.formsec.box .switchgrid{display:grid;gap:0}
 .switchgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:0 12px}
 @media (prefers-reduced-motion:reduce){.formsec.box,.box-chev{transition:none}}
+/* Batch 53: SVG box icons + order wizard */
+.box-ico{color:#0f4f4a}.box-ico svg{display:block}.formsec.box.open .box-ico{color:#fff}
+.paybox{width:100%;max-width:560px;display:flex;flex-direction:column;max-height:94vh;overflow:hidden;padding:18px}
+.pay-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.pay-head h2{margin:0;font-size:22px}
+.pay-x{border:0;background:#eef2f7;width:36px;height:36px;border-radius:50%;font-size:22px;line-height:1;cursor:pointer;color:#334155}.pay-x:focus-visible,.pay-steps button:focus-visible{outline:3px solid #0f766e;outline-offset:2px}
+.pay-steps{display:flex;gap:6px;margin:12px 0}.pay-steps button{flex:1;border:0;border-radius:12px;padding:9px 6px;background:#eef2f7;color:#475569;font-weight:800;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;box-shadow:0 3px 0 #d5dde8}
+.pay-steps button i{font-style:normal;width:20px;height:20px;border-radius:50%;background:#cbd5e1;color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:12px}
+.pay-steps button.on{background:#0f766e;color:#fff;box-shadow:0 3px 0 #0a4f49}.pay-steps button.on i{background:#fff;color:#0f766e}
+.pay-pane{display:none;overflow:auto;min-height:0}.pay-pane.on{display:block}
+.pay-pane .actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.pay-pane .actions .btn{flex:1 1 150px}
+.pay-pane .payqr{max-width:130px;max-height:130px}
+.pay-pane .txnbox input,.pay-pane .unlockbox input{width:100%}
+.pay-pane .unlockbox{border-top:0;margin-top:0;padding-top:0}
+@media (max-width:520px){.paywall{padding:8px}.paybox{padding:14px;border-radius:18px}.pay-head h2{font-size:19px}.pay-steps button{font-size:12px}}
