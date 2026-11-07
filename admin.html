@@ -55,6 +55,22 @@
 .ad-ci .go{flex:0 0 auto;border:1px solid #1d4ed8;color:#1d4ed8;background:#fff;border-radius:10px;padding:6px 10px;font-weight:800;font-size:13px;cursor:pointer}
 .ad-ci label{display:flex;gap:10px;align-items:flex-start;cursor:pointer;flex:1}.ad-ci label input{width:22px;height:22px;margin-top:2px;flex:0 0 auto}
 .ad-guide summary{cursor:pointer;font-weight:900}.ad-guide ol,.ad-guide ul{line-height:1.75;color:#334155;padding-left:20px}
+
+/* ===== Batch 50: admin look (matches builder/home colours) ===== */
+body{background:#f7f1e6}
+.ad-oldbanner{background:#fee2e2;color:#7f1d1d;border:1px solid #fca5a5;border-radius:12px;padding:10px 14px;margin:0 0 12px;font-weight:800}
+.ad-oldbanner[hidden]{display:none}
+.nav .brand,.ad-h2,.ad-group>h2,#tabTitle{font-family:Fraunces,Georgia,'Times New Roman',serif}
+.ad-stat{border-radius:16px;box-shadow:0 6px 16px rgba(15,23,42,.08);transition:transform .15s,box-shadow .15s}
+.ad-stat:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(15,23,42,.14)}
+.ad-stat.on{box-shadow:0 0 0 3px #0f3d3a,0 10px 22px rgba(15,23,42,.14)}
+.ad-card{border-radius:16px;box-shadow:0 6px 18px rgba(15,23,42,.08);border:1px solid #e8dfcf}
+.ad-btn.pri{background:linear-gradient(#0f4f4a,#0b3835);color:#fff}
+@media (max-width:560px){.ad-stats{grid-template-columns:repeat(2,1fr)}}
+.hero,.topbar{background:linear-gradient(135deg,#0c2423,#0f4f4a 62%,#16796f)!important;color:#fff}
+.nav .brand span{color:#d99a2b!important}
+.ad-btn:not(.pri){background:#fff;color:#0f3d3a;border:1px solid #d9cfba}
+#alertBtn{border-color:#d99a2b}
 </style></head><body><div class="wrap"><nav class="nav"><div class="brand">CV Studio <span>Owner</span></div><div class="links"><a href="index.html">Home</a><a href="builder.html">Builder</a></div></nav>
 
 <div id="ownerLogin" style="display:none"><section class="topbar"><h1>Owner Login</h1><p>Owner password daalein. Ye server par check hota hai, site ke code mein kahin save nahi.</p></section><section class="section"><div class="formsec"><label for="ownerPassInput">Owner Password</label><div style="display:flex;gap:6px;align-items:center"><input id="ownerPassInput" type="password" autocomplete="current-password" placeholder="Enter owner password" style="flex:1"><button type="button" class="btn light" style="padding:6px 10px" aria-label="Show or hide password" onclick="togglePwd('ownerPassInput',this)">👁</button></div><div class="actions" style="margin-top:10px"><button class="btn dark" id="ownerLoginBtn" onclick="ownerLogin()">Login</button></div><p class="muted small" id="ownerLoginMsg" role="status"></p></div></section></div>
@@ -65,8 +81,8 @@
 <div id="toast" class="ad-toast" role="status" aria-live="polite"></div>
 <div class="ad-stats" id="stats" role="tablist" aria-label="Orders ke hisse"></div>
 <div id="panelOrders">
-<div class="ad-bar"><input id="searchBox" class="ad-search" type="search" placeholder="Naam, number, email ya code se dhoondein" aria-label="Search orders"><button class="ad-btn pri" id="refreshBtn" onclick="loadOrders(true)">Refresh</button><a class="ad-btn" href="builder.html">Owner Builder (print/PDF)</a><button class="ad-btn" onclick="ownerLogout()">Log Out</button></div>
-<div id="ordersList" class="muted">Loading...</div>
+<div class="ad-bar"><input id="searchBox" class="ad-search" type="search" placeholder="Naam, number, email ya code se dhoondein" aria-label="Search orders"><button class="ad-btn pri" id="refreshBtn" onclick="loadOrders(true)">Refresh</button><button class="ad-btn" id="alertBtn" type="button" onclick="toggleAlerts()">🔔 Alerts: OFF</button><a class="ad-btn" href="builder.html">Owner Builder (print/PDF)</a><button class="ad-btn" onclick="ownerLogout()">Log Out</button></div>
+<div id="oldBanner" class="ad-oldbanner" role="status" aria-live="polite" hidden></div><div id="ordersList" class="muted">Loading...</div>
 </div>
 </section>
 <div id="panelSettings" style="display:none">
@@ -379,6 +395,31 @@ async function loadOrders(manual){
   if(!r||!r.valid){if(!ORDERS.length)box.textContent='Orders load nahi ho sake. Refresh karke dekhein.';else toast('err','Orders refresh nahi ho sake.');return}
   ORDERS=(r.orders||[]).slice();if(typeof r.codesLeft==='number')CODES_LEFT=r.codesLeft;
   render();
+  try{checkAlerts()}catch(e){}
+}
+
+/* ===== Batch 50: new-order alerts (works while this page is open: sound, title, notification, banner) ===== */
+var ALERTS_ON=false,PREV_NEW=null,AUDIO_CTX=null;
+try{ALERTS_ON=localStorage.getItem('cvOwnerAlerts')==='1'}catch(e){}
+function alertBtnText(){var b=$('alertBtn');if(b)b.textContent='🔔 Alerts: '+(ALERTS_ON?'ON':'OFF')}
+function beep(){try{var C=window.AudioContext||window.webkitAudioContext;if(!C)return;if(!AUDIO_CTX)AUDIO_CTX=new C();if(AUDIO_CTX.state==='suspended')AUDIO_CTX.resume();[0,0.28,0.56].forEach(function(d,i){var o=AUDIO_CTX.createOscillator(),g=AUDIO_CTX.createGain();o.type='sine';o.frequency.value=i===1?1175:880;g.gain.setValueAtTime(0.0001,AUDIO_CTX.currentTime+d);g.gain.exponentialRampToValueAtTime(0.35,AUDIO_CTX.currentTime+d+0.02);g.gain.exponentialRampToValueAtTime(0.0001,AUDIO_CTX.currentTime+d+0.24);o.connect(g);g.connect(AUDIO_CTX.destination);o.start(AUDIO_CTX.currentTime+d);o.stop(AUDIO_CTX.currentTime+d+0.26)})}catch(e){}}
+function toggleAlerts(){
+  ALERTS_ON=!ALERTS_ON;try{localStorage.setItem('cvOwnerAlerts',ALERTS_ON?'1':'0')}catch(e){}
+  alertBtnText();
+  if(ALERTS_ON){beep();try{if('Notification' in window&&Notification.permission==='default')Notification.requestPermission()}catch(e){}toast('ok','Alerts ON: naya order aane par awaz aaye gi. Yeh page khula rakhein.')}
+  else toast('info','Alerts OFF.');
+}
+function checkAlerts(){
+  var nNew=0,old=0;ORDERS.forEach(function(o){if(groupOf(o)==='new'){nNew++;try{if(ageText(o.timestamp).old)old++}catch(e){}}});
+  var bn=$('oldBanner');
+  if(bn){if(old>0){bn.hidden=false;bn.textContent='⚠ '+old+' order ka payment/approval abhi tak baqi hai. "Naye" tab mein dekhein.'}else bn.hidden=true}
+  if(PREV_NEW!==null&&nNew>PREV_NEW){
+    var add=nNew-PREV_NEW;
+    if(ALERTS_ON){beep();try{if('Notification' in window&&Notification.permission==='granted')new Notification('Naya order aaya!',{body:add+' naya order. Approve ke liye admin page kholein.'})}catch(e){}}
+    toast('info','Naya order aaya: '+add);
+  }
+  PREV_NEW=nNew;
+  alertBtnText();
 }
 function groupOf(o){
   var s=String(o.status||'');
