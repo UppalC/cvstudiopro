@@ -1146,3 +1146,43 @@ html,body{
 .btn.big{font-size:17px;padding:14px 20px;flex:1 1 100%}
 .linkbtn{border:0;background:none;color:#0f766e;text-decoration:underline;font:inherit;font-weight:700;cursor:pointer;padding:0}
 .dl-help{margin-top:12px}.dl-help summary{cursor:pointer;font-weight:700;font-size:13px;color:#475569}
+/* Batch 57: Word-style templates t65-t67 */
+.cv-l65,.cv-l66,.cv-l67{font-family:Calibri,Carlito,'Segoe UI',Arial,sans-serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.cv-l65 .cv-header,.cv-l67 .cv-header{display:flex;align-items:center;gap:18px;padding-bottom:12px;margin-bottom:14px}
+.cv-l65 .cv-header{border-bottom:2px solid #2e74b5}
+.cv-l65 .cv-header>.cv-photo{margin:0}
+.cv-l65 .cv-header h1,.cv-l65 .cv-header h2{color:#1f4e79;font-size:34px;font-weight:700;letter-spacing:-.3px;margin:0 0 2px}
+.cv-l65 .cv-header .cv-sub{color:#2e74b5;font-size:15px;font-weight:600}
+.cv-l65 .cv-header .cv-contact,.cv-l65 .cv-header .hd-wrap>div:last-child{font-size:12px;color:#475569;line-height:1.5;margin-top:6px}
+.cv-l65 .cv-section,.cv-l66 .cv-section,.cv-l67 .cv-section{background:transparent;box-shadow:none;border:0;border-radius:0;padding:0;margin:0 0 12px}
+.cv-l65 .cv-card,.cv-l66 .cv-card,.cv-l67 .cv-card{background:transparent;box-shadow:none;border:0;border-radius:0;padding:0 0 7px;margin:0}
+.cv-l65 .cv-section>h2{color:#1f4e79;font-size:13px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;border-bottom:1px solid #9dc3e6;padding:0 0 3px;margin:0 0 8px}
+.cv-l65 .cv-section>h2:before,.cv-l66 .cv-section>h2:before,.cv-l67 .cv-section>h2:before{display:none!important;content:none!important}
+.cv-l65 .cv-card .cv-title{color:#1f2937;font-weight:700}
+.cv-l65 .cv-card .cv-sub,.cv-l65 .cv-section .cv-sub{color:#2e74b5;font-weight:600}
+.cv-l65 .skill-item .bar{height:6px;border-radius:0;background:#deeaf6}.cv-l65 .skill-item .bar span{border-radius:0;background:#2e74b5}
+.cv-l65 .cv-chip{background:#fff;color:#1f4e79;border:1px solid #9dc3e6;border-radius:3px;box-shadow:none;font-weight:600}
+.cv-l65 .cv-bullets li:before{background:none;content:'\2022';color:#2e74b5;width:auto;height:auto;border:0;transform:none;top:0;font-weight:900}
+/* t66 */
+.cv-l66{display:grid;grid-template-columns:196px 1fr;column-gap:22px;align-content:start;background:#fff}
+.cv-l66 .cv-header{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:16px;background:#1f3a5f;color:#fff;border-radius:0;padding:20px 22px;margin:-2px -2px 18px;border-bottom:5px solid #e07b00}
+.cv-l66 .cv-header h1,.cv-l66 .cv-header h2{color:#fff;font-size:32px;margin:0}.cv-l66 .cv-header .cv-sub{color:#ffd9a6;font-weight:600}
+.cv-l66 .cv-header>div:last-child{font-size:12px;line-height:1.55;color:#e8eef7;text-align:right}
+.cv-l66 .cv-side{background:#eef2f6;padding:14px 14px 6px;border-radius:0;align-self:start}
+.cv-l66 .cv-side .cv-photo{margin:0 auto 12px}
+.cv-l66 .cv-side h2,.cv-l66 .cv-main h2,.cv-l66>div:not(.cv-header):not(.cv-side):not(.cv-footer) h2{color:#1f3a5f;font-size:12.5px;letter-spacing:1.2px;text-transform:uppercase;border-bottom:2px solid #e07b00;padding:0 0 3px;margin:0 0 8px;display:block}
+.cv-l66 .cv-side .cv-card{padding:0 0 6px}.cv-l66 .cv-section .cv-sub{color:#b45f00;font-weight:600}
+.cv-l66 .skill-item .bar{height:5px;border-radius:0;background:#d5dde8}.cv-l66 .skill-item .bar span{border-radius:0;background:#1f3a5f}
+.cv-l66 .cv-chip{background:#fff;color:#1f3a5f;border:1px solid #b8c4d6;border-radius:3px;box-shadow:none}
+.cv-l66 .cv-footer{grid-column:1/-1}
+/* t67 */
+.cv-l67{font-family:Cambria,Georgia,'Times New Roman',serif;background:#fff}
+.cv-l67 .cv-header{flex-direction:column;text-align:center;gap:8px;border-bottom:3px double #8a6d3b}
+.cv-l67 .cv-header h1,.cv-l67 .cv-header h2{color:#262626;font-size:34px;font-weight:700;letter-spacing:1px;margin:0;text-transform:uppercase}
+.cv-l67 .cv-header .cv-sub{color:#8a6d3b;font-style:italic;font-size:15px}
+.cv-l67 .cv-header .hd-wrap>div:last-child{font-size:12px;color:#525252;margin-top:6px}
+.cv-l67 .cv-section>h2{color:#262626;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;text-align:center;border-top:1px solid #8a6d3b;border-bottom:1px solid #8a6d3b;padding:4px 0;margin:0 0 9px}
+.cv-l67 .cv-card .cv-title{font-weight:700;color:#262626}.cv-l67 .cv-section .cv-sub{color:#8a6d3b;font-style:italic}
+.cv-l67 .skill-item .bar{height:4px;border-radius:0;background:#e7e0d3}.cv-l67 .skill-item .bar span{border-radius:0;background:#8a6d3b}
+.cv-l67 .cv-chip{background:transparent;color:#262626;border:0;border-bottom:1px solid #8a6d3b;border-radius:0;box-shadow:none;padding:1px 4px}
+.cv-l65 .cv-section>h2,.cv-l66 .cv-section>h2,.cv-l67 .cv-section>h2,.cv-l66 .cv-side h2{border-left:0;padding-left:0;box-shadow:none}
