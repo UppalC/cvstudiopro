@@ -1200,3 +1200,5 @@ body[data-ts-line="t"] .cvpage p,body[data-ts-line="t"] .cvpage li{line-height:1
 body[data-ts-line="r"] .cvpage p,body[data-ts-line="r"] .cvpage li{line-height:1.75!important}
 body[data-ts-bold="1"] .cvpage h1,body[data-ts-bold="1"] .cvpage h2{font-weight:900!important}
 body[data-ts-bold="1"] .cvpage .cv-title{font-weight:800!important}
+/* Batch 60: clearer Start step */
+.qs-list{display:grid;gap:10px}.qs-row{display:grid;gap:4px}.qs-row .btn{width:100%}.qs-row span{font-size:13px;color:#64748b;line-height:1.4;padding:0 4px}
