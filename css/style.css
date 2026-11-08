@@ -1186,3 +1186,17 @@ html,body{
 .cv-l67 .skill-item .bar{height:4px;border-radius:0;background:#e7e0d3}.cv-l67 .skill-item .bar span{border-radius:0;background:#8a6d3b}
 .cv-l67 .cv-chip{background:transparent;color:#262626;border:0;border-bottom:1px solid #8a6d3b;border-radius:0;box-shadow:none;padding:1px 4px}
 .cv-l65 .cv-section>h2,.cv-l66 .cv-section>h2,.cv-l67 .cv-section>h2,.cv-l66 .cv-side h2{border-left:0;padding-left:0;box-shadow:none}
+/* Batch 58: text style panel (only active when the user picks something) */
+.seg{display:flex;gap:6px;margin:4px 0 12px}.seg button{flex:1;border:1px solid #cbd5e1;background:#fff;border-radius:10px;padding:9px 6px;font-weight:700;font-size:13px;color:#334155;cursor:pointer;box-shadow:0 2px 0 #e2e8f0}.seg button.on{background:#0f766e;border-color:#0f766e;color:#fff;box-shadow:0 2px 0 #0a4f49}.seg button:focus-visible{outline:3px solid #0f766e;outline-offset:2px}
+body[data-ts-font="sans"] .cvpage,body[data-ts-font="sans"] .cvpage *{font-family:Arial,Helvetica,sans-serif!important}
+body[data-ts-font="calibri"] .cvpage,body[data-ts-font="calibri"] .cvpage *{font-family:Calibri,Carlito,'Segoe UI',Arial,sans-serif!important}
+body[data-ts-font="serif"] .cvpage,body[data-ts-font="serif"] .cvpage *{font-family:Georgia,'Times New Roman',serif!important}
+body[data-ts-font="times"] .cvpage,body[data-ts-font="times"] .cvpage *{font-family:'Times New Roman',Times,serif!important}
+body[data-ts-font="verdana"] .cvpage,body[data-ts-font="verdana"] .cvpage *{font-family:Verdana,Geneva,sans-serif!important}
+body[data-ts-font="mono"] .cvpage,body[data-ts-font="mono"] .cvpage *{font-family:'Courier New',Courier,monospace!important}
+body[data-ts-size="s"] .cvpage .cv-section,body[data-ts-size="s"] .cvpage .cv-header>div:not(.cv-photo){zoom:.92}
+body[data-ts-size="l"] .cvpage .cv-section,body[data-ts-size="l"] .cvpage .cv-header>div:not(.cv-photo){zoom:1.08}
+body[data-ts-line="t"] .cvpage p,body[data-ts-line="t"] .cvpage li{line-height:1.25!important}
+body[data-ts-line="r"] .cvpage p,body[data-ts-line="r"] .cvpage li{line-height:1.75!important}
+body[data-ts-bold="1"] .cvpage h1,body[data-ts-bold="1"] .cvpage h2{font-weight:900!important}
+body[data-ts-bold="1"] .cvpage .cv-title{font-weight:800!important}
