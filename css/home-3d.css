@@ -71,3 +71,5 @@
 @keyframes heroSpin{to{transform:rotate(360deg)}}
 @keyframes hlShimmer{to{background-position:260% 0}}
 @media (prefers-reduced-motion:reduce){.hero.home3d:before,.hero .hl{animation:none}}
+/* Batch 59: keep the floating chip clear of the hero card on phones */
+@media (max-width:700px){.float-chip.c1{left:-16px;padding:7px 10px}}
