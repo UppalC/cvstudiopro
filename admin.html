@@ -1,90 +1,152 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="robots" content="noindex,nofollow"><script>if(window.top!==window.self){document.documentElement.style.display="none"}</script><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Owner Orders - CV Studio Pro</title><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="css/style.css">
 <style>
-.ad-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:0 0 16px}
-.ad-stat{border-radius:14px;padding:12px 10px;text-align:center;border:2px solid transparent;background:#f1f5f9;cursor:pointer;font:inherit;color:#0f172a}
-.ad-stat b{display:block;font-size:26px;line-height:1.1}
-.ad-stat span{font-size:12px;font-weight:700}
-.ad-stat.new{background:#fef3c7;border-color:#f59e0b}.ad-stat.sent{background:#dbeafe;border-color:#3b82f6}.ad-stat.work{background:#ede9fe;border-color:#8b5cf6}.ad-stat.done{background:#dcfce7;border-color:#22c55e}
-.ad-stat:focus-visible,.ad-btn:focus-visible,.ad-search:focus-visible{outline:3px solid #1d4ed8;outline-offset:2px}
-.ad-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 14px}
-.ad-search{flex:1;min-width:180px;padding:10px 12px;border:1px solid #cbd5e1;border-radius:10px;font:inherit}
-.ad-toast{display:none;padding:10px 14px;border-radius:10px;margin:0 0 12px;font-weight:700}
+/* ===== Batch 63: admin layout (phone / tablet / laptop / desktop) ===== */
+:root{--ad-ink:#0f172a;--ad-mut:#475569;--ad-line:#e8dfcf;--ad-teal:#0f4f4a;--ad-gold:#d99a2b}
+html{-webkit-text-size-adjust:100%}
+body{background:#f7f1e6}
+button,a,input,select,label,summary{touch-action:manipulation;-webkit-tap-highlight-color:rgba(15,79,74,.18)}
+.nav .brand,.ad-h2,.ad-group>h2,#tabTitle{font-family:Fraunces,Georgia,'Times New Roman',serif}
+.nav .brand span{color:var(--ad-gold)!important}
+.topbar.ad-head{padding:18px 20px;border-radius:22px;display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#0c2423,#0f4f4a 62%,#16796f)!important;color:#fff}
+.ad-head h1{font-size:clamp(24px,4vw,34px);margin:0}
+.ad-head p{margin:4px 0 0;font-size:14px;line-height:1.5;max-width:60ch;color:#d6efe9}
+.ad-tools{display:flex;flex-wrap:wrap;gap:8px}
+.ad-tools .ad-btn{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.35)}
+.ad-tools .ad-btn:hover{background:rgba(255,255,255,.22)}
+/* shell: bottom bar on phone/tablet, sidebar on laptop+ */
+.ad-shell{display:block;padding-bottom:92px}
+.ad-main{min-width:0}
+.ad-nav{position:fixed;left:0;right:0;bottom:0;z-index:60;display:grid;grid-template-columns:repeat(6,1fr);gap:2px;background:#fff;border-top:1px solid var(--ad-line);box-shadow:0 -6px 20px rgba(15,23,42,.12);padding:6px 6px calc(6px + env(safe-area-inset-bottom))}
+.ad-stat{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:56px;border:0;border-radius:12px;background:transparent;color:var(--ad-ink);font:inherit;cursor:pointer;padding:4px 2px}
+.ad-stat b{font-size:19px;line-height:1.1;min-height:21px;display:flex;align-items:center}
+.ad-stat span{font-size:11px;font-weight:700;line-height:1.1}
+.ad-stat svg{width:20px;height:20px}
+.ad-stat.new b{color:#b45309}.ad-stat.active b{color:#1d4ed8}.ad-stat.done b{color:#15803d}.ad-stat.cancel b{color:#475569}
+.ad-stat.on{background:#e6f2ef;box-shadow:inset 0 0 0 2px var(--ad-teal)}
+.ad-stat:focus-visible,.ad-btn:focus-visible,.ad-search:focus-visible,.seg button:focus-visible,.ad-set input:focus-visible,.ad-set select:focus-visible{outline:3px solid #1d4ed8;outline-offset:2px}
+@media (hover:hover){.ad-stat:hover{background:#f1f5f9}.ad-stat.on:hover{background:#e6f2ef}.ad-btn:hover{filter:brightness(.97)}}
+@media (min-width:900px){
+  .ad-shell{display:grid;grid-template-columns:230px minmax(0,1fr);gap:22px;align-items:start;padding-bottom:30px;margin-top:14px}
+  .ad-nav{position:sticky;top:12px;left:auto;right:auto;bottom:auto;display:flex;flex-direction:column;gap:6px;border:1px solid var(--ad-line);border-radius:18px;box-shadow:0 6px 18px rgba(15,23,42,.08);padding:10px}
+  .ad-stat{flex-direction:row;justify-content:flex-start;gap:10px;min-height:48px;padding:6px 12px;text-align:left}
+  .ad-stat span{order:1;flex:1;font-size:15px;text-align:left}
+  .ad-stat b{order:2;font-size:17px;min-width:28px;justify-content:center}
+  .ad-stat svg{order:2}
+  .ad-nav .ad-sep{height:1px;background:var(--ad-line);margin:4px 6px}
+}
+.ad-nav .ad-sep{display:none}
+@media (min-width:900px){.ad-nav .ad-sep{display:block}.ad-nav{display:flex}}
+/* toast floats, so the page never jumps under a finger */
+.ad-toast{display:none;position:fixed;left:50%;top:10px;transform:translateX(-50%);width:min(560px,calc(100vw - 24px));z-index:80;padding:12px 16px;border-radius:12px;font-weight:700;box-shadow:0 10px 30px rgba(15,23,42,.25);pointer-events:none}
 .ad-toast.ok{display:block;background:#dcfce7;color:#14532d}.ad-toast.err{display:block;background:#fee2e2;color:#7f1d1d}.ad-toast.info{display:block;background:#dbeafe;color:#1e3a8a}
-.ad-group{margin:0 0 18px}
-.ad-group>summary,.ad-group>h2{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:17px;margin:0 0 8px;font-weight:800}
-.ad-group>summary::-webkit-details-marker{display:none}
+.ad-oldbanner{background:#fee2e2;color:#7f1d1d;border:1px solid #fca5a5;border-radius:12px;padding:10px 14px;margin:0 0 12px;font-weight:800}.ad-oldbanner[hidden]{display:none}
+/* buttons */
+.ad-btn{border:1px solid #d9cfba;border-radius:12px;padding:10px 14px;min-height:44px;font:inherit;font-weight:700;cursor:pointer;background:#fff;color:#0f3d3a;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;text-align:center;line-height:1.2}
+.ad-btn.pri{background:linear-gradient(#0f4f4a,#0b3835);color:#fff;border-color:#0b3835}.ad-btn.wa{background:#15803d;color:#fff;border-color:#15803d}.ad-btn.warn{background:#fee2e2;color:#7f1d1d;border-color:#fca5a5}.ad-btn.rem{background:#fde68a;color:#78350f;border-color:#f5c451}
+.ad-btn[disabled]{opacity:.55;cursor:wait}
+.ad-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.ad-actions .ad-btn{flex:1 1 150px}
+/* orders */
+.ad-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 14px}
+.ad-search{flex:1;min-width:0;width:100%;padding:12px 14px;min-height:46px;border:1px solid #cbd5e1;border-radius:12px;font:inherit;background:#fff}
+.ad-group{margin:0 0 20px}
+.ad-group>h2{display:flex;align-items:center;gap:8px;font-size:18px;margin:0 0 10px;font-weight:800}
 .ad-count{display:inline-block;min-width:26px;text-align:center;border-radius:999px;padding:2px 8px;font-size:13px;font-weight:800;color:#fff}
 .g-new .ad-count{background:#b45309}.g-sent .ad-count{background:#1d4ed8}.g-work .ad-count{background:#6d28d9}.g-done .ad-count{background:#15803d}.g-cancel .ad-count{background:#475569}
-.ad-hint{font-size:13px;color:#475569;margin:0 0 8px}
-.ad-card{background:#fff;border:1px solid #e2e8f0;border-left:6px solid #94a3b8;border-radius:12px;padding:12px 14px;margin:0 0 10px;box-shadow:0 1px 0 rgba(15,23,42,.04)}
+.ad-cards{display:grid;grid-template-columns:1fr;gap:12px}
+@media (min-width:1200px){.ad-cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.ad-card{background:#fff;border:1px solid var(--ad-line);border-left:6px solid #94a3b8;border-radius:16px;padding:14px;box-shadow:0 6px 18px rgba(15,23,42,.08);min-width:0}
 .g-new .ad-card{border-left-color:#f59e0b;background:#fffbeb}.g-sent .ad-card{border-left-color:#3b82f6}.g-work .ad-card{border-left-color:#8b5cf6}.g-done .ad-card{border-left-color:#22c55e}
-.ad-top{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
-.ad-name{font-weight:800;font-size:16px;color:#0f172a}
-.ad-meta{font-size:13px;color:#475569;margin-top:2px;word-break:break-word}
-.ad-code{display:inline-block;margin-top:6px;padding:3px 8px;border-radius:8px;background:#0f172a;color:#fff;font-family:ui-monospace,Consolas,monospace;font-size:13px}
-.ad-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.ad-btn{border:0;border-radius:10px;padding:9px 13px;font:inherit;font-weight:700;cursor:pointer;background:#e2e8f0;color:#0f172a;text-decoration:none;display:inline-block}
-.ad-btn.pri{background:#0f172a;color:#fff}.ad-btn.wa{background:#15803d;color:#fff}.ad-btn.warn{background:#fee2e2;color:#7f1d1d}
-.ad-btn[disabled]{opacity:.55;cursor:wait}
-.ad-empty{color:#64748b;font-size:14px;padding:6px 2px}
-.ad-help summary{cursor:pointer;font-weight:700}
-.ad-h2{font-size:20px;margin:0 0 10px}
-.ad-stats{grid-template-columns:repeat(5,1fr)}
-.ad-stat.cancel{background:#f1f5f9;border-color:#94a3b8}.ad-stat.settings{background:#fce7f3;border-color:#ec4899}
-.ad-stat.on{outline:4px solid #0f172a;outline-offset:2px}
+.ad-name{font-weight:800;font-size:17px;color:var(--ad-ink);overflow-wrap:anywhere}
+.ad-meta{font-size:13.5px;color:var(--ad-mut);margin-top:3px;word-break:break-word}
+.ad-code{display:inline-block;margin-top:8px;padding:4px 9px;border-radius:8px;background:var(--ad-ink);color:#fff;font-family:ui-monospace,Consolas,monospace;font-size:14px}
 .ad-age{display:inline-block;margin-left:6px;font-size:12px;font-weight:800;padding:2px 8px;border-radius:999px;background:#fee2e2;color:#7f1d1d}
-.ad-age.ok{background:#dcfce7;color:#14532d}
-.ad-btn.rem{background:#fde68a;color:#78350f}
-@media(max-width:700px){.ad-stats{grid-template-columns:repeat(2,1fr)}}
-.ad-set label{display:block;font-weight:700;margin:10px 0 4px}
-.ad-set input[type=text],.ad-set input[type=password]{width:100%;padding:10px 12px;border:1px solid #cbd5e1;border-radius:10px;font:inherit}
-.ad-set .ad-slot{border:1px solid #cbd5e1;border-radius:12px;padding:6px 14px 14px;margin:12px 0;background:#f8fafc}
+.ad-empty{color:#64748b;font-size:14px;padding:8px 2px}
+.ad-help summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:center}
+.ad-h2{font-size:21px;margin:0 0 10px}
+.section{border-radius:20px;padding:18px}
+@media (max-width:560px){.section{padding:14px;border-radius:16px}.wrap{padding:12px}.ad-tools .ad-btn{flex:1 1 45%}}
+/* forms */
+.ad-set label{display:block;font-weight:700;margin:12px 0 5px}
+.ad-set input[type=text],.ad-set input[type=password],.ad-set input[type=date],.ad-set input[type=url],.ad-set select{width:100%;padding:11px 12px;min-height:46px;border:1px solid #cbd5e1;border-radius:12px;font:inherit;background:#fff}
+.ad-set .ad-slot{border:1px solid #cbd5e1;border-radius:14px;padding:6px 14px 14px;margin:12px 0;background:#f8fafc}
 .ad-set .ad-slot h3{margin:10px 0 0;font-size:16px}
 .ad-set .qrprev{display:block;margin-top:8px;max-width:180px;max-height:180px;border:1px solid #cbd5e1;border-radius:8px;background:#fff}
-.ad-set .chk{display:flex;gap:8px;align-items:center;font-weight:700;margin:10px 0}
-.ad-set .chk input{width:20px;height:20px}
-.ad-set .ad-hint2{font-size:13px;color:#475569;margin:2px 0 0}
-
-
+.ad-set .chk{display:flex;gap:10px;align-items:center;font-weight:700;margin:10px 0;min-height:44px}
+.ad-set .chk input{width:22px;height:22px;flex:0 0 auto}
+.ad-set .ad-hint2,.ad-hint2{font-size:13.5px;color:var(--ad-mut);margin:3px 0 0;line-height:1.55}
+.pwrow{display:flex;gap:6px;align-items:center}.pwrow input{flex:1}
+@media (min-width:900px){.ad-set .formsec{max-width:760px}}
+/* checklist + guide (unchanged look) */
 .ad-check{border:1px solid #bfdbfe;background:linear-gradient(135deg,#eff6ff,#fff);border-radius:16px;padding:14px 16px;margin:0 0 14px}
 .ad-check h2{margin:0 0 6px}.ad-prog{height:12px;border-radius:99px;background:#e2e8f0;overflow:hidden;margin:8px 0 12px}.ad-prog span{display:block;height:100%;background:linear-gradient(90deg,#16a34a,#22c55e);transition:width .3s}
 .ad-ci{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-top:1px solid #e2e8f0}.ad-ci:first-of-type{border-top:0}
 .ad-ci .ico{flex:0 0 26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:15px;color:#fff;background:#94a3b8}
 .ad-ci.ok .ico{background:#16a34a}.ad-ci.warn .ico{background:#dc2626}.ad-ci.opt .ico{background:#f59e0b}
 .ad-ci .tx{flex:1;min-width:0}.ad-ci .tx b{display:block}.ad-ci .tx span{display:block;color:#475569;font-size:13px;line-height:1.5}
-.ad-ci .go{flex:0 0 auto;border:1px solid #1d4ed8;color:#1d4ed8;background:#fff;border-radius:10px;padding:6px 10px;font-weight:800;font-size:13px;cursor:pointer}
+.ad-ci .go{flex:0 0 auto;border:1px solid #1d4ed8;color:#1d4ed8;background:#fff;border-radius:10px;padding:8px 12px;min-height:40px;font-weight:800;font-size:13px;cursor:pointer}
 .ad-ci label{display:flex;gap:10px;align-items:flex-start;cursor:pointer;flex:1}.ad-ci label input{width:22px;height:22px;margin-top:2px;flex:0 0 auto}
 .ad-guide summary{cursor:pointer;font-weight:900}.ad-guide ol,.ad-guide ul{line-height:1.75;color:#334155;padding-left:20px}
-
-/* ===== Batch 50: admin look (matches builder/home colours) ===== */
-body{background:#f7f1e6}
-.ad-oldbanner{background:#fee2e2;color:#7f1d1d;border:1px solid #fca5a5;border-radius:12px;padding:10px 14px;margin:0 0 12px;font-weight:800}
-.ad-oldbanner[hidden]{display:none}
-.nav .brand,.ad-h2,.ad-group>h2,#tabTitle{font-family:Fraunces,Georgia,'Times New Roman',serif}
-.ad-stat{border-radius:16px;box-shadow:0 6px 16px rgba(15,23,42,.08);transition:transform .15s,box-shadow .15s}
-.ad-stat:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(15,23,42,.14)}
-.ad-stat.on{box-shadow:0 0 0 3px #0f3d3a,0 10px 22px rgba(15,23,42,.14)}
-.ad-card{border-radius:16px;box-shadow:0 6px 18px rgba(15,23,42,.08);border:1px solid #e8dfcf}
-.ad-btn.pri{background:linear-gradient(#0f4f4a,#0b3835);color:#fff}
-@media (max-width:560px){.ad-stats{grid-template-columns:repeat(2,1fr)}}
-.hero,.topbar{background:linear-gradient(135deg,#0c2423,#0f4f4a 62%,#16796f)!important;color:#fff}
-.nav .brand span{color:#d99a2b!important}
-.ad-btn:not(.pri){background:#fff;color:#0f3d3a;border:1px solid #d9cfba}
-#alertBtn{border-color:#d99a2b}
+/* Site Control: template list */
+.tc-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0 12px}
+.tc-sum{font-weight:800}
+.tc-chips{display:flex;flex-wrap:wrap;gap:6px}
+.tc-chip{border:1px solid #d9cfba;background:#fff;border-radius:999px;padding:8px 14px;min-height:40px;font:inherit;font-weight:700;cursor:pointer;color:#0f3d3a}
+.tc-chip.on{background:var(--ad-teal);color:#fff;border-color:var(--ad-teal)}
+.tc-list{display:grid;grid-template-columns:1fr;gap:8px}
+@media (min-width:1500px){.tc-list{grid-template-columns:1fr 1fr}}
+#ctlTpl .formsec{max-width:none}
+.tc-row{display:flex;align-items:center;gap:10px;border:1px solid #e2e8f0;border-radius:14px;padding:8px 10px;background:#fff;min-width:0}
+.tc-row.chg{border-color:#f59e0b;background:#fffbeb}
+.tc-row img{width:40px;height:53px;object-fit:cover;border-radius:6px;border:1px solid #e2e8f0;flex:0 0 auto;background:#f1f5f9}
+.tc-name{flex:1;min-width:0}.tc-name b{display:block;font-size:14.5px;overflow-wrap:anywhere}.tc-name small{color:#64748b;font-size:12px}
+.seg{display:inline-flex;border:1px solid #cbd5e1;border-radius:12px;overflow:hidden;flex:0 0 auto}
+.seg button{border:0;background:#fff;color:#334155;font:inherit;font-weight:800;font-size:14px;min-height:44px;min-width:64px;padding:0 10px;cursor:pointer}
+.seg button+button{border-left:1px solid #cbd5e1}
+.seg button.on.f{background:#16a34a;color:#fff}.seg button.on.p{background:#0f172a;color:#fff}
+.demo-prev{margin-top:10px;max-width:520px}
 </style></head><body><div class="wrap"><nav class="nav"><div class="brand">CV Studio <span>Owner</span></div><div class="links"><a href="index.html">Home</a><a href="builder.html">Builder</a></div></nav>
 
-<div id="ownerLogin" style="display:none"><section class="topbar"><h1>Owner Login</h1><p>Owner password daalein. Ye server par check hota hai, site ke code mein kahin save nahi.</p></section><section class="section"><div class="formsec"><label for="ownerPassInput">Owner Password</label><div style="display:flex;gap:6px;align-items:center"><input id="ownerPassInput" type="password" autocomplete="current-password" placeholder="Enter owner password" style="flex:1"><button type="button" class="btn light" style="padding:6px 10px" aria-label="Show or hide password" onclick="togglePwd('ownerPassInput',this)">👁</button></div><div class="actions" style="margin-top:10px"><button class="btn dark" id="ownerLoginBtn" onclick="ownerLogin()">Login</button></div><p class="muted small" id="ownerLoginMsg" role="status"></p></div></section></div>
+<div id="ownerLogin" style="display:none"><section class="topbar"><h1>Owner Login</h1><p>Owner password daalein. Ye server par check hota hai, site ke code mein kahin save nahi.</p></section><section class="section"><div class="formsec"><label for="ownerPassInput">Owner Password</label><div style="display:flex;gap:6px;align-items:center"><input id="ownerPassInput" type="password" autocomplete="current-password" placeholder="Enter owner password" style="flex:1"><button type="button" class="btn light" style="padding:6px 10px" aria-label="Show or hide password" onclick="togglePwd('ownerPassInput',this)">Show</button></div><div class="actions" style="margin-top:10px"><button class="btn dark" id="ownerLoginBtn" onclick="ownerLogin()">Login</button></div><p class="muted small" id="ownerLoginMsg" role="status"></p></div></section></div>
 
 <div id="ownerArea" style="display:none">
-<section class="topbar"><h1 id="tabTitle">Orders</h1><p id="tabHint"></p></section>
-<section class="section">
+<div class="ad-shell">
+<nav class="ad-nav" id="stats" role="tablist" aria-label="Admin ke hisse"></nav>
+<main class="ad-main">
+<section class="topbar ad-head"><div><h1 id="tabTitle">Orders</h1><p id="tabHint"></p></div><div class="ad-tools"><button class="ad-btn" id="refreshBtn" type="button" onclick="loadOrders(true)">Refresh</button><button class="ad-btn" id="alertBtn" type="button" onclick="toggleAlerts()">Alerts: OFF</button><a class="ad-btn" href="builder.html">Owner Builder</a><button class="ad-btn" type="button" onclick="ownerLogout()">Log Out</button></div></section>
 <div id="toast" class="ad-toast" role="status" aria-live="polite"></div>
-<div class="ad-stats" id="stats" role="tablist" aria-label="Orders ke hisse"></div>
-<div id="panelOrders">
-<div class="ad-bar"><input id="searchBox" class="ad-search" type="search" placeholder="Naam, number, email ya code se dhoondein" aria-label="Search orders"><button class="ad-btn pri" id="refreshBtn" onclick="loadOrders(true)">Refresh</button><button class="ad-btn" id="alertBtn" type="button" onclick="toggleAlerts()">🔔 Alerts: OFF</button><a class="ad-btn" href="builder.html">Owner Builder (print/PDF)</a><button class="ad-btn" onclick="ownerLogout()">Log Out</button></div>
+<div id="panelOrders" class="section" style="margin-top:14px">
+<div class="ad-bar"><input id="searchBox" class="ad-search" type="search" placeholder="Naam, number, email ya code se dhoondein" aria-label="Search orders"></div>
 <div id="oldBanner" class="ad-oldbanner" role="status" aria-live="polite" hidden></div><div id="ordersList" class="muted">Loading...</div>
 </div>
-</section>
+<div id="panelControl" style="display:none">
+<section class="section ad-set" id="ctlTpl"><h2 class="ad-h2">Templates: Free ya Premium</h2><div class="formsec">
+<p class="ad-hint2">Har template ke samne <b>Free</b> ya <b>Premium</b> dabayen. Neeche password daal kar <b>Control Save karein</b> dabayen, tab website par tabdeeli aati hai (1-2 minute). Peela (zard) kaarda matlab is template ko aap ne default se badla hai.</p>
+<div class="tc-bar"><span class="tc-sum" id="tcSum" role="status"></span></div>
+<div class="tc-bar"><div class="tc-chips" id="tcChips" role="group" aria-label="Filter"></div></div>
+<input type="search" id="tcSearch" class="ad-search" placeholder="Template ka naam ya number (misal: t21)" aria-label="Template dhoondein">
+<div class="ad-actions"><button type="button" class="ad-btn" id="tcReset">Sab default par wapas</button></div>
+<div class="tc-list" id="tcList" style="margin-top:12px"></div>
+<p class="ad-hint2"><b>Sach baat:</b> Free/Premium ka lock browser mein chalta hai (website ke code mein), server par nahi. Yani ye ek <b>business ka switch</b> hai, koi mazboot tala nahi. Koi tech-savvy shakhs premium ko free karwa sakta hai. Paison ka asal mamla (code check) server par hi hota hai, aur is ke liye yeh switch theek hai.</p>
+</div></section>
+<section class="section ad-set" id="ctlName"><h2 class="ad-h2">Site ka naam</h2><div class="formsec">
+<label for="ctlSiteName">Website ka naam (khali = purana naam "CV Studio Pro")</label><input type="text" id="ctlSiteName" maxlength="40" autocomplete="off" placeholder="CV Studio Pro">
+<p class="ad-hint2"><b>Kya badlega:</b> har page ke upar wala naam aur neeche footer ka naam. <b>Kya NAHI badlega:</b> Google search mein dikhne wala title, page ka description, sharing image aur domain (github.io address). Wo sab abhi code mein likhe hain; naam final hone par hum aik alag batch mein sab badlenge.</p>
+</div></section>
+<section class="section ad-set" id="ctlVideo"><h2 class="ad-h2">Demo video (Guide page par)</h2><div class="formsec">
+<label for="ctlVideoUrl">Video ka link (YouTube ya Google Drive)</label><input type="url" id="ctlVideoUrl" maxlength="300" autocomplete="off" inputmode="url" placeholder="https://www.youtube.com/watch?v=...">
+<div class="ad-actions"><button type="button" class="ad-btn" id="ctlVideoClear">Video hata dein</button></div>
+<div id="ctlVideoPrev" class="demo-prev" aria-live="polite"></div>
+<p class="ad-hint2"><b>Video direct yahan upload kyun nahi:</b> admin panel ka server (Google Apps Script) bari video file nahi sambhal sakta, aur website ka free hosting bhi bari video ke liye theek nahi. Isliye video pehle YouTube par daalein, phir uska link yahan paste karein.</p>
+<ol class="ad-hint2" style="padding-left:20px"><li>youtube.com kholein, apne Google account se login karein.</li><li>Upar <b>Create</b> (ya + ka button) dabayen, phir <b>Upload video</b>.</li><li>Video chunein. Visibility mein <b>Unlisted</b> chunein (sirf link walay dekh saken ge) ya <b>Public</b>.</li><li>Upload poora hone par video ka link copy karein aur upar wale box mein paste karein.</li><li>Google Drive se bhi chal sakta hai: file par right click, Share, "Anyone with the link" karein, link paste karein. YouTube behtar chalta hai.</li></ol>
+</div></section>
+<section class="section ad-set"><h2 class="ad-h2">Save</h2><div class="formsec">
+<label for="ctlPass">Tasdeeq ke liye apna Owner Password daalein</label><input type="password" id="ctlPass" autocomplete="current-password">
+<div class="ad-actions"><button class="ad-btn pri" id="ctlSaveBtn" onclick="saveControlUI()">Control Save karein</button></div>
+<p class="muted" id="ctlMsg" role="status" aria-live="polite"></p>
+<p class="ad-hint2">Agar "Server purana version hai" likha aaye to Apps Script mein aik chhota update karna hoga (alag file mein tareeqa diya hai: APPS_SCRIPT_PATCH_batch63.txt).</p>
+</div></section>
+</div>
 <div id="panelSettings" style="display:none">
 <section class="section ad-set"><div class="ad-check" id="setupCheck" aria-live="polite"><h2 class="ad-h2">Setup checklist</h2><div id="setupProg" class="muted">Loading...</div></div>
 <details class="ad-help ad-guide"><summary>Settings kaise bharein (step by step)</summary>
@@ -131,21 +193,24 @@ body{background:#f7f1e6}
 <p class="muted" id="setMsg" role="status" aria-live="polite"></p>
 </div></div></section>
 <section class="section ad-set"><h2 class="ad-h2">Orders ka backup</h2><div class="formsec"><p class="ad-hint2">Saare orders ki CSV file (Excel mein khulti hai) download karein.</p><div class="ad-actions"><button class="ad-btn" id="csvBtn" onclick="exportCSV()">Orders CSV download</button></div></div></section>
-<section class="section"><div><h2 class="ad-h2">Owner password badlein</h2><div class="formsec"><label for="oldPassInput">Current Password</label><div style="display:flex;gap:6px;align-items:center"><input id="oldPassInput" type="password" autocomplete="current-password" placeholder="Current password" style="flex:1"><button type="button" class="btn light" style="padding:6px 10px" aria-label="Show or hide password" onclick="togglePwd('oldPassInput',this)">👁</button></div><label for="newPassInput">New Password</label><div style="display:flex;gap:6px;align-items:center"><input id="newPassInput" type="password" autocomplete="new-password" placeholder="Kam az kam 12 characters" style="flex:1"><button type="button" class="btn light" style="padding:6px 10px" aria-label="Show or hide password" onclick="togglePwd('newPassInput',this)">👁</button></div><div class="actions" style="margin-top:10px"><button class="btn dark" id="changePassBtn" onclick="changePasswordUI()">Change Password</button></div><p class="muted small" id="changePassMsg" role="status"></p></div></div></section>
+<section class="section ad-set"><div><h2 class="ad-h2">Owner password badlein</h2><div class="formsec"><label for="oldPassInput">Current Password</label><div class="pwrow"><input id="oldPassInput" type="password" autocomplete="current-password" placeholder="Current password"><button type="button" class="ad-btn" aria-label="Show or hide password" onclick="togglePwd('oldPassInput',this)">Show</button></div><label for="newPassInput">New Password</label><div class="pwrow"><input id="newPassInput" type="password" autocomplete="new-password" placeholder="Kam az kam 12 characters"><button type="button" class="ad-btn" aria-label="Show or hide password" onclick="togglePwd('newPassInput',this)">Show</button></div><div class="ad-actions"><button class="ad-btn pri" id="changePassBtn" onclick="changePasswordUI()">Change Password</button></div><p class="muted small" id="changePassMsg" role="status"></p></div></div></section>
 </div>
 <div id="helpBox"><section class="section"><details class="ad-help"><summary>Madad: order ka kaam kaise hota hai</summary>
 <ol class="muted"><li><b>Naya order</b> aata hai: payment check karein, phir <b>Approve &amp; Send Code</b> dabayen. Agle unused code customer ko email ho jata hai. Agar email nahi di thi to <b>WhatsApp par code bhejein</b> wala button dabayen.</li><li><b>Code bheja</b>: customer code daal kar khud CV download kar leta hai. Agar aap khud CV bana kar dena chahte hain to <b>Kaam shuru</b> dabayen.</li><li><b>Kaam jari hai</b>: jab CV de dein to <b>Mukammal</b> dabayen.</li><li>Codes khatam hon to <b>khud naye ban jate hain</b> (approve karte waqt). Chahein to Settings tab se pehle se bhi bana sakte hain.</li><li>Har status Google Sheet ke <b>Orders</b> tab mein save hota hai, isliye phone aur laptop dono par same nazar aata hai.</li></ol></details></section></div>
+</main>
+</div>
 </div>
 
 <script src="js/app.js"></script><script>
 var ORDERS=[],FILTER='',TIMER=null,TAB='new',CODES_LEFT=null;
-var TABS=['new','active','done','cancel','settings'];
+var TABS=['new','active','done','cancel','control','settings'];
 var TAB_INFO={
   new:['Naye Orders','Ye wo orders hain jin par aap ka action chahiye. Payment check karein, phir Approve dabayen. Payment nahi aayi to Reminder bhejein.'],
   active:['Jari Orders','Jin ko code ja chuka hai ya jin ka kaam chal raha hai.'],
   done:['Mukammal Orders','Ye orders poore ho chuke hain. Inhein dobara kholna ho to "Dobara kholein" dabayen.'],
   cancel:['Cancelled Orders','Cancel kiye hue orders.'],
-  settings:['Settings','Prices, WhatsApp number, payment details aur QR yahan se badlein.']
+  control:['Site Control','Templates Free/Premium, site ka naam aur demo video yahan se control karein.'],
+  settings:['Settings','Prices, WhatsApp number, payment details, codes aur password yahan se badlein.']
 };
 var TOK_KEY='cvStudioOwnerToken';
 function $(id){return document.getElementById(id)}
@@ -167,7 +232,7 @@ function adminBoot(){
   $('ownerPassInput').addEventListener('keydown',function(e){if(e.key==='Enter')ownerLogin()});
   $('searchBox').addEventListener('input',function(){FILTER=this.value.trim().toLowerCase();render()});
   $('ordersList').addEventListener('click',onListClick);
-  $('stats').addEventListener('click',function(e){var b=e.target.closest('[data-tab]');if(!b)return;var t=b.getAttribute('data-tab');if(t===TAB){var l=$('ordersList');if(l&&l.scrollIntoView)l.scrollIntoView({behavior:'smooth',block:'start'});return}setTab(t)});
+  $('stats').addEventListener('click',function(e){var b=e.target.closest('[data-tab]');if(!b)return;var t=b.getAttribute('data-tab');if(t===TAB){try{window.scrollTo({top:0,behavior:'smooth'})}catch(e){window.scrollTo(0,0)}return}setTab(t)});
 }
 
 /* ---------- Site settings ---------- */
@@ -279,6 +344,7 @@ async function loadSiteSettings(){
   }
   for(var m=1;m<=3;m++)setQrPreview(m);
   previewOffer();renderChecklist();
+  try{ctlInit(S)}catch(e){}
 }
 async function saveSiteSettingsUI(){
   var msg=$('setMsg'),btn=$('setSaveBtn'),pw=$('setPass').value;
@@ -303,7 +369,7 @@ async function saveSiteSettingsUI(){
     msg.textContent=r.changed&&r.changed.length?'Save ho gaya ('+r.changed.length+' cheezein badli). Website par 1-2 minute mein nazar aayega.':'Koi tabdeeli nahi thi.';
     toast('ok','Site settings save ho gayin.');
   }else{
-    var m={wrong_password:'Owner password galat hai.',locked:'Bohat zyada galat koshishen. 15 minute baad try karein.',bad_qr:'QR image theek nahi (sirf PNG/JPG, chhoti).',bad_whatsapp:'WhatsApp number theek nahi.',bad_date:'Akhri tareekh theek nahi.',bad_email:'Email theek nahi.',bad_key:'Server purana version hai. Naya Code.gs deploy karein.',network:'Internet / server masla. Dobara try karein.'};
+    var m={wrong_password:'Owner password galat hai.',locked:'Bohat zyada galat koshishen. 15 minute baad try karein.',bad_qr:'QR image theek nahi (sirf PNG/JPG, chhoti).',bad_whatsapp:'WhatsApp number theek nahi.',bad_date:'Akhri tareekh theek nahi.',bad_email:'Email theek nahi.',bad_video:'Video link sirf YouTube ya Google Drive ka ho (https://).',bad_key:'Server purana version hai. Naya Code.gs deploy karein.',network:'Internet / server masla. Dobara try karein.'};
     msg.textContent=(r&&m[r.error])||('Save nahi hua: '+((r&&r.error)||'unknown'));
   }
 }
@@ -375,7 +441,7 @@ async function ownerLogin(){
     msg.textContent='Server purana version hai. Naya Code.gs deploy karein (Deploy > Manage deployments > New version).';
   }else{msg.textContent='Incorrect password.'}
 }
-function togglePwd(id,btn){var el=$(id);if(!el)return;if(el.type==='password'){el.type='text';btn.textContent='🙈'}else{el.type='password';btn.textContent='👁'}}
+function togglePwd(id,btn){var el=$(id);if(!el)return;if(el.type==='password'){el.type='text';btn.textContent='Hide'}else{el.type='password';btn.textContent='Show'}}
 async function ownerLogout(){
   var t=tok();if(t){try{await verifyWithBackend({action:'logout',token:t})}catch(e){}}
   showLogin('');location.reload();
@@ -401,7 +467,7 @@ async function loadOrders(manual){
 /* ===== Batch 50: new-order alerts (works while this page is open: sound, title, notification, banner) ===== */
 var ALERTS_ON=false,PREV_NEW=null,AUDIO_CTX=null;
 try{ALERTS_ON=localStorage.getItem('cvOwnerAlerts')==='1'}catch(e){}
-function alertBtnText(){var b=$('alertBtn');if(b)b.textContent='🔔 Alerts: '+(ALERTS_ON?'ON':'OFF')}
+function alertBtnText(){var b=$('alertBtn');if(b)b.textContent='Alerts: '+(ALERTS_ON?'ON':'OFF')}
 function beep(){try{var C=window.AudioContext||window.webkitAudioContext;if(!C)return;if(!AUDIO_CTX)AUDIO_CTX=new C();if(AUDIO_CTX.state==='suspended')AUDIO_CTX.resume();[0,0.28,0.56].forEach(function(d,i){var o=AUDIO_CTX.createOscillator(),g=AUDIO_CTX.createGain();o.type='sine';o.frequency.value=i===1?1175:880;g.gain.setValueAtTime(0.0001,AUDIO_CTX.currentTime+d);g.gain.exponentialRampToValueAtTime(0.35,AUDIO_CTX.currentTime+d+0.02);g.gain.exponentialRampToValueAtTime(0.0001,AUDIO_CTX.currentTime+d+0.24);o.connect(g);g.connect(AUDIO_CTX.destination);o.start(AUDIO_CTX.currentTime+d);o.stop(AUDIO_CTX.currentTime+d+0.26)})}catch(e){}}
 function toggleAlerts(){
   ALERTS_ON=!ALERTS_ON;try{localStorage.setItem('cvOwnerAlerts',ALERTS_ON?'1':'0')}catch(e){}
@@ -412,7 +478,7 @@ function toggleAlerts(){
 function checkAlerts(){
   var nNew=0,old=0;ORDERS.forEach(function(o){if(groupOf(o)==='new'){nNew++;try{if(ageText(o.timestamp).old)old++}catch(e){}}});
   var bn=$('oldBanner');
-  if(bn){if(old>0){bn.hidden=false;bn.textContent='⚠ '+old+' order ka payment/approval abhi tak baqi hai. "Naye" tab mein dekhein.'}else bn.hidden=true}
+  if(bn){if(old>0){bn.hidden=false;bn.textContent='Dhyan: '+old+' order ka payment/approval abhi tak baqi hai. "Naye" tab mein dekhein.'}else bn.hidden=true}
   if(PREV_NEW!==null&&nNew>PREV_NEW){
     var add=nNew-PREV_NEW;
     if(ALERTS_ON){beep();try{if(navigator.vibrate)navigator.vibrate([300,150,300,150,300])}catch(e){}try{if('Notification' in window&&Notification.permission==='granted')new Notification('Naya order aaya!',{body:add+' naya order. Approve ke liye admin page kholein.'})}catch(e){}}
@@ -456,14 +522,16 @@ function card(o){
 }
 function group(id,title,hint,list){
   var inner=list.length?list.map(card).join(''):'<div class="ad-empty">'+esc(hint)+'</div>';
-  return '<div class="ad-group g-'+id+'" id="grp-'+id+'"><h2>'+esc(title)+' <span class="ad-count">'+list.length+'</span></h2>'+inner+'</div>';
+  return '<div class="ad-group g-'+id+'" id="grp-'+id+'"><h2>'+esc(title)+' <span class="ad-count">'+list.length+'</span></h2>'+(list.length?'<div class="ad-cards">'+inner+'</div>':inner)+'</div>';
 }
 
 function setTab(t){
   if(TABS.indexOf(t)<0)t='new';TAB=t;
   try{history.replaceState(null,'','#'+t)}catch(e){}
-  $('panelOrders').style.display=(t==='settings')?'none':'block';
+  $('panelOrders').style.display=(t==='settings'||t==='control')?'none':'block';
+  $('panelControl').style.display=(t==='control')?'block':'none';
   $('panelSettings').style.display=(t==='settings')?'block':'none';
+  try{window.scrollTo(0,0)}catch(e){}
   $('tabTitle').textContent=TAB_INFO[t][0];$('tabHint').textContent=TAB_INFO[t][1];
   render();
 }
@@ -476,8 +544,11 @@ function render(){
   var all={new:[],sent:[],work:[],done:[],cancel:[]},n={new:0,sent:0,work:0,done:0,cancel:0};
   ORDERS.slice().reverse().forEach(function(o){var g=groupOf(o);n[g]++;if(matches(o))all[g].push(o)});
   var pend=n.new;document.title=(pend?'('+pend+') ':'')+'Owner Orders - CV Studio Pro';
-  var tiles=[['new','Naye (action chahiye)',n.new],['active','Jari',n.sent+n.work],['done','Mukammal',n.done],['cancel','Cancelled',n.cancel],['settings','Settings','⚙']];
-  var __st=tiles.map(function(x){return '<button class="ad-stat '+x[0]+(TAB===x[0]?' on':'')+'" role="tab" aria-selected="'+(TAB===x[0])+'" data-tab="'+x[0]+'"><b>'+x[2]+'</b><span>'+x[1]+'</span></button>'}).join('');if($('stats').getAttribute('data-h')!==__st){$('stats').innerHTML=__st;$('stats').setAttribute('data-h',__st)}
+  var ICO_CTL='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2.2"/><circle cx="8" cy="17" r="2.2"/></svg>';
+  var ICO_SET='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M3 10h18M7 15h4"/></svg>';
+  var tiles=[['new','Naye',n.new],['active','Jari',n.sent+n.work],['done','Mukammal',n.done],['cancel','Cancelled',n.cancel],['control','Control',ICO_CTL],['settings','Settings',ICO_SET]];
+  var __st=tiles.map(function(x,i){return (i===4?'<div class="ad-sep" aria-hidden="true"></div>':'')+'<button type="button" class="ad-stat '+x[0]+(TAB===x[0]?' on':'')+'" role="tab" aria-selected="'+(TAB===x[0])+'" data-tab="'+x[0]+'"><b>'+x[2]+'</b><span>'+x[1]+'</span></button>'}).join('');if($('stats').getAttribute('data-h')!==__st){$('stats').innerHTML=__st;$('stats').setAttribute('data-h',__st)}
+  if(TAB==='control'){renderControl();return}
   if(TAB==='settings'){var cl=$('codesLeftTxt');if(cl&&CODES_LEFT!==null)cl.textContent='Abhi unused codes: '+CODES_LEFT;renderChecklist();return}
   if(!ORDERS.length){$('ordersList').innerHTML='<div class="ad-empty">Abhi koi order nahi aaya.</div>';return}
   var h='';
@@ -545,6 +616,76 @@ async function changePasswordUI(){
   else if(r&&r.error==='password_too_short'){msg.textContent='Naya password kam az kam 12 characters ka hona chahiye.'}
   else if(r&&r.error==='wrong_password'){msg.textContent='Current password galat hai.'}
   else{msg.textContent='Password nahi badal saka. Dobara try karein.'}
+}
+
+/* ===== Batch 63: Site Control (template Free/Premium, site name, demo video) ===== */
+var CTL={eff:{},def:{},loaded:false,filter:'all',q:''};
+function ctlInit(S){
+  var free=parseIdList(S.tpl_free),prem=parseIdList(S.tpl_premium);
+  templates.forEach(function(t){var d=(t._p0===undefined)?!!t.premium:t._p0;CTL.def[t.id]=d;var p=d;if(prem.indexOf(t.id)>=0)p=true;else if(free.indexOf(t.id)>=0)p=false;CTL.eff[t.id]=p});
+  CTL.loaded=true;
+  $('ctlSiteName').value=S.site_name||'';$('ctlVideoUrl').value=S.demo_video||'';ctlVideoPrev();
+  if(TAB==='control')renderControl();
+}
+function renderControl(){
+  var list=$('tcList');if(!list)return;
+  if(!CTL.loaded){list.innerHTML='<div class="ad-empty">Settings load ho rahi hain... (agar der lage to Refresh karein)</div>';return}
+  var nF=0,nP=0,chg=0;
+  templates.forEach(function(t){if(CTL.eff[t.id])nP++;else nF++;if(CTL.eff[t.id]!==CTL.def[t.id])chg++});
+  $('tcSum').textContent='Free: '+nF+'  |  Premium: '+nP+(chg?'  |  '+chg+' tabdeeli (abhi save nahi hui)':'');
+  var chips=[['all','Sab ('+templates.length+')'],['free','Free ('+nF+')'],['prem','Premium ('+nP+')'],['chg','Badle hue ('+chg+')']];
+  var ch=chips.map(function(c){return '<button type="button" class="tc-chip'+(CTL.filter===c[0]?' on':'')+'" data-tcf="'+c[0]+'" aria-pressed="'+(CTL.filter===c[0])+'">'+c[1]+'</button>'}).join('');
+  if($('tcChips').getAttribute('data-h')!==ch){$('tcChips').innerHTML=ch;$('tcChips').setAttribute('data-h',ch)}
+  var q=CTL.q,h='';
+  templates.forEach(function(t){
+    var p=!!CTL.eff[t.id],c=p!==CTL.def[t.id];
+    if(CTL.filter==='free'&&p)return;if(CTL.filter==='prem'&&!p)return;if(CTL.filter==='chg'&&!c)return;
+    if(q&&(t.name+' '+t.id).toLowerCase().indexOf(q)<0)return;
+    h+='<div class="tc-row'+(c?' chg':'')+'"><img src="img/templates/'+esc(t.id)+'.jpg" loading="lazy" width="40" height="53" alt=""><div class="tc-name"><b>'+esc(t.name)+'</b><small>'+esc(t.id)+' &middot; default: '+(CTL.def[t.id]?'Premium':'Free')+'</small></div><div class="seg" role="group" aria-label="'+esc(t.name)+'"><button type="button" class="f'+(p?'':' on')+'" data-tc="'+esc(t.id)+'" data-v="f" aria-pressed="'+(!p)+'">Free</button><button type="button" class="p'+(p?' on':'')+'" data-tc="'+esc(t.id)+'" data-v="p" aria-pressed="'+p+'">Premium</button></div></div>';
+  });
+  list.innerHTML=h||'<div class="ad-empty">Is filter mein koi template nahi.</div>';
+}
+function ctlVideoPrev(){
+  var u=$('ctlVideoUrl').value.trim(),box=$('ctlVideoPrev');box.textContent='';
+  if(!u)return;
+  var src=demoEmbed(u);
+  if(!src){var p=document.createElement('p');p.className='ad-hint2';p.textContent='Ye link pehchana nahi gaya. YouTube (youtube.com/watch?v=... ya youtu.be/...) ya Google Drive file ka link daalein.';box.appendChild(p);return}
+  var w=document.createElement('div');w.className='demo-frame';var f=document.createElement('iframe');f.src=src;f.title='Video preview';f.setAttribute('allowfullscreen','');f.setAttribute('allow','fullscreen');w.appendChild(f);box.appendChild(w);
+}
+document.addEventListener('click',function(e){
+  var t=e.target.closest&&e.target.closest('[data-tc]');
+  if(t){CTL.eff[t.getAttribute('data-tc')]=(t.getAttribute('data-v')==='p');renderControl();return}
+  var f=e.target.closest&&e.target.closest('[data-tcf]');
+  if(f){CTL.filter=f.getAttribute('data-tcf');renderControl();return}
+  if(e.target.id==='tcReset'){templates.forEach(function(x){CTL.eff[x.id]=CTL.def[x.id]});renderControl();return}
+  if(e.target.id==='ctlVideoClear'){$('ctlVideoUrl').value='';ctlVideoPrev()}
+});
+document.addEventListener('input',function(e){
+  if(e.target.id==='tcSearch'){CTL.q=e.target.value.trim().toLowerCase();renderControl()}
+  if(e.target.id==='ctlVideoUrl')ctlVideoPrev();
+});
+async function saveControlUI(){
+  var msg=$('ctlMsg'),btn=$('ctlSaveBtn'),pw=$('ctlPass').value;
+  if(!CTL.loaded){msg.textContent='Settings abhi load nahi hui. Page refresh karke dobara try karein.';return}
+  if(!pw){msg.textContent='Pehle apna Owner Password daalein.';$('ctlPass').focus();return}
+  var url=$('ctlVideoUrl').value.trim();
+  if(url&&!demoEmbed(url)){msg.textContent='Video ka link YouTube ya Google Drive ka hona chahiye.';return}
+  var nF=0,tf=[],tp=[];
+  templates.forEach(function(t){if(!CTL.eff[t.id])nF++;if(CTL.eff[t.id]!==CTL.def[t.id]){(CTL.eff[t.id]?tp:tf).push(t.id)}});
+  if(nF<1&&!confirm('Koi bhi template Free nahi reh raha. Visitors ko free mein kuch nahi milega. Phir bhi save karna hai?'))return;
+  var v={site_name:$('ctlSiteName').value.trim(),demo_video:url,tpl_free:tf.join(','),tpl_premium:tp.join(',')};
+  btn.disabled=true;btn.textContent='Saving...';msg.textContent='';
+  var r=await api({action:'saveSiteSettings',password:pw,values:v});
+  btn.disabled=false;btn.textContent='Control Save karein';
+  if(r===null)return;
+  if(r&&r.valid){
+    $('ctlPass').value='';
+    msg.textContent=r.changed&&r.changed.length?'Save ho gaya ('+r.changed.length+' cheezein badli). Website par 1-2 minute mein nazar aayega.':'Koi tabdeeli nahi thi.';
+    toast('ok','Site Control save ho gaya.');
+  }else{
+    var m={wrong_password:'Owner password galat hai.',locked:'Bohat zyada galat koshishen. 15 minute baad try karein.',bad_video:'Video link sirf YouTube ya Google Drive ka ho (https://).',bad_key:'Server purana version hai. Apps Script mein chhota update chahiye (APPS_SCRIPT_PATCH_batch63.txt dekhein).',network:'Internet / server masla. Dobara try karein.'};
+    msg.textContent=(r&&m[r.error])||('Save nahi hua: '+((r&&r.error)||'unknown'));
+  }
 }
 
 adminBoot();
