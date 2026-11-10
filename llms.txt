@@ -1,0 +1,28 @@
+# CV Studio Pro
+
+> CV Studio Pro is a free online CV builder with premium templates, run from Pakistan for job seekers in Pakistan, India and the Gulf. Users type their details in the browser, pick a template and download a PDF or Word file. Premium designs are unlocked with an access code after a manual payment. Free CV writing guides are published under CV Tips.
+
+## Main pages
+- [Home](https://uppalc.github.io/cvstudiopro/): overview, free and premium templates
+- [CV Builder](https://uppalc.github.io/cvstudiopro/builder.html): the online builder
+- [Templates](https://uppalc.github.io/cvstudiopro/templates.html): 70 CV templates by category
+- [Pricing](https://uppalc.github.io/cvstudiopro/pricing.html): price of a premium CV
+- [How to use](https://uppalc.github.io/cvstudiopro/guide.html): step-by-step help
+
+## CV Tips (original guides)
+- [CV Tips hub](https://uppalc.github.io/cvstudiopro/tips.html)
+- [How to write a CV](https://uppalc.github.io/cvstudiopro/tips-how-to-write-a-cv.html)
+- [What is an ATS CV](https://uppalc.github.io/cvstudiopro/tips-what-is-ats-cv.html)
+- [CV for freshers with no experience](https://uppalc.github.io/cvstudiopro/tips-fresher-cv-no-experience.html)
+- [CV vs resume vs biodata](https://uppalc.github.io/cvstudiopro/tips-cv-vs-resume-vs-biodata.html)
+- [CV for jobs abroad](https://uppalc.github.io/cvstudiopro/tips-cv-for-jobs-abroad.html)
+- [Skills on a CV](https://uppalc.github.io/cvstudiopro/tips-skills-on-a-cv.html)
+- [How to write a cover letter](https://uppalc.github.io/cvstudiopro/tips-cover-letter-how-to-write.html)
+- [Common CV mistakes](https://uppalc.github.io/cvstudiopro/tips-common-cv-mistakes.html)
+- [Job interview preparation](https://uppalc.github.io/cvstudiopro/tips-job-interview-preparation.html)
+
+## Policies
+- [Privacy Policy](https://uppalc.github.io/cvstudiopro/privacy.html)
+- [Terms and Conditions](https://uppalc.github.io/cvstudiopro/terms.html)
+- [Refund Policy](https://uppalc.github.io/cvstudiopro/refund.html)
+- [Contact](https://uppalc.github.io/cvstudiopro/contact.html)
