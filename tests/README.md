@@ -2,7 +2,7 @@
 
 Unit tests (no install needed, Node 18+):
 
-    node --test tests/resume-import.test.js
+    node --test tests/*.test.js
 
 Browser integration tests (import + Word export; needs Python, `pip install playwright python-docx pillow`, LibreOffice and poppler-utils):
 
