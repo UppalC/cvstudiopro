@@ -8,6 +8,7 @@
 - [Templates](https://uppalc.github.io/cvstudiopro/templates.html): 70 CV templates by category
 - [Pricing](https://uppalc.github.io/cvstudiopro/pricing.html): price of a premium CV
 - [How to use](https://uppalc.github.io/cvstudiopro/guide.html): step-by-step help
+- [ATS CV Checker](https://uppalc.github.io/cvstudiopro/ats-checker.html): free rule-based checklist for pasted CV text
 
 ## CV Tips (original guides)
 - [CV Tips hub](https://uppalc.github.io/cvstudiopro/tips.html)

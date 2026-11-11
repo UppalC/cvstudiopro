@@ -1,0 +1,19 @@
+.ats-box{display:grid;gap:14px;margin:18px 0}
+.ats-box label{font-weight:700;display:block;margin-bottom:6px}
+.ats-box textarea{width:100%;min-height:220px;padding:12px;border:2px solid #cbd5e1;border-radius:12px;font:inherit;line-height:1.5;resize:vertical;background:#fff;color:#0f172a}
+.ats-box textarea.short{min-height:110px}
+.ats-box textarea:focus-visible{outline:3px solid #f59e0b;outline-offset:2px}
+.ats-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.ats-note{font-size:14px;color:#475569}
+.ats-result{margin-top:22px}
+.ats-score{padding:16px 18px;border-radius:14px;background:#eef2ff;border:1px solid #c7d2fe;font-size:20px;font-weight:800}
+.ats-score small{display:block;font-weight:400;font-size:14px;color:#475569;margin-top:4px}
+.ats-list{list-style:none;padding:0;margin:14px 0;display:grid;gap:10px}
+.ats-item{display:grid;grid-template-columns:auto 1fr;gap:10px;padding:12px 14px;border-radius:12px;background:#fff;border:1px solid #e2e8f0;border-left-width:6px}
+.ats-item b{display:block}.ats-item span.d{display:block;color:#475569;font-size:15px;line-height:1.55;margin-top:2px}
+.ats-tag{font-size:12px;font-weight:800;padding:3px 8px;border-radius:999px;align-self:start;white-space:nowrap}
+.ats-pass{border-left-color:#16a34a}.ats-pass .ats-tag{background:#dcfce7;color:#14532d}
+.ats-warn{border-left-color:#d97706}.ats-warn .ats-tag{background:#fef3c7;color:#78350f}
+.ats-fail{border-left-color:#dc2626}.ats-fail .ats-tag{background:#fee2e2;color:#7f1d1d}
+.ats-info{border-left-color:#64748b}.ats-info .ats-tag{background:#e2e8f0;color:#1e293b}
+.ats-msg{color:#b91c1c;font-weight:700}
