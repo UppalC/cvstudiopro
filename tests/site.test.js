@@ -57,3 +57,14 @@ test('llms.txt: starts with an H1, has a summary, and every link points to an ex
  const links=[...t.matchAll(/\]\((https:\/\/[^)]+)\)/g)].map(m=>m[1]);assert.ok(links.length>=15);
  links.forEach(u=>assert.ok(fs.existsSync(path.join(ROOT,u.replace(/^https:\/\/uppalc\.github\.io\/cvstudiopro\//,'')||'index.html')),u));
 });
+test('structured data (JSON-LD) on every page is valid JSON',()=>{
+ pages.forEach(f=>{[...read(f).matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].forEach(m=>assert.doesNotThrow(()=>JSON.parse(m[1]),f))});
+});
+test('outside links only go to a short list of known sites',()=>{
+ const ok=/^https?:\/\/(?:uppalc\.github\.io|wa\.me|www\.gulftalent\.com|visualcv\.com|careers\.ed\.ac\.uk|www\.jobbank\.gc\.ca|www\.w3\.org|schema\.org)(?:[\/?#]|$)/;
+ const bad=[];pages.forEach(f=>{[...read(f).matchAll(/(?:href|src)="(https?:\/\/[^"]+)"/g)].forEach(m=>{if(!ok.test(m[1]))bad.push(f+' -> '+m[1])})});
+ assert.deepEqual(bad,[]);
+});
+test('every article has one H1, an Article schema and a link back to the tips hub',()=>{
+ pages.filter(f=>/^tips-/.test(f)).forEach(f=>{const s=read(f);assert.equal((s.match(/<h1[ >]/g)||[]).length,1,f);assert.match(s,/"@type":\s*"Article"/,f);assert.ok(s.includes('href="tips.html"'),f)});
+});

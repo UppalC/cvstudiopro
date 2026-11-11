@@ -21,6 +21,10 @@
 - [How to write a cover letter](https://uppalc.github.io/cvstudiopro/tips-cover-letter-how-to-write.html)
 - [Common CV mistakes](https://uppalc.github.io/cvstudiopro/tips-common-cv-mistakes.html)
 - [Job interview preparation](https://uppalc.github.io/cvstudiopro/tips-job-interview-preparation.html)
+- [CV format in Pakistan](https://uppalc.github.io/cvstudiopro/tips-cv-format-pakistan.html)
+- [CV format for the UAE and the Gulf](https://uppalc.github.io/cvstudiopro/tips-cv-format-uae-gulf.html)
+- [UK CV format](https://uppalc.github.io/cvstudiopro/tips-cv-format-uk.html)
+- [Canadian resume format](https://uppalc.github.io/cvstudiopro/tips-cv-format-canada.html)
 
 ## Policies
 - [Privacy Policy](https://uppalc.github.io/cvstudiopro/privacy.html)
