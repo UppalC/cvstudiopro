@@ -1,0 +1,101 @@
+APPS SCRIPT UPDATE - Batch 73 (5 chhoti tabdeeliyan, sab ek hi dafa Redeploy)
+===========================================================================
+Kyun: (1) customers ka code-check aur aap ka login "lock" karna ab bohat mushkil se ho (pehle sirf 40 / 5 galat
+koshishon par sab lock ho jate the). (2) Agar koi aap ka password guess karne ki koshish kare to aap ko email aaye.
+(3) Admin ke Settings mein "Purana customer data hatayen" button kaam kare (privacy policy mein 12 mahine ka wada hai).
+(4) Control tab (site ka naam, demo video, free/premium templates) save ho sake.
+
+Aap ki purani Code.gs (Google Sheet > Extensions > Apps Script) ko MAT delete karein. Sirf neeche ke 5 hissay jodein
+ya badlein. Har tabdeeli ke liye Ctrl+F se jagah dhoondein. Agar koi tabdeeli pehle hi lag chuki ho (jaise Batch 63
+wali) to us ko dobara na karein.
+
+TABDEELI 1: do ginti badalna
+----------------------------
+Dhoondein:  const OWNER_MAX_FAILS = 5;
+Badal kar:  const OWNER_MAX_FAILS = 8;
+Dhoondein:  const CODE_MAX_FAILS = 40;
+Badal kar:  const CODE_MAX_FAILS = 150;
+
+TABDEELI 2: ek line jodna (purane orders mitane ke liye)
+--------------------------------------------------------
+Dhoondein:  case 'changePassword':
+Is line se THEEK PEHLE (upar) ye ek line paste karein:
+
+      case 'purgeOldOrders': return respond(withOwner(body, function () { return purgeOldOrders(body.months); }));
+
+TABDEELI 3: owner login lock hone par email
+-------------------------------------------
+Dhoondein:  addFail('owner', OWNER_LOCK_SECONDS);
+Is line ke THEEK NEECHE ye hissa paste karein:
+
+  if (getFails('owner') === OWNER_MAX_FAILS) {
+    try {
+      MailApp.sendEmail(Session.getEffectiveUser().getEmail(), 'CV Studio: owner login locked',
+        'Owner login was locked for ' + (OWNER_LOCK_SECONDS / 60) + ' minutes after ' + OWNER_MAX_FAILS + ' wrong passwords. If this was not you, someone is trying to guess your password: change it (Google Sheet > OwnerLogin > A2) and check your Google account security.');
+    } catch (e) { Logger.log('lock alert failed: ' + e); }
+  }
+
+TABDEELI 4: purgeOldOrders function jodna
+-----------------------------------------
+Dhoondein:  function randomCode()
+Is se THEEK PEHLE (upar) ye poora function paste karein (jis comment /** se shuru hota hai wahan se):
+
+/** Privacy: erase personal details of orders older than N months (default 12). Keeps order number, template, status and code. */
+function purgeOldOrders(months) {
+  const m = months === undefined || months === null || months === '' ? 12 : Number(months);
+  if (!isFinite(m) || m < 3 || m > 60 || Math.floor(m) !== m) return { valid: false, error: 'bad_months' };
+  const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(ORDERS_TAB);
+  if (!sheet) return { valid: false, error: 'no_orders_tab' };
+  const cutoff = new Date();
+  cutoff.setMonth(cutoff.getMonth() - m);
+  let purged = 0;
+  const lock = LockService.getScriptLock();
+  lock.waitLock(10000);
+  try {
+    const data = sheet.getDataRange().getValues();
+    for (let i = 1; i < data.length; i++) {
+      const ts = data[i][0];
+      if (!(ts instanceof Date) || ts.getTime() >= cutoff.getTime()) continue;
+      if (String(data[i][1]) === 'Deleted' && !data[i][2] && !data[i][3] && !data[i][5] && !data[i][10]) continue;
+      sheet.getRange(i + 1, 2, 1, 3).setValues([['Deleted', '', '']]);
+      sheet.getRange(i + 1, 6).setValue('');
+      sheet.getRange(i + 1, 11).setValue('');
+      purged++;
+    }
+  } finally {
+    lock.releaseLock();
+  }
+  return { valid: true, purged: purged, months: m };
+}
+
+TABDEELI 5: Control tab ke liye (agar Batch 63 wala patch pehle nahi lagaya)
+----------------------------------------------------------------------------
+Is ke liye pehle wali file APPS_SCRIPT_PATCH_batch63.txt dekhein (PUBLIC_KEYS mein 4 naam + validation ka hissa).
+Agar aap ne wo pehle hi laga diya hai to ise chhor dein.
+
+Phir Ctrl+S (save).
+
+REDEPLOY (zaroor, warna tabdeeli live nahi hoti)
+------------------------------------------------
+1. Upar right mein Deploy > Manage deployments.
+2. Pencil (edit) icon dabayen.
+3. Version: "New version" chunein.
+4. Deploy dabayen. (/exec link wahi rehta hai, website mein kuch nahi badalna.)
+
+CHECK KARNE KA TAREEQA
+----------------------
+1. Admin kholein > Settings. "Purana customer data hatayen" button dikhe.
+   Dabayen: confirm box aayega. "Cancel" dabayen (pehli dafa sirf dekhne ke liye). Agar button dabane par
+   "Server purana version hai" likha aaye to Tabdeeli 2 ya 4 ya Redeploy rah gaya hai.
+2. Admin > Control mein site ka naam badal kar save karein. "Save ho gaya" likha aaye to Tabdeeli 5 theek hai.
+
+PURANE ORDERS KE BAARE MEIN (zaroor parhein)
+--------------------------------------------
+- Button 12 mahine se purane orders ka naam, WhatsApp, email, note aur transaction ID mita deta hai (wapas nahi aata).
+  Order number, template, status aur code rehte hain, taake hisab kitab kharab na ho.
+- Sirf wo orders mitte hain jin ki date Google Sheet mein asli "date" format mein ho (jo website khud likhti hai).
+  Agar aap ne kisi row ki date haath se text likhi hai to wo nahi mitegi.
+- Ye mahine mein ek dafa khud karna hai. Ye apne aap nahi chalta.
+- Mitane se pehle chahein to Google Sheet ki copy bana lein (File > Make a copy).
+
+NOTE: Is file mein koi password ya raaz nahi hai. Apni SHEET_ID kahin share mat karein.

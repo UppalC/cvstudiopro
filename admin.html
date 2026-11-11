@@ -193,7 +193,7 @@ button,a,input,select,label,summary{touch-action:manipulation;-webkit-tap-highli
 <p class="muted" id="setMsg" role="status" aria-live="polite"></p>
 </div></div></section>
 <section class="section ad-set"><h2 class="ad-h2">Orders ka backup</h2><div class="formsec"><p class="ad-hint2">Saare orders ki CSV file (Excel mein khulti hai) download karein.</p><div class="ad-actions"><button class="ad-btn" id="csvBtn" onclick="exportCSV()">Orders CSV download</button></div></div></section>
-<section class="section ad-set"><div><h2 class="ad-h2">Owner password badlein</h2><div class="formsec"><label for="oldPassInput">Current Password</label><div class="pwrow"><input id="oldPassInput" type="password" autocomplete="current-password" placeholder="Current password"><button type="button" class="ad-btn" aria-label="Show or hide password" onclick="togglePwd('oldPassInput',this)">Show</button></div><label for="newPassInput">New Password</label><div class="pwrow"><input id="newPassInput" type="password" autocomplete="new-password" placeholder="Kam az kam 12 characters"><button type="button" class="ad-btn" aria-label="Show or hide password" onclick="togglePwd('newPassInput',this)">Show</button></div><div class="ad-actions"><button class="ad-btn pri" id="changePassBtn" onclick="changePasswordUI()">Change Password</button></div><p class="muted small" id="changePassMsg" role="status"></p></div></div></section>
+<section class="section ad-set"><div><h2 class="ad-h2">Purana customer data hatayen (privacy)</h2><p class="muted small">Privacy policy mein likha hai ke orders ka data 12 mahine tak rakha jata hai. Ye button 12 mahine se purane orders ka naam, WhatsApp, email, note aur transaction ID mita deta hai. Order number, template, status aur code rehte hain. Ye wapas nahi aata. Mahine mein aik dafa chalana kafi hai.</p><div class="ad-actions"><button class="ad-btn" id="purgeBtn" onclick="purgeOldUI()">12 mahine se purana data hatayen</button></div><p class="muted small" id="purgeMsg" role="status"></p></div></section><section class="section ad-set"><div><h2 class="ad-h2">Owner password badlein</h2><div class="formsec"><label for="oldPassInput">Current Password</label><div class="pwrow"><input id="oldPassInput" type="password" autocomplete="current-password" placeholder="Current password"><button type="button" class="ad-btn" aria-label="Show or hide password" onclick="togglePwd('oldPassInput',this)">Show</button></div><label for="newPassInput">New Password</label><div class="pwrow"><input id="newPassInput" type="password" autocomplete="new-password" placeholder="Kam az kam 12 characters"><button type="button" class="ad-btn" aria-label="Show or hide password" onclick="togglePwd('newPassInput',this)">Show</button></div><div class="ad-actions"><button class="ad-btn pri" id="changePassBtn" onclick="changePasswordUI()">Change Password</button></div><p class="muted small" id="changePassMsg" role="status"></p></div></div></section>
 </div>
 <div id="helpBox"><section class="section"><details class="ad-help"><summary>Madad: order ka kaam kaise hota hai</summary>
 <ol class="muted"><li><b>Naya order</b> aata hai: payment check karein, phir <b>Approve &amp; Send Code</b> dabayen. Agle unused code customer ko email ho jata hai. Agar email nahi di thi to <b>WhatsApp par code bhejein</b> wala button dabayen.</li><li><b>Code bheja</b>: customer code daal kar khud CV download kar leta hai. Agar aap khud CV bana kar dena chahte hain to <b>Kaam shuru</b> dabayen.</li><li><b>Kaam jari hai</b>: jab CV de dein to <b>Mukammal</b> dabayen.</li><li>Codes khatam hon to <b>khud naye ban jate hain</b> (approve karte waqt). Chahein to Settings tab se pehle se bhi bana sakte hain.</li><li>Har status Google Sheet ke <b>Orders</b> tab mein save hota hai, isliye phone aur laptop dono par same nazar aata hai.</li></ol></details></section></div>
@@ -616,6 +616,18 @@ async function changePasswordUI(){
   else if(r&&r.error==='password_too_short'){msg.textContent='Naya password kam az kam 12 characters ka hona chahiye.'}
   else if(r&&r.error==='wrong_password'){msg.textContent='Current password galat hai.'}
   else{msg.textContent='Password nahi badal saka. Dobara try karein.'}
+}
+
+async function purgeOldUI(){
+  var btn=$('purgeBtn'),msg=$('purgeMsg');
+  if(!confirm('12 mahine se purane orders ka naam, WhatsApp, email, note aur transaction ID hamesha ke liye mita diye jayenge. Wapas nahi aayega. Jari rakhein?'))return;
+  btn.disabled=true;msg.textContent='Ho raha hai...';
+  var r=await api({action:'purgeOldOrders',months:12});
+  btn.disabled=false;
+  if(r===null)return;
+  if(r&&r.valid){msg.textContent=r.purged?(r.purged+' purane orders ka data mita diya gaya.'):'Koi order 12 mahine se purana nahi mila.';if(r.purged)loadOrders(true)}
+  else if(r&&r.error==='unknown_action'){msg.textContent='Server purana version hai. Apps Script update karke Redeploy karein.'}
+  else{msg.textContent='Nahi ho saka. Dobara try karein.'}
 }
 
 /* ===== Batch 63: Site Control (template Free/Premium, site name, demo video) ===== */
