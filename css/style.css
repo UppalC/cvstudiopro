@@ -1320,3 +1320,5 @@ body[data-ts-bold="1"] .cvpage .cv-title{font-weight:800!important}
 .cv-l78 .fn-side{border-left:1px solid #e5dccb;padding-left:16px;align-self:start}
 .cv-l78 .cv-section .cv-sub{color:#8a6c3c;font-style:italic}.cv-l78 .skill-item .bar{height:4px;background:#e9e1d1}.cv-l78 .skill-item .bar span{background:#0f2a47}
 .cv-l78 .cv-chip{background:transparent;color:#0f2a47;border:0;border-bottom:1px solid #b08d57;border-radius:0;padding:1px 4px}
+
+@media print{.cv-photo.ph-empty{display:none!important}}

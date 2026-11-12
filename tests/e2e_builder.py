@@ -85,6 +85,11 @@ try:
   # ---- long CV
   pg.evaluate("()=>{fillDemo();state.form.exp1d=Array(40).fill('Handled daily work').join('\\n')}");p=export(pg,'long.docx')
   ok(len(docx.Document(p).paragraphs)>60,'word: long CV exports all lines')
+  # ---- real-user checks: fresh builder must not ship sample skills, and an empty photo box must not print
+  fp=br.new_page();fp.goto(pg.url.split('?')[0]);fp.wait_for_timeout(700)
+  ok(fp.evaluate("state.form.tech.length===0&&!state.form.soft&&!state.form.lang"),'fresh builder: no sample skills / soft skills / languages pre-filled');fp.close()
+  pg.evaluate("()=>{state.form.name='Ahmed Raza';setTemplate('t21');refreshPreview()}");pg.wait_for_timeout(300)
+  pg.emulate_media(media='print');ok(pg.evaluate("[...document.querySelectorAll('#cvPreview .cv-photo.ph-empty')].every(e=>getComputedStyle(e).display==='none')"),'no photo: "Profile Photo" box is hidden in print/PDF');pg.emulate_media(media='screen')
   # ---- WORD exact design (one real .docx file with the page pictures inside)
   pg.evaluate("()=>{fillDemo();state.photo='';setTemplate('t21');refreshPreview()}");pg.wait_for_timeout(600)
   npages=pg.evaluate("document.querySelectorAll('#cvPreview .cvpage').length")
