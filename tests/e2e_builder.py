@@ -85,6 +85,24 @@ try:
   # ---- long CV
   pg.evaluate("()=>{fillDemo();state.form.exp1d=Array(40).fill('Handled daily work').join('\\n')}");p=export(pg,'long.docx')
   ok(len(docx.Document(p).paragraphs)>60,'word: long CV exports all lines')
+  # ---- WORD exact design (one real .docx file with the page pictures inside)
+  pg.evaluate("()=>{fillDemo();state.photo='';setTemplate('t21');refreshPreview()}");pg.wait_for_timeout(600)
+  npages=pg.evaluate("document.querySelectorAll('#cvPreview .cvpage').length")
+  with pg.expect_download() as d: pg.get_by_role('button',name='Word (exact design)').click() if pg.evaluate("state.step")==4 else pg.evaluate("exportWord()")
+  dl=d.value;ok(dl.suggested_filename.endswith('_design.docx'),'design word: file name ends with _design.docx ('+dl.suggested_filename+')')
+  p=os.path.join(TMP,'design.docx');dl.save_as(p);z=zipfile.ZipFile(p);names=z.namelist()
+  ok(z.testzip() is None,'design word: zip is valid')
+  ok(sum(1 for n in names if n.startswith('word/media/page'))==npages,f'design word: {npages} page picture(s) inside the same file')
+  docx.Document(p);x=z.read('word/document.xml').decode();ok(x.count('<wp:anchor')==npages,'design word: one full-page picture per page, opens in python-docx')
+  ok('w:left="0"' in x and 'w:top="0"' in x,'design word: zero page margins (picture fills the page)')
+  from PIL import Image as _I
+  im=_I.open(io.BytesIO(z.read('word/media/page1.jpg')));ok(im.size[0]>=1500 and abs(im.size[1]/im.size[0]-1.414)<0.03,f'design word: picture is full A4 size and not shrunk by preview zoom {im.size}')
+  pdf=pdf_of(p);pc=subprocess.run(['pdfinfo',pdf],capture_output=True,text=True).stdout
+  m=re.search(r'Pages:\s+(\d+)',pc);ok(m and int(m.group(1))==npages,f'design word: LibreOffice shows exactly {npages} page(s), no blank extra page ('+(m.group(1) if m else '?')+')')
+  # ---- WORD editable keeps a coloured header band
+  p=export(pg,'band.docx');x=zipfile.ZipFile(p).read('word/document.xml').decode()
+  ok('<w:shd w:val="clear"' in x,'editable word: name/title/contact have a coloured band')
+  ok(os.path.exists(pdf_of(p)),'editable word: still converts')
   # ---- premium lock for guests
   pg.evaluate("()=>{fillDemo();setTemplate('t68');refreshPreview()}");pg.wait_for_timeout(300)
   got=[];pg.on('download',lambda d:got.append(1));pg.evaluate("exportDocx()");pg.wait_for_timeout(800)
