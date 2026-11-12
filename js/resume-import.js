@@ -26,15 +26,33 @@ var BULLET=/^\s*(?:[•●▪■◦‣⁃∙·►➤✓✔*\-–—>]+|\d{1,2}[.
 function clean(s){return String(s==null?'':s).replace(/\r\n?/g,'\n').replace(/ /g,' ').replace(/[​-‏‪-‮﻿]/g,'').replace(/\t/g,'  ')}
 function stripBullet(l){return l.replace(BULLET,'').trim()}
 function isBullet(l){return BULLET.test(l)}
+var FUZZY=[['refs',/\breferees?\b|\breferences?\b/],['summary',/\bsummary\b|\bprofile\b|\bobjective\b|\babout me\b/],['exp',/\bexperience\b|\bemployment\b|\bwork history\b/],['edu',/\beducation\b|\bacademics?\b|\bqualifications?\b/],['certs',/\bcertif\w*|\bcourses\b|\btraining\b|\btest scores\b/],['lang',/^languages?\b/],['soft',/\bsoft skills\b|\bstrengths\b/],['tech',/\bskills\b|\bcompetenc\w*/],['projects',/^projects?\b/],['ach',/\bachievements\b|\bawards\b/],['custom',/\bavailability\b/]];
 function headKey(line){
  var t=String(line||'').trim();
- if(!t||t.length>45||isBullet(t))return '';
+ if(!t||t.length>50||isBullet(t))return '';
+ var raw=t;
  t=t.replace(/^[#=*_\-\s]+|[#=*_\-:\s]+$/g,'').replace(/\s+/g,' ').toLowerCase();
  t=t.replace(/&/g,'and');
- return HEAD_MAP[t]||'';
+ if(t.length<=45&&HEAD_MAP[t])return HEAD_MAP[t];
+ /* looser match only for lines written in capitals, so normal sentences are never taken as headings */
+ var up=raw.replace(/[^A-Za-z]/g,'');
+ if(up.length>=4&&raw===raw.toUpperCase()&&!/\d/.test(raw.replace(/\([^)]*\)/g,''))&&raw.split(/\s+/).length<=6){
+  var core=t.replace(/\([^)]*\)/g,' ').replace(/\s+/g,' ').trim();
+  for(var i=0;i<FUZZY.length;i++)if(FUZZY[i][1].test(core))return FUZZY[i][0];
+ }
+ return '';
 }
-function titleCase(s){return s.toLowerCase().replace(/(^|[\s'\-])([a-zÀ-ɏ])/g,function(m,a,b){return a+b.toUpperCase()})}
-function toLines(txt){return clean(txt).split('\n').map(function(l){return l.replace(/\s+$/,'')})}
+function titleCase(s){return s.toLowerCase().replace(/(^|[\s'\-(])([a-zÀ-ɏ])/g,function(m,a,b){return a+b.toUpperCase()})}
+function toLines(txt){
+ var out=[];
+ clean(txt).split('\n').forEach(function(l){
+  l=l.replace(/\s+$/,'');
+  if(l.indexOf(' | ')>0){var parts=l.split(/\s+\|\s+/);
+   if(parts.length>1&&parts.filter(function(x){return labelled(x)}).length>=2){parts.forEach(function(x){out.push(x)});return}}
+  out.push(l);
+ });
+ return out;
+}
 
 var LABELS=[
  ['father',/^(?:father'?s?\s*name|father|s\/o|son of|d\/o|daughter of)\s*[:\-]\s*(.+)$/i],
@@ -46,7 +64,8 @@ var LABELS=[
  ['religion',/^religion\s*[:\-]\s*(.+)$/i],
  ['address',/^(?:address|current\s*address|location|residence)\s*[:\-]\s*(.+)$/i],
  ['phone',/^(?:phone|mobile|cell|contact|tel|telephone|whatsapp)(?:\s*(?:no|number|#))?\.?\s*[:\-]\s*(.+)$/i],
- ['email',/^e-?mail(?:\s*address)?\s*[:\-]\s*(.+)$/i]
+ ['email',/^e-?mail(?:\s*address)?\s*[:\-]\s*(.+)$/i],
+ ['visa',/^visa(?:\s*status)?\s*[:\-]\s*(.+)$/i]
 ];
 function labelled(line){
  var t=stripBullet(line);
@@ -97,6 +116,28 @@ function splitItems(blockLines){
  items.forEach(function(x){var k=x.toLowerCase();if(!seen[k]){seen[k]=1;out.push(x)}});
  return out;
 }
+function splitSkills(blockLines){
+ var cols=[],lang=[];
+ blockLines.forEach(function(l){
+  var t=l.trim();if(!t)return;
+  t.split(/\s{3,}/).forEach(function(piece,i){
+   var c=cols[i]=cols[i]||[];
+   if(isBullet(piece)||!c.length)c.push(stripBullet(piece));else c[c.length-1]+=' '+piece.trim();
+  });
+ });
+ var tech=[];
+ function words(txt){return txt.split(/\s*[,;]\s*/).map(function(x){return x.replace(/^and\s+/i,'').replace(/[.\s]+$/,'').trim()}).filter(function(x){return x&&x.length<=40})}
+ cols.forEach(function(c){c.forEach(function(item){
+  var m=item.match(/^([^:]{2,30}):\s+(.+)$/);
+  if(m){
+   if(/^languages?$/i.test(m[1].trim()))lang=lang.concat(words(m[2]));
+   else if(/skills|software|tools|computer|systems/i.test(m[1]))tech=tech.concat(words(m[2]));
+   else tech.push(m[1].trim());
+  }else tech=tech.concat(words(item));
+ })});
+ var seen={};tech=tech.filter(function(x){var k=x.toLowerCase();if(seen[k])return false;seen[k]=1;return true});
+ return {tech:tech,lang:lang};
+}
 function datesOnly(l){return /^\(?(?:(?:jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]*\.?\s+)?(?:19|20)\d{2}\)?\s*(?:[\-–—]|to)\s*\(?(?:(?:(?:jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]*\.?\s+)?(?:19|20)\d{2}|present|current|now)\)?$/i.test(l.trim())}
 
 function splitEntries(blockLines){
@@ -107,8 +148,9 @@ function splitEntries(blockLines){
   var b=isBullet(t);
   if(!b&&(prevBlank||prevBullet)){cur={head:[],body:[],started:false};entries.push(cur)}
   else if(!cur){cur={head:[],body:[],started:false};entries.push(cur)}
+  var gap=!b&&t.match(/^(.*?\S)\s{3,}(\S.*)$/),pieces=(gap&&/(?:19|20)\d{2}|present|current/i.test(gap[2]))?[gap[1],gap[2]]:[t];
   if(b){cur.started=true;cur.body.push(stripBullet(t))}
-  else if(!cur.started&&cur.head.length<3&&t.length<=90&&!/[.!?]$/.test(t)){cur.head.push(t)}
+  else if(!cur.started&&cur.head.length+pieces.length<=3&&pieces[0].length<=90&&!/[.!?]$/.test(pieces[0])){pieces.forEach(function(x){cur.head.push(x)})}
   else{cur.started=true;cur.body.push(t)}
   prevBlank=false;prevBullet=b;
  });
@@ -126,13 +168,13 @@ function splitEntries(blockLines){
 
 function parseResumeText(input){
  var res={name:'',job:'',email:'',phone:'',address:'',summary:'',father:'',dob:'',cnic:'',marital:'',nationality:'',domicile:'',religion:'',
-  exp:[],edu:[],tech:[],soft:[],lang:[],certs:[],projects:[],achievements:[],refs:'',found:[]};
+  exp:[],edu:[],tech:[],soft:[],lang:[],certs:[],projects:[],achievements:[],refs:'',visa:'',customTitle:'',customBody:'',found:[]};
  var lines=toLines(input);
  if(!lines.some(function(l){return l.trim()}))return res;
  var sections=[],head=[],cur=null;
  lines.forEach(function(l){
   var k=headKey(l);
-  if(k){cur={key:k,lines:[]};sections.push(cur)}
+  if(k){cur={key:k,lines:[],title:l.trim().replace(/^[#=*_\-\s]+|[#=*_\-:\s]+$/g,'')};sections.push(cur)}
   else if(cur)cur.lines.push(l);
   else head.push(l);
  });
@@ -177,7 +219,11 @@ function parseResumeText(input){
     if(sm&&!res.summary)res.summary=sm.slice(0,1200);break;
    case 'exp':res.exp=res.exp.concat(splitEntries(body));break;
    case 'edu':res.edu=res.edu.concat(splitEntries(body));break;
-   case 'tech':res.tech=res.tech.concat(splitItems(body));break;
+   case 'tech':
+    if(body.some(function(l){return /\S\s{3,}\S/.test(l.trim())||/^\s*[•●▪■◦‣*\-–—]\s+[^:,]{2,30}:\s+\S/.test(l)})){var sk=splitSkills(body);res.tech=res.tech.concat(sk.tech);res.lang=res.lang.concat(sk.lang)}
+    else res.tech=res.tech.concat(splitItems(body));break;
+   case 'custom':
+    if(!res.customBody){res.customTitle=titleCase(s.title);res.customBody=body.map(stripBullet).filter(Boolean).join('\n').slice(0,900)}break;
    case 'soft':res.soft=res.soft.concat(splitItems(body));break;
    case 'lang':res.lang=res.lang.concat(splitItems(body));break;
    case 'certs':res.certs=res.certs.concat(body.map(stripBullet).filter(Boolean));break;
@@ -186,6 +232,7 @@ function parseResumeText(input){
    case 'refs':res.refs=(res.refs?res.refs+'\n':'')+body.map(function(x){return x.trim()}).filter(Boolean).join('\n');break;
   }
  });
+ if(res.visa){res.customBody=(res.customBody?res.customBody+'\n':'')+'Visa Status: '+res.visa;if(!res.customTitle)res.customTitle='Additional Information'}
  res.exp=res.exp.slice(0,MAX_EXP);res.edu=res.edu.slice(0,MAX_EDU);
  res.tech=res.tech.slice(0,MAX_TECH);
  ['name','job','email','phone','address','summary','father','dob','cnic','marital','nationality','domicile','religion'].forEach(function(k){if(res[k])res.found.push(k)});
@@ -213,13 +260,14 @@ function applyParsed(form,p){
  if(p.projects.length)form.projects=p.projects.join('|');
  if(p.achievements.length)form.achievements=p.achievements.join('\n');
  if(p.refs)form.refs=p.refs;
+ if(p.customBody){form.customTitle=p.customTitle||'Additional Information';form.customBody=p.customBody}
  return form;
 }
 function importSummary(p){
  var n=[];
  if(p.name)n.push('name');if(p.job)n.push('job title');if(p.email)n.push('email');if(p.phone)n.push('phone');
  if(p.exp.length)n.push(p.exp.length+' experience');if(p.edu.length)n.push(p.edu.length+' education');
- if(p.tech.length)n.push(p.tech.length+' skills');if(p.lang.length)n.push('languages');if(p.summary)n.push('summary');
+ if(p.tech.length)n.push(p.tech.length+' skills');if(p.lang.length)n.push('languages');if(p.summary)n.push('summary');if(p.customBody)n.push('extra section');
  if(!n.length)return 'Nothing could be recognised. Paste the text with headings such as Experience, Education and Skills, or fill the form by hand.';
  return 'Imported: '+n.join(', ')+'. Please review every step before exporting.';
 }

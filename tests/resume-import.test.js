@@ -132,3 +132,78 @@ test('hostile input stays plain text (no HTML interpretation in parser)',()=>{
  const r=P('<img src=x onerror=alert(1)>\nJohn\n\nSUMMARY\n<script>alert(1)</script>');
  assert.equal(typeof r.summary,'string');assert.ok(r.summary.includes('<script>'));
 });
+
+/* ---- Batch 77: Australian student style CV (wide gaps, two column skills, other heading names) ---- */
+const AU=`Bilal Ahmed
+International Student | Customer Service & Retail Assistant
+Location: Lahore, Pakistan (Relocating to Melbourne, Australia) | Phone: +92 300 1234567
+Email: bilal.ahmed@gmail.com | Visa Status: Australian Student Visa (Subclass 500)
+
+PERSONAL SUMMARY
+A hardworking, punctual, and reliable student relocating to Australia to pursue higher education.
+Seeking part-time or casual work in retail.
+
+WORK AVAILABILITY (AUSTRALIA)
+ • Monday – Friday: Available after 2:00 PM
+ • Saturday – Sunday: Full-day availability (7:00 AM – 10:00 PM)
+
+KEY SKILLS
+
+ • Customer Service: Polite communication and                        • Time Management: Reliable attendance and
+   assisting customers efficiently.                                    meeting daily deadlines.
+ • Computer Skills: Microsoft Word, Excel,                           • Languages: English (Fluent), Urdu (Native),
+   PowerPoint, and internet tools.                                     Punjabi.
+
+EDUCATION
+Bachelor of Information Technology (Enrolled)                                                    2026 – 2029
+Monash University, Melbourne
+
+Intermediate (ICS)                                                                               2022 – 2024
+Punjab College, Lahore — Grade/Marks: 85%
+
+WORK & VOLUNTEER EXPERIENCE
+Sales Assistant                                                                                  Jan 2025 – Aug 2026
+Metro Store, Lahore
+ • Greeted customers and visitors politely.
+ • Assisted with daily counter operations.
+
+CERTIFICATIONS & TEST SCORES
+ • English Proficiency: IELTS Overall Band 6.5 (2026)
+ • Short Courses: Basic First Aid Certificate (2026)
+
+REFEREES
+Available upon request.
+`;
+test('AU: other heading names are recognised',()=>{
+  const p=P(AU);
+  assert.match(p.summary,/hardworking/);
+  assert.equal(p.exp.length,1);assert.equal(p.exp[0].t,'Sales Assistant');
+  assert.match(p.exp[0].c,/Metro Store/);assert.match(p.exp[0].c,/Jan 2025/);
+  assert.match(p.exp[0].d,/Greeted customers/);
+  assert.equal(p.certs.length,2);assert.equal(p.refs,'Available upon request.');
+});
+test('AU: education title and dates are split on wide gaps',()=>{
+  const p=P(AU);
+  assert.equal(p.edu.length,2);
+  assert.equal(p.edu[0].t,'Bachelor of Information Technology (Enrolled)');
+  assert.match(p.edu[0].c,/Monash University/);assert.match(p.edu[0].c,/2026 – 2029/);
+  assert.equal(p.edu[1].t,'Intermediate (ICS)');
+});
+test('AU: two column skills give clean names, languages move to languages',()=>{
+  const p=P(AU);
+  ['Customer Service','Time Management','Microsoft Word','Excel','PowerPoint'].forEach(s=>assert.ok(p.tech.includes(s),'missing '+s+' in '+JSON.stringify(p.tech)));
+  assert.ok(!p.tech.some(s=>/assisting|meeting|Reliable|Polite/i.test(s)),JSON.stringify(p.tech));
+  assert.deepEqual(p.lang,['English (Fluent)','Urdu (Native)','Punjabi']);
+});
+test('AU: contact line with pipes, visa status and availability go to the extra section',()=>{
+  const p=P(AU);
+  assert.equal(p.phone,'+92 300 1234567');assert.equal(p.email,'bilal.ahmed@gmail.com');
+  assert.match(p.address,/Lahore/);assert.ok(!/Phone/.test(p.address));
+  assert.equal(p.customTitle,'Work Availability (Australia)');
+  assert.match(p.customBody,/Saturday – Sunday/);assert.match(p.customBody,/Visa Status: Australian Student Visa/);
+  const f=A({},p);assert.equal(f.customTitle,p.customTitle);assert.match(f.customBody,/Monday/);
+});
+test('headings: plain words inside body text are not turned into headings',()=>{
+  const p=P('Ali Khan\nAccountant\n\nEXPERIENCE\nSenior Accountant\nABC\n- Improved the experience of 20 customers\n- Managed skills training for staff\n');
+  assert.equal(p.exp.length,1);assert.equal(p.certs.length,0);
+});
