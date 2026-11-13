@@ -1082,8 +1082,7 @@ html,body{
 .cv-l63 h1{background:none!important;-webkit-background-clip:border-box!important;background-clip:border-box!important;-webkit-text-fill-color:#6d28d9!important;color:#6d28d9!important}
 
 /* ===== Batch 51: template picker with previews + switch toggles ===== */
-.tpl-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:8px}
-@media (min-width:1500px){.tpl-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.tpl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:10px;margin-top:8px}
 .tpl-card{position:relative;display:flex;flex-direction:column;gap:6px;padding:8px;border:2px solid #e8dfcf;border-radius:16px;background:#fff;cursor:pointer;font:inherit;text-align:left;color:#0f172a;box-shadow:0 4px 12px rgba(15,23,42,.07);transition:transform .18s,box-shadow .18s,border-color .18s}
 .tpl-card:hover{transform:translateY(-3px);box-shadow:0 12px 24px rgba(15,23,42,.15)}
 .tpl-card:focus-visible{outline:3px solid #0f4f4a;outline-offset:2px}
@@ -1322,3 +1321,11 @@ body[data-ts-bold="1"] .cvpage .cv-title{font-weight:800!important}
 .cv-l78 .cv-chip{background:transparent;color:#0f2a47;border:0;border-bottom:1px solid #b08d57;border-radius:0;padding:1px 4px}
 
 @media print{.cv-photo.ph-empty{display:none!important}}
+
+.tpl-filters{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 4px}
+.tpl-fchip{font:inherit;font-size:12px;font-weight:800;padding:6px 11px;border:1.5px solid #d9cfbd;border-radius:999px;background:#fff;color:#334155;cursor:pointer}
+.tpl-fchip[aria-pressed=true]{background:#0f4f4a;border-color:#0f4f4a;color:#fff}
+.tpl-fchip:focus-visible,.linkbtn:focus-visible{outline:3px solid #0f4f4a;outline-offset:2px}
+.tpl-count{margin:4px 0 0}.linkbtn{font:inherit;font-weight:800;color:#0f4f4a;background:none;border:0;padding:0 0 0 8px;text-decoration:underline;cursor:pointer}
+.tpl-foot{margin:12px 0 0;text-align:center}
+.tpl-card{padding:6px;border-radius:12px}.tpl-name{font-size:12px}
