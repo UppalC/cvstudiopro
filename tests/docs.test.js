@@ -31,3 +31,8 @@ test('template count in descriptions matches the real number of templates', () =
   for (const f of ['index.html', 'about.html', 'builder.html', 'templates.html']) assert.ok(!read(f).includes('60+'), f + ' still says 60+');
   if (real) assert.strictEqual(real, 70);
 });
+
+test('guide explains how to add the site to the phone home screen', () => {
+  const g = read('guide.html');
+  assert.ok(/Add to Home screen/.test(g) && /Add to Home Screen/.test(g) && /Install app/.test(g));
+});
