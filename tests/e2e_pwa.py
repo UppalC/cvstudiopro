@@ -39,6 +39,14 @@ try:
   except Exception:gone=True
   ok(gone,'admin is not served from cache offline (network only)')
   ctx.set_offline(False)
+  # ---- admin app: separate installable app limited to admin.html ----
+  ap=ctx.new_page();ap.route('https://script.google.com/**',lambda r:r.fulfill(status=200,headers={'access-control-allow-origin':'*','content-type':'application/json'},body='{"valid":false}'))
+  ap.goto(U+'admin.html');ap.wait_for_timeout(1500);ap.reload();ap.wait_for_timeout(800)
+  ac=ctx.new_cdp_session(ap);ar=ac.send('Page.getInstallabilityErrors');ok(ar.get('installabilityErrors')==[],'admin page is installable '+json.dumps(ar)[:150])
+  am=ac.send('Page.getAppManifest');ok(am['url'].endswith('admin-manifest.webmanifest') and not am.get('errors'),'admin page uses the admin manifest')
+  ok(json.loads(am['data'])['id'].endswith('admin.html') and json.loads(am['data'])['scope']=='./admin.html','admin app scope is only admin.html')
+  ap.goto(U+'builder.html');ap.wait_for_timeout(500)
+  ok(ap.evaluate("document.querySelector('link[rel=manifest]').href").endswith('/manifest.webmanifest'),'public pages still use the public manifest')
   ok(not errs,'no JavaScript errors '+';'.join(errs)[:120])
 finally: srv.terminate()
 print(f'\n{N[0]-len(F)}/{N[0]} passed');sys.exit(1 if F else 0)

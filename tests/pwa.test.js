@@ -39,13 +39,28 @@ test('start_url and shortcuts point to real files', () => {
   for (const t of targets) assert.ok(fs.existsSync(path.join(root, t.split('?')[0])), t);
 });
 
-test('public pages link the manifest and register the worker; admin and 404 do not', () => {
+test('public pages link the public manifest; admin links its own admin manifest; 404 has none', () => {
   for (const f of fs.readdirSync(root).filter(f => f.endsWith('.html'))) {
     const s = fs.readFileSync(path.join(root, f), 'utf8');
-    const has = s.includes('rel="manifest"') && s.includes('js/pwa.js');
-    if (f === 'admin.html' || f === '404.html') assert.ok(!has, f + ' must not be part of the app');
-    else assert.ok(has, f + ' is missing the manifest or pwa.js');
+    if (f === '404.html') { assert.ok(!s.includes('rel="manifest"'), '404 must not link a manifest'); continue; }
+    if (f === 'admin.html') {
+      assert.ok(s.includes('href="admin-manifest.webmanifest"') && !s.includes('href="manifest.webmanifest"'), 'admin must use only the admin manifest');
+      assert.ok(s.includes('js/pwa.js'));
+      continue;
+    }
+    assert.ok(s.includes('href="manifest.webmanifest"') && s.includes('js/pwa.js'), f + ' is missing the manifest or pwa.js');
   }
+});
+
+test('admin manifest is a separate app: own id, scope limited to admin.html, own icons', () => {
+  const a = JSON.parse(fs.readFileSync(path.join(root, 'admin-manifest.webmanifest'), 'utf8'));
+  assert.notStrictEqual(a.id, manifest.id);
+  assert.strictEqual(a.start_url, './admin.html');
+  assert.strictEqual(a.scope, './admin.html');
+  assert.strictEqual(a.display, 'standalone');
+  for (const i of a.icons) { const [w, h] = pngSize(path.join(root, i.src)); assert.strictEqual(w + 'x' + h, i.sizes, i.src); }
+  assert.deepStrictEqual(pngSize(path.join(root, 'img/icon-admin-180.png')), [180, 180]);
+  assert.ok(!JSON.stringify(a).match(/token|secret|api[_-]?key|script\.google/i), 'admin manifest must hold no secrets');
 });
 
 test('service worker never touches admin, other origins, or non-GET requests', () => {
