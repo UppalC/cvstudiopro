@@ -55,7 +55,7 @@ test('public pages link the public manifest; admin links its own admin manifest;
 test('admin manifest is a separate app: own id, scope limited to admin.html, own icons', () => {
   const a = JSON.parse(fs.readFileSync(path.join(root, 'admin-manifest.webmanifest'), 'utf8'));
   assert.notStrictEqual(a.id, manifest.id);
-  assert.strictEqual(a.start_url, './admin.html');
+  assert.strictEqual(a.start_url, './admin.html?source=pwa');
   assert.strictEqual(a.scope, './admin.html');
   assert.strictEqual(a.display, 'standalone');
   for (const i of a.icons) { const [w, h] = pngSize(path.join(root, i.src)); assert.strictEqual(w + 'x' + h, i.sizes, i.src); }

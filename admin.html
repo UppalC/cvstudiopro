@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="robots" content="noindex,nofollow"><script>if(window.top!==window.self){document.documentElement.style.display="none"}</script><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Owner Orders - CV Studio Pro</title><link rel="icon" href="favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="css/style.css">
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="robots" content="noindex,nofollow"><script>if(window.top!==window.self){document.documentElement.style.display="none"}</script><meta name="referrer" content="strict-origin-when-cross-origin"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Owner Orders - CV Studio Pro</title><link rel="icon" href="favicon-admin.svg?v=2" type="image/svg+xml"><link rel="icon" href="favicon-admin-32.png?v=2" sizes="32x32" type="image/png"><link rel="shortcut icon" href="favicon-admin.ico?v=2"><link rel="stylesheet" href="css/style.css">
 <style>
 /* ===== Batch 63: admin layout (phone / tablet / laptop / desktop) ===== */
 :root{--ad-ink:#0f172a;--ad-mut:#475569;--ad-line:#e8dfcf;--ad-teal:#0f4f4a;--ad-gold:#d99a2b}
@@ -7,6 +7,26 @@ body{background:#f7f1e6}
 button,a,input,select,label,summary{touch-action:manipulation;-webkit-tap-highlight-color:rgba(15,79,74,.18)}
 .nav .brand,.ad-h2,.ad-group>h2,#tabTitle{font-family:Fraunces,Georgia,'Times New Roman',serif}
 .nav .brand span{color:var(--ad-gold)!important}
+/* ===== Batch 84: owner login screen + back button ===== */
+.lg-wrap{max-width:460px;margin:18px auto 40px}
+.lg-hero{background:linear-gradient(135deg,#0c2423,#0f4f4a 62%,#16796f);color:#fff;border-radius:22px;padding:26px 22px;text-align:center}
+.lg-logo{display:inline-flex;margin-bottom:10px;border-radius:14px;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+.lg-hero h1{font-family:Fraunces,Georgia,'Times New Roman',serif;font-size:clamp(26px,6vw,32px);margin:0 0 6px;color:#fff}
+.lg-hero p{margin:0 auto;font-size:14px;line-height:1.55;color:#d6efe9;max-width:36ch}
+.lg-card{background:#fff;border:1px solid var(--ad-line);border-radius:20px;padding:20px;margin-top:14px;box-shadow:0 8px 24px rgba(15,23,42,.08)}
+.lg-card label{display:block;font-weight:800;font-size:14px;color:var(--ad-ink);margin-bottom:8px}
+.lg-row{display:flex;gap:8px;align-items:stretch}
+.lg-row input{flex:1;min-width:0;font:inherit;font-size:16px;padding:12px 14px;border:1.5px solid #cbd5e1;border-radius:12px;background:#fff;color:var(--ad-ink)}
+.lg-row input:focus{outline:3px solid #1d4ed8;outline-offset:1px;border-color:#1d4ed8}
+.lg-show{font:inherit;font-weight:800;font-size:14px;padding:0 14px;min-height:48px;border:1.5px solid #cbd5e1;background:#f1f5f9;color:var(--ad-teal);border-radius:12px;cursor:pointer}
+.lg-go{display:block;width:100%;margin-top:14px;min-height:50px;font:inherit;font-weight:800;font-size:16px;border:0;border-radius:12px;background:var(--ad-teal);color:#fff;cursor:pointer}
+.lg-go:hover{background:#0c3f3b}.lg-go:disabled{opacity:.6;cursor:wait}
+.lg-show:focus-visible,.lg-go:focus-visible{outline:3px solid #1d4ed8;outline-offset:2px}
+.lg-msg{min-height:20px;margin:10px 0 0;font-size:14px;font-weight:700;color:#b91c1c}
+.lg-note{margin:6px 0 0;font-size:12.5px;line-height:1.5;color:var(--ad-mut)}
+.ad-back{display:none;align-items:center;gap:6px;font:inherit;font-weight:800;font-size:14px;min-height:40px;padding:0 14px 0 10px;border-radius:999px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);color:#fff;cursor:pointer;margin-bottom:10px}
+.ad-back.on{display:inline-flex}
+.ad-back:hover{background:rgba(255,255,255,.22)}.ad-back:focus-visible{outline:3px solid #fff;outline-offset:2px}
 .topbar.ad-head{padding:18px 20px;border-radius:22px;display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#0c2423,#0f4f4a 62%,#16796f)!important;color:#fff}
 .ad-head h1{font-size:clamp(24px,4vw,34px);margin:0}
 .ad-head p{margin:4px 0 0;font-size:14px;line-height:1.5;max-width:60ch;color:#d6efe9}
@@ -107,13 +127,13 @@ button,a,input,select,label,summary{touch-action:manipulation;-webkit-tap-highli
 .demo-prev{margin-top:10px;max-width:520px}
 </style><link rel="manifest" href="admin-manifest.webmanifest"><link rel="apple-touch-icon" href="img/icon-admin-180.png"><script src="js/pwa.js" defer></script></head><body><div class="wrap"><nav class="nav"><div class="brand">CV Studio <span>Owner</span></div><div class="links"><a href="index.html">Home</a><a href="builder.html">Builder</a></div></nav>
 
-<div id="ownerLogin" style="display:none"><section class="topbar"><h1>Owner Login</h1><p>Owner password daalein. Ye server par check hota hai, site ke code mein kahin save nahi.</p></section><section class="section"><div class="formsec"><label for="ownerPassInput">Owner Password</label><div style="display:flex;gap:6px;align-items:center"><input id="ownerPassInput" type="password" autocomplete="current-password" placeholder="Enter owner password" style="flex:1"><button type="button" class="btn light" style="padding:6px 10px" aria-label="Show or hide password" onclick="togglePwd('ownerPassInput',this)">Show</button></div><div class="actions" style="margin-top:10px"><button class="btn dark" id="ownerLoginBtn" onclick="ownerLogin()">Login</button></div><p class="muted small" id="ownerLoginMsg" role="status"></p></div></section></div>
+<div id="ownerLogin" style="display:none"><div class="lg-wrap"><section class="lg-hero"><div class="lg-logo" aria-hidden="true"><svg viewBox="0 0 64 64" width="56" height="56"><rect width="64" height="64" rx="14" fill="#d99a2b"/><g fill="none" stroke="#14302d" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"><path d="M31 23.5A11 11 0 1 0 31 36.5"/><path d="M35.5 19.5 42.5 38 49.5 19.5"/></g><rect x="14" y="46" width="36" height="5" rx="2.5" fill="#14302d"/></svg></div><h1>Owner Login</h1><p>Owner password daalein. Ye server par check hota hai, site ke code mein kahin save nahi.</p></section><section class="lg-card"><label for="ownerPassInput">Owner Password</label><div class="lg-row"><input id="ownerPassInput" type="password" autocomplete="current-password" placeholder="Enter owner password"><button type="button" class="lg-show" aria-label="Show or hide password" onclick="togglePwd('ownerPassInput',this)">Show</button></div><button class="lg-go" id="ownerLoginBtn" type="button" onclick="ownerLogin()">Login</button><p class="lg-msg" id="ownerLoginMsg" role="status"></p><p class="lg-note">Sirf owner ke liye. Ghalat password bar bar dalne se login thori der ke liye band ho jata hai.</p></section></div></div>
 
 <div id="ownerArea" style="display:none">
 <div class="ad-shell">
 <nav class="ad-nav" id="stats" role="tablist" aria-label="Admin ke hisse"></nav>
 <main class="ad-main">
-<section class="topbar ad-head"><div><h1 id="tabTitle">Orders</h1><p id="tabHint"></p></div><div class="ad-tools"><button class="ad-btn" id="refreshBtn" type="button" onclick="loadOrders(true)">Refresh</button><button class="ad-btn" id="alertBtn" type="button" onclick="toggleAlerts()">Alerts: OFF</button><a class="ad-btn" href="builder.html">Owner Builder</a><button class="ad-btn" type="button" onclick="ownerLogout()">Log Out</button></div></section>
+<section class="topbar ad-head"><div><button type="button" class="ad-back" id="backBtn" onclick="goBack()"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>Wapis</button><h1 id="tabTitle">Orders</h1><p id="tabHint"></p></div><div class="ad-tools"><button class="ad-btn" id="refreshBtn" type="button" onclick="loadOrders(true)">Refresh</button><button class="ad-btn" id="alertBtn" type="button" onclick="toggleAlerts()">Alerts: OFF</button><a class="ad-btn" href="builder.html">Owner Builder</a><button class="ad-btn" type="button" onclick="ownerLogout()">Log Out</button></div></section>
 <div id="toast" class="ad-toast" role="status" aria-live="polite"></div>
 <div id="panelOrders" class="section" style="margin-top:14px">
 <div class="ad-bar"><input id="searchBox" class="ad-search" type="search" placeholder="Naam, number, email ya code se dhoondein" aria-label="Search orders"></div>
@@ -202,6 +222,7 @@ button,a,input,select,label,summary{touch-action:manipulation;-webkit-tap-highli
 </div>
 
 <script src="js/app.js"></script><script>
+var HIST_READY=false;
 var ORDERS=[],FILTER='',TIMER=null,TAB='new',CODES_LEFT=null;
 var TABS=['new','active','done','cancel','control','settings'];
 var TAB_INFO={
@@ -525,9 +546,16 @@ function group(id,title,hint,list){
   return '<div class="ad-group g-'+id+'" id="grp-'+id+'"><h2>'+esc(title)+' <span class="ad-count">'+list.length+'</span></h2>'+(list.length?'<div class="ad-cards">'+inner+'</div>':inner)+'</div>';
 }
 
-function setTab(t){
+function setTab(t,fromHist){
   if(TABS.indexOf(t)<0)t='new';TAB=t;
-  try{history.replaceState(null,'','#'+t)}catch(e){}
+  try{
+    var want='#'+t;
+    if(!fromHist&&location.hash!==want){
+      if(HIST_READY){history.pushState({cvTab:t},'',want);window.__cvPushed=true}else history.replaceState({cvTab:t},'',want);
+    }
+    HIST_READY=true;
+  }catch(e){}
+  var bb=$('backBtn');if(bb)bb.className='ad-back'+(t==='new'?'':' on');
   $('panelOrders').style.display=(t==='settings'||t==='control')?'none':'block';
   $('panelControl').style.display=(t==='control')?'block':'none';
   $('panelSettings').style.display=(t==='settings')?'block':'none';
@@ -535,6 +563,14 @@ function setTab(t){
   $('tabTitle').textContent=TAB_INFO[t][0];$('tabHint').textContent=TAB_INFO[t][1];
   render();
 }
+function goBack(){
+  if(TAB==='new')return;
+  if(window.__cvPushed){history.back()}else{setTab('new')}
+}
+window.addEventListener('popstate',function(){
+  if($('ownerArea').style.display==='none')return;
+  var h=(location.hash||'').replace('#','');setTab(TABS.indexOf(h)>=0?h:'new',true);
+});
 function ageText(ts){
   var m=String(ts||'').match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);if(!m)return {t:'',old:false};
   var d=new Date(+m[1],+m[2]-1,+m[3],+m[4],+m[5]);var h=Math.max(0,Math.round((Date.now()-d.getTime())/3600000));

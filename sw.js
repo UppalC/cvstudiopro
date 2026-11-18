@@ -5,11 +5,11 @@
    - admin.html is never cached.
    - Network first: when online you always get the newest files after a deploy. The cache is only the fallback.
    Change VERSION to force every phone to drop the old cache. */
-const VERSION = 'v1';
+const VERSION = 'v2';
 const CACHE = 'cvsp-' + VERSION;
 const CORE = ['./', 'index.html', 'builder.html', 'templates.html', 'css/style.css', 'css/home.css', 'css/home-3d.css', 'css/builder-skin.css',
   'js/app.js', 'js/resume-import.js', 'js/site-config.js', 'js/consent.js', 'js/html2canvas.min.js', 'js/pwa.js',
-  'fonts/fraunces-latin-wght-normal.woff2', 'fonts/inter-latin-wght-normal.woff2', 'favicon.svg', 'manifest.webmanifest', 'img/icon-192.png'];
+  'fonts/fraunces-latin-wght-normal.woff2', 'fonts/inter-latin-wght-normal.woff2', 'favicon.svg', 'favicon-32.png', 'manifest.webmanifest', 'img/icon-192.png'];
 const NETWORK_TIMEOUT_MS = 4000;
 
 self.addEventListener('install', function (e) {

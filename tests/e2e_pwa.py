@@ -44,7 +44,7 @@ try:
   ap.goto(U+'admin.html');ap.wait_for_timeout(1500);ap.reload();ap.wait_for_timeout(800)
   ac=ctx.new_cdp_session(ap);ar=ac.send('Page.getInstallabilityErrors');ok(ar.get('installabilityErrors')==[],'admin page is installable '+json.dumps(ar)[:150])
   am=ac.send('Page.getAppManifest');ok(am['url'].endswith('admin-manifest.webmanifest') and not am.get('errors'),'admin page uses the admin manifest')
-  ok(json.loads(am['data'])['id'].endswith('admin.html') and json.loads(am['data'])['scope']=='./admin.html','admin app scope is only admin.html')
+  ok(json.loads(am['data'])['id'].split('?')[0].endswith('admin.html') and json.loads(am['data'])['scope']=='./admin.html','admin app scope is only admin.html')
   ap.goto(U+'builder.html');ap.wait_for_timeout(500)
   ok(ap.evaluate("document.querySelector('link[rel=manifest]').href").endswith('/manifest.webmanifest'),'public pages still use the public manifest')
   ok(not errs,'no JavaScript errors '+';'.join(errs)[:120])
