@@ -1203,7 +1203,7 @@ body[data-ts-bold="1"] .cvpage .cv-title{font-weight:800!important}
 .qs-list{display:grid;gap:10px}.qs-row{display:grid;gap:4px}.qs-row .btn{width:100%}.qs-row span{font-size:13px;color:#64748b;line-height:1.4;padding:0 4px}
 
 /* Batch 63: demo video */
-.demo-box{margin:18px 0}.demo-box[hidden]{display:none}.demo-frame{position:relative;width:100%;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:#0f172a;box-shadow:0 10px 30px rgba(15,23,42,.15)}.demo-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.demo-box{margin:18px 0}.demo-box[hidden]{display:none}.demo-frame{position:relative;width:100%;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:#0f172a;box-shadow:0 10px 30px rgba(15,23,42,.15)}.demo-frame iframe,.demo-frame video{position:absolute;inset:0;width:100%;height:100%;border:0;background:#000}.demo-note{margin:8px 0 0;font-size:13px;color:#475569}
 
 /* Batch 65: tips / articles */
 .art{max-width:860px}.art h2{margin:26px 0 8px}.art p,.art li{line-height:1.75;font-size:17px}.art ul,.art ol{padding-left:22px}

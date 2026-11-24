@@ -24,5 +24,5 @@ test('favicon files exist, are valid, and the old blue colour is gone', () => {
 });
 test('service worker precaches the new favicon and uses a new cache version', () => {
   const s = fs.readFileSync(path.join(root, 'sw.js'), 'utf8');
-  assert.ok(s.includes("'favicon-32.png'") && s.includes("VERSION = 'v2'"));
+  assert.ok(s.includes("'favicon-32.png'") && s.includes("VERSION = 'v3'"));
 });

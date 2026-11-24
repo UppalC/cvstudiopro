@@ -18,10 +18,26 @@
     if((m=u.match(/^https:\/\/drive\.google\.com\/file\/d\/([\w-]{10,})(?:[\/?#]|$)/)))return 'https://drive.google.com/file/d/'+m[1]+'/preview';
     return '';
   }
+  /* Built-in guide video (no YouTube link set in admin): self-hosted, silent, Urdu subtitles. */
+  function local(box){
+    if(box.getAttribute('data-src')==='local')return;
+    box.setAttribute('data-src','local');box.textContent='';
+    var h=document.createElement('h2');h.textContent='Watch: how to make a CV';
+    var w=document.createElement('div');w.className='demo-frame';
+    var v=document.createElement('video');v.controls=true;v.preload='none';v.setAttribute('playsinline','');v.poster='video/guide-poster.jpg';v.title='CV Studio Pro guide video';
+    var s=document.createElement('source');s.src='video/guide-video.mp4';s.type='video/mp4';
+    var t=document.createElement('track');t.kind='subtitles';t.srclang='ur';t.label='\u0627\u0631\u062f\u0648';t.src='video/guide-video.ur.vtt';t.default=true;
+    v.appendChild(s);v.appendChild(t);w.appendChild(v);
+    var p=document.createElement('p');p.className='demo-note';p.textContent='No sound. The steps are written on the video, with Urdu subtitles. Use the CC button to turn subtitles off.';
+    box.appendChild(h);box.appendChild(w);box.appendChild(p);box.hidden=false;
+  }
   function video(u){
     var box=document.getElementById('demoVideoBox');if(!box)return;
     var src=embed(u);
-    if(!src){box.hidden=true;box.textContent='';box.removeAttribute('data-src');return}
+    if(!src){
+      if(box.hasAttribute('data-local')){local(box);return}
+      box.hidden=true;box.textContent='';box.removeAttribute('data-src');return;
+    }
     if(box.getAttribute('data-src')===src)return;
     box.setAttribute('data-src',src);box.textContent='';
     var h=document.createElement('h2');h.textContent='Watch: how to make a CV';
@@ -31,6 +47,7 @@
     w.appendChild(f);box.appendChild(h);box.appendChild(w);box.hidden=false;
   }
   function apply(s){if(!s)return;try{name(s.site_name)}catch(e){}try{video(s.demo_video)}catch(e){}}
+  try{video('')}catch(e){}
   var cache=null;try{cache=JSON.parse(localStorage.getItem(KEY)||'null')}catch(e){}
   if(cache&&cache.s)apply(cache.s);
   if(cache&&cache.t&&Date.now()-cache.t<600000)return;      // fresh enough: no network call

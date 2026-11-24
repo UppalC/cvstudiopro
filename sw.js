@@ -5,7 +5,7 @@
    - admin.html is never cached.
    - Network first: when online you always get the newest files after a deploy. The cache is only the fallback.
    Change VERSION to force every phone to drop the old cache. */
-const VERSION = 'v2';
+const VERSION = 'v3';
 const CACHE = 'cvsp-' + VERSION;
 const CORE = ['./', 'index.html', 'builder.html', 'templates.html', 'css/style.css', 'css/home.css', 'css/home-3d.css', 'css/builder-skin.css',
   'js/app.js', 'js/resume-import.js', 'js/site-config.js', 'js/consent.js', 'js/html2canvas.min.js', 'js/pwa.js',
@@ -27,6 +27,8 @@ self.addEventListener('activate', function (e) {
 
 function skip(req, url) {
   if (req.method !== 'GET') return true;
+  if (req.headers.has('range')) return true;            // video/audio streaming: let the browser handle it
+  if (/\.(mp4|webm|vtt)$/i.test(new URL(req.url).pathname)) return true; // big media is never stored by the service worker
   if (url.origin !== self.location.origin) return true;
   if (/(^|\/)admin(\.html)?$/.test(url.pathname)) return true;
   return false;
