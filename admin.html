@@ -7,6 +7,18 @@ body{background:#f7f1e6}
 button,a,input,select,label,summary{touch-action:manipulation;-webkit-tap-highlight-color:rgba(15,79,74,.18)}
 .nav .brand,.ad-h2,.ad-group>h2,#tabTitle{font-family:Fraunces,Georgia,'Times New Roman',serif}
 .nav .brand span{color:var(--ad-gold)!important}
+/* ===== Batch 85: offer wizard + dashboard ===== */
+.of-stat{border-radius:12px;padding:10px 14px;font-weight:800;margin:6px 0 10px;background:#f1f5f9;color:#334155;border:1px solid #cbd5e1}
+.of-stat.live{background:#dcfce7;color:#14532d;border-color:#86efac}.of-stat.bad{background:#fee2e2;color:#7f1d1d;border-color:#fca5a5}.of-stat.warn{background:#fef3c7;color:#78350f;border-color:#fcd34d}
+.of-steps{padding-left:20px;margin:6px 0}
+.of-check{margin:10px 0}.of-check ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.of-check li{border-radius:10px;padding:8px 12px;font-size:14px;line-height:1.45;border:1px solid}
+.of-check li.err{background:#fee2e2;color:#7f1d1d;border-color:#fca5a5}.of-check li.warn{background:#fef3c7;color:#78350f;border-color:#fcd34d}.of-check li.ok{background:#dcfce7;color:#14532d;border-color:#86efac}
+.ad-sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin:0 0 12px}
+.ad-sum>div{background:#fff;border:1px solid var(--ad-line);border-radius:14px;padding:10px 12px}
+.ad-sum b{display:block;font-size:22px;line-height:1.2;color:var(--ad-ink)}.ad-sum span{font-size:12px;font-weight:700;color:var(--ad-mut)}
+.ad-sum .low{background:#fee2e2;border-color:#fca5a5}.ad-sum .low b{color:#b91c1c}
+.ad-sum button{margin-top:6px;font:inherit;font-weight:800;font-size:12px;min-height:34px;padding:0 10px;border-radius:999px;border:1px solid #b91c1c;background:#fff;color:#b91c1c;cursor:pointer}
 /* ===== Batch 84: owner login screen + back button ===== */
 .lg-wrap{max-width:460px;margin:18px auto 40px}
 .lg-hero{background:linear-gradient(135deg,#0c2423,#0f4f4a 62%,#16796f);color:#fff;border-radius:22px;padding:26px 22px;text-align:center}
@@ -137,7 +149,7 @@ button,a,input,select,label,summary{touch-action:manipulation;-webkit-tap-highli
 <div id="toast" class="ad-toast" role="status" aria-live="polite"></div>
 <div id="panelOrders" class="section" style="margin-top:14px">
 <div class="ad-bar"><input id="searchBox" class="ad-search" type="search" placeholder="Naam, number, email ya code se dhoondein" aria-label="Search orders"></div>
-<div id="oldBanner" class="ad-oldbanner" role="status" aria-live="polite" hidden></div><div id="ordersList" class="muted">Loading...</div>
+<div id="sumBox" class="ad-sum" aria-label="Khulasa"></div><div id="oldBanner" class="ad-oldbanner" role="status" aria-live="polite" hidden></div><div id="ordersList" class="muted">Loading...</div>
 </div>
 <div id="panelControl" style="display:none">
 <section class="section ad-set" id="ctlTpl"><h2 class="ad-h2">Templates: Free ya Premium</h2><div class="formsec">
@@ -196,14 +208,19 @@ button,a,input,select,label,summary{touch-action:manipulation;-webkit-tap-highli
 <label for="setPayNote">Payment ke baad customer ke liye hidayat (optional)</label><input type="text" id="setPayNote" maxlength="300" autocomplete="off" placeholder="Payment ke baad Transaction ID zaroor likhein">
 <h3>4. Offer banner &amp; free trial</h3>
 <p class="ad-hint2"><b>Zaroori:</b> kati hui "purani price" sirf tab likhein jab pehle waqai wo price thi. Jhooti discount qanooni aur Google AdSense ke liye khatarnak hai. Nayi price upar "Premium CV price" mein likhein.</p>
+<div id="offerStatus" class="of-stat" role="status" aria-live="polite"></div>
+<ol class="ad-hint2 of-steps"><li><b>Step 1:</b> neeche se tayyar offer chunein (ya apni line likhein).</li><li><b>Step 2:</b> upar &quot;Premium CV price&quot; mein <b>nayi</b> price likhein, yahan <b>purani</b> price likhein.</li><li><b>Step 3:</b> offer ki akhri tareekh chunein.</li><li><b>Step 4:</b> neeche hari/laal list dekhein, phir sab se neeche Save karein.</li></ol>
 <label class="chk"><input type="checkbox" id="setOfferOn"> Website ke upar offer banner dikhayein</label>
 <p class="ad-hint2">Tayyar offers (click karein, phir apni price aur akhri tareekh likhein):</p><div class="ad-actions" id="presetBox"></div>
 <label for="setOfferBadge">Chhota label (misal: EID SPECIAL)</label><input type="text" id="setOfferBadge" maxlength="30" autocomplete="off">
 <label for="setOfferText">Offer ki line</label><input type="text" id="setOfferText" maxlength="300" autocomplete="off">
 <label for="setPriceOld">Purani price (kati hui dikhegi, misal: Rs. 500). Khali = koi kati hui price nahi</label><input type="text" id="setPriceOld" maxlength="80" autocomplete="off">
-<label for="setOfferEnds">Offer kab khatam hogi (is tareekh ke baad banner khud ghayab)</label><input type="date" id="setOfferEnds" style="width:100%;padding:10px 12px;border:1px solid #cbd5e1;border-radius:10px;font:inherit">
+<label for="setOfferEnds">Offer kab khatam hogi (is tareekh ke baad banner khud ghayab)</label><div class="ad-actions" id="endsQuick" role="group" aria-label="Jaldi tareekh"><button type="button" class="ad-btn" data-endsin="0">Aaj raat tak</button><button type="button" class="ad-btn" data-endsin="3">3 din</button><button type="button" class="ad-btn" data-endsin="7">7 din</button><button type="button" class="ad-btn" data-endsin="30">30 din</button></div><input type="date" id="setOfferEnds" style="width:100%;padding:10px 12px;border:1px solid #cbd5e1;border-radius:10px;font:inherit">
 <label for="setOfferStyle">Banner ka rang</label><select id="setOfferStyle" style="width:100%;padding:10px 12px;border:1px solid #cbd5e1;border-radius:10px;font:inherit"><option value="gold">Sunehri (gold)</option><option value="purple">Jamni (purple)</option><option value="green">Hara (green)</option><option value="red">Surkh (red)</option><option value="blue">Neela (blue)</option></select>
 <p class="ad-hint2"><b>Preview (website par aisa dikhega):</b></p><div id="offerPreview"></div>
+<div id="offerCheck" class="of-check" aria-live="polite"></div>
+<div class="ad-actions"><button type="button" class="ad-btn" id="offerClear">Offer ke sab fields saaf karein</button></div>
+<p class="ad-hint2">Offer sirf <b>Premium CV</b> par lagti hai (banner, Pricing page, Order page aur customer ki email mein). Expert service ki price alag rehti hai.</p>
 <label for="setTrialEnds">Free trial kab khatam hogi (is tareekh ke baad free trial khud band ho jayegi)</label><input type="date" id="setTrialEnds" style="width:100%;padding:10px 12px;border:1px solid #cbd5e1;border-radius:10px;font:inherit;margin-bottom:8px">
 <label class="chk"><input type="checkbox" id="setFreeTrial"> <span><b style="color:#b91c1c">Free trial mode:</b> ON karne se SAB premium templates SAB ke liye mufat khul jate hain. Sirf tab ON karein jab aap jaan boojh kar free dena chahte hon.</span></label>
 <h3>5. Save</h3>
@@ -373,6 +390,8 @@ async function saveSiteSettingsUI(){
   var wa=$('setWhatsapp').value.replace(/\D/g,'');
   if($('setWhatsapp').value.trim()&&(wa.length<8||wa.length>15)){msg.textContent='WhatsApp number theek nahi lag raha.';return}
   var v={show_prices:$('setShowPrices').checked?'true':'false',price_premium:$('setPricePremium').value,price_expert:$('setPriceExpert').value,price_note:$('setPriceNote').value,pay_note:$('setPayNote').value,offer_enabled:$('setOfferOn').checked?'true':'false',offer_text:$('setOfferText').value,offer_badge:$('setOfferBadge').value,price_old:$('setPriceOld').value,offer_ends:$('setOfferEnds').value,offer_style:$('setOfferStyle').value,free_trial_mode:$('setFreeTrial').checked?'true':'false',free_trial_ends:$('setTrialEnds').value};
+  var __op=offerProblems();
+  if(__op.err.length){msg.textContent='Save nahi hua: '+__op.err[0]+(__op.err.length>1?' (aur '+(__op.err.length-1)+' masle, offer wale hisse mein list dekhein)':'');try{setTab('settings')}catch(e){}$('offerCheck').scrollIntoView({behavior:'smooth',block:'center'});return}
   if($('setFreeTrial').checked&&!$('setTrialEnds').value&&!confirm('Free trial ki akhri tareekh nahi di. Bina tareekh ke ye khud band nahi hogi. Phir bhi ON karna hai?'))return;
   if($('setFreeTrial').checked&&!FREE_INIT&&!confirm('Free trial mode ON hone se SAB premium templates SAB ke liye free ho jayenge. Kya waqai ON karna hai?'))return;
   if($('setWhatsapp').value.trim())v.whatsapp=$('setWhatsapp').value;
@@ -431,9 +450,53 @@ function buildPresets(){
   $('presetBox').innerHTML=PRESETS.map(function(p,i){return '<button type="button" class="ad-btn" data-preset="'+i+'">'+esc(p.n)+'</button>'}).join('');
 }
 function offerCfg(){return {enabled:true,text:$('setOfferText').value||'Special offer',badge:$('setOfferBadge').value,old:$('setPriceOld').value,ends:$('setOfferEnds').value,style:$('setOfferStyle').value}}
+function todayStr(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
+function addDaysStr(n){var d=new Date();d.setDate(d.getDate()+n);return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)}
+function daysLeft(ends){var m=String(ends||'').match(/^(\d{4})-(\d{2})-(\d{2})$/);if(!m)return null;var e=new Date(+m[1],+m[2]-1,+m[3]),t=new Date();t=new Date(t.getFullYear(),t.getMonth(),t.getDate());return Math.round((e-t)/86400000)}
+/* returns {err:[...],warn:[...],ok:[...]} - err blocks Save */
+function offerProblems(){
+  var on=$('setOfferOn').checked,ends=val('setOfferEnds'),old=val('setPriceOld'),pr=val('setPricePremium'),show=$('setShowPrices').checked,text=val('setOfferText');
+  var trial=$('setFreeTrial').checked,tends=val('setTrialEnds'),E=[],W=[],K=[];
+  var dl=daysLeft(ends);
+  if(on){
+    if(!text)E.push('Offer ki line (text) khali hai. Pehle koi tayyar offer chunein ya line likhein.');
+    if(!ends)(old?E:W).push(old?'Purani price likhi hai magar offer ki akhri tareekh nahi. Bina tareekh ke "discount" hamesha chalta rahega, ye jhoota lagta hai. Tareekh chunein.':'Offer ki akhri tareekh nahi di. Behtar hai tareekh lagayen.');
+    else if(dl<0)E.push('Akhri tareekh guzar chuki hai ('+ends+'). Is tareekh par banner website par dikhega hi nahi. Nayi tareekh chunein.');
+    else K.push('Offer '+(dl===0?'aaj raat tak':dl+' din tak')+' chalegi.');
+    if(!pr)E.push('Premium CV ki price khali hai. Offer ke saath nayi price zaroor likhein.');
+    if(pr&&!show)W.push('"Website par prices dikhayein" band hai, is liye banner mein price nahi dikhegi. Price dikhani hai to upar wo box ON karein.');
+  }
+  if(old){
+    var a=firstNum(old),b=firstNum(pr);
+    if(!(a>0))E.push('Purani price mein koi number nahi mila (misal: Rs. 500).');
+    else if(pr&&!(b>0))E.push('Premium CV price mein koi number nahi mila (misal: Rs. 400).');
+    else if(b>0&&a<=b)E.push('Purani price ('+old+') nayi price ('+pr+') se bari honi chahiye, warna "discount" ghalat dikhega.');
+    else if(b>0)K.push('Discount: '+offerPct(old,pr)+'% OFF khud dikhega.');
+    if(!on)W.push('Purani price likhi hai magar offer banner OFF hai. Is halat mein kati hui price kahin nahi dikhegi.');
+  }
+  if(on&&!old&&pr)K.push('Kati hui price nahi di: banner mein sirf nayi price dikhegi (koi % OFF nahi). Ye bhi theek hai.');
+  if(on&&trial)W.push('Free trial ON hai: saare premium mufat hain, to price wala offer customer ko ulta confuse karega. Dono mein se aik hi rakhein.');
+  if(trial&&tends&&daysLeft(tends)<0)W.push('Free trial ki tareekh guzar chuki hai, wo khud band hai. Checkbox hata dein.');
+  if(on&&!E.length&&!(ends&&dl<0))K.push('Banner in pages par dikhega: Home, Templates, Pricing aur Builder.');
+  return {err:E,warn:W,ok:K};
+}
+function offerState(){
+  var on=$('setOfferOn').checked,ends=val('setOfferEnds'),dl=daysLeft(ends),p=offerProblems();
+  if(!on)return ['','Offer abhi OFF hai. Website par koi offer banner nahi.'];
+  if(p.err.length)return ['bad','Offer ON hai lekin adhoori hai ('+p.err.length+' masla). Neeche list dekhein.'];
+  if(ends&&dl<0)return ['bad','Offer ki tareekh guzar chuki hai: banner nahi dikh raha.'];
+  return ['live','Offer LIVE hogi'+(ends?(dl===0?': aaj raat tak.':': '+dl+' din baqi.'):'.')];
+}
+function renderOfferCheck(){
+  var p=offerProblems(),h='';
+  p.err.forEach(function(x){h+='<li class="err">&#10007; '+esc(x)+'</li>'});p.warn.forEach(function(x){h+='<li class="warn">! '+esc(x)+'</li>'});p.ok.forEach(function(x){h+='<li class="ok">&#10003; '+esc(x)+'</li>'});
+  $('offerCheck').innerHTML=h?'<ul>'+h+'</ul>':'';
+  var s=offerState(),st=$('offerStatus');st.className='of-stat '+s[0];st.textContent=s[1];
+}
 function previewOffer(){
   var pr={show:$('setShowPrices').checked,premium:$('setPricePremium').value};
   $('offerPreview').innerHTML=offerHTML(offerCfg(),pr,true);
+  try{renderOfferCheck()}catch(e){}
 }
 document.addEventListener('click',function(e){
   var b=e.target.closest&&e.target.closest('[data-preset]');if(!b)return;
@@ -441,8 +504,17 @@ document.addEventListener('click',function(e){
   $('setOfferBadge').value=p.b;$('setOfferText').value=p.t;$('setOfferStyle').value=p.s;$('setOfferOn').checked=true;previewOffer();
   $('setMsg').textContent='Offer tayyar. Ab apni price aur akhri tareekh likhein, phir Save dabayen.';
 });
-document.addEventListener('input',function(e){if(e.target&&e.target.id&&/^set(Offer|Price|ShowPrices)/.test(e.target.id))previewOffer()});
-document.addEventListener('change',function(e){if(e.target&&e.target.id&&/^set(Offer|Price|ShowPrices)/.test(e.target.id))previewOffer()});
+document.addEventListener('click',function(e){
+  var q=e.target.closest&&e.target.closest('[data-endsin]');
+  if(q){$('setOfferEnds').value=addDaysStr(Number(q.getAttribute('data-endsin')));previewOffer();renderChecklist();return}
+  if(e.target&&e.target.id==='offerClear'){
+    if(!confirm('Offer ke sab fields (banner, line, purani price, tareekh) khali kar dein? Website par tabdeeli Save dabane ke baad aayegi.'))return;
+    $('setOfferOn').checked=false;['setOfferText','setOfferBadge','setPriceOld','setOfferEnds'].forEach(function(i){$(i).value=''});
+    previewOffer();renderChecklist();$('setMsg').textContent='Offer saaf ho gayi. Ab Save dabayen.';
+  }
+});
+document.addEventListener('input',function(e){if(e.target&&e.target.id&&/^set(Offer|Price|ShowPrices|FreeTrial|TrialEnds)/.test(e.target.id))previewOffer()});
+document.addEventListener('change',function(e){if(e.target&&e.target.id&&/^set(Offer|Price|ShowPrices|FreeTrial|TrialEnds)/.test(e.target.id))previewOffer()});
 
 function toast(kind,text){var t=$('toast');t.className='ad-toast '+kind;t.textContent=text;clearTimeout(toast._t);if(kind!=='err')toast._t=setTimeout(function(){t.className='ad-toast'},9000)}
 async function ownerLogin(){
@@ -563,6 +635,25 @@ function setTab(t,fromHist){
   $('tabTitle').textContent=TAB_INFO[t][0];$('tabHint').textContent=TAB_INFO[t][1];
   render();
 }
+function parseTs(ts){var m=String(ts||'').match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/);return m?new Date(+m[1],+m[2]-1,+m[3],+m[4],+m[5]):null}
+function renderSummary(){
+  var box=$('sumBox');if(!box)return;
+  var now=new Date(),d0=new Date(now.getFullYear(),now.getMonth(),now.getDate()).getTime(),d7=d0-6*86400000,d30=d0-29*86400000;
+  var t=0,w=0,m=0,pend=0,done=0,real=0,oldest=0;
+  ORDERS.forEach(function(o){
+    var g=groupOf(o),d=parseTs(o.timestamp);if(g!=='cancel')real++;
+    if(d){var x=d.getTime();if(x>=d0)t++;if(x>=d7)w++;if(x>=d30)m++;if(g==='new'){var a=now.getTime()-x;if(a>oldest)oldest=a}}
+    if(g==='new')pend++;if(g==='done')done++;
+  });
+  var oh=Math.round(oldest/3600000),oldTxt=pend?(oh<1?'sab se purana: abhi':(oh<24?'sab se purana: '+oh+' ghante':'sab se purana: '+Math.floor(oh/24)+' din')):'sab clear';
+  var low=CODES_LEFT!==null&&CODES_LEFT<3;
+  var h='<div><b>'+t+'</b><span>Aaj ke orders</span></div><div><b>'+w+'</b><span>Pichle 7 din</span></div><div><b>'+m+'</b><span>Pichle 30 din</span></div>'+
+   '<div><b>'+pend+'</b><span>Pending ('+oldTxt+')</span></div>'+
+   '<div><b>'+(real?Math.round(done/real*100):0)+'%</b><span>Mukammal ('+done+' / '+real+')</span></div>'+
+   '<div'+(low?' class="low"':'')+'><b>'+(CODES_LEFT===null?'...':CODES_LEFT)+'</b><span>Unused codes'+(low?' (kam hain)':'')+'</span>'+(low?'<button type="button" data-gen="10">10 naye codes banayen</button>':'')+'</div>';
+  if(box.getAttribute('data-h')!==h){box.innerHTML=h;box.setAttribute('data-h',h)}
+  box.style.display=(TAB==='new'||TAB==='active'||TAB==='done'||TAB==='cancel')?'grid':'none';
+}
 function goBack(){
   if(TAB==='new')return;
   if(window.__cvPushed){history.back()}else{setTab('new')}
@@ -586,6 +677,7 @@ function render(){
   var __st=tiles.map(function(x,i){return (i===4?'<div class="ad-sep" aria-hidden="true"></div>':'')+'<button type="button" class="ad-stat '+x[0]+(TAB===x[0]?' on':'')+'" role="tab" aria-selected="'+(TAB===x[0])+'" data-tab="'+x[0]+'"><b>'+x[2]+'</b><span>'+x[1]+'</span></button>'}).join('');if($('stats').getAttribute('data-h')!==__st){$('stats').innerHTML=__st;$('stats').setAttribute('data-h',__st)}
   if(TAB==='control'){renderControl();return}
   if(TAB==='settings'){var cl=$('codesLeftTxt');if(cl&&CODES_LEFT!==null)cl.textContent='Abhi unused codes: '+CODES_LEFT;renderChecklist();return}
+  try{renderSummary()}catch(e){}
   if(!ORDERS.length){$('ordersList').innerHTML='<div class="ad-empty">Abhi koi order nahi aaya.</div>';return}
   var h='';
   if(TAB==='new')h=group('new','Naye orders','Koi naya order nahi. Sab clear!',all.new);

@@ -36,3 +36,9 @@ test('guide explains how to add the site to the phone home screen', () => {
   const g = read('guide.html');
   assert.ok(/Add to Home screen/.test(g) && /Add to Home Screen/.test(g) && /Install app/.test(g));
 });
+
+test('terms say how offers work (Premium only, price at checkout) and the date is current', () => {
+  const s = read('terms.html');
+  assert.ok(/offer applies to the Premium CV price only/.test(s) && /price shown at checkout/.test(s));
+  assert.ok(s.includes('Last updated: 18 November 2026'));
+});
