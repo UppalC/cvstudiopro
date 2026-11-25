@@ -73,3 +73,10 @@ test('every file the worker pre-caches exists', () => {
   const core = eval(s.match(/const CORE = (\[[\s\S]*?\]);/)[1]);
   for (const f of core) if (f !== './') assert.ok(fs.existsSync(path.join(root, f)), f);
 });
+
+test('installed apps are not locked to portrait (videos and fullscreen must be able to rotate)', () => {
+  for (const f of ['manifest.webmanifest', 'admin-manifest.webmanifest']) {
+    const m = JSON.parse(fs.readFileSync(path.join(__dirname, '..', f), 'utf8'));
+    assert.ok(m.orientation === 'any' || m.orientation === undefined, f + ' orientation=' + m.orientation);
+  }
+});

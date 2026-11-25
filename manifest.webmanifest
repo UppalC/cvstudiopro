@@ -6,7 +6,7 @@
   "start_url": "./builder.html",
   "scope": "./",
   "display": "standalone",
-  "orientation": "portrait",
+  "orientation": "any",
   "background_color": "#f7f1e6",
   "theme_color": "#14302d",
   "lang": "en",
