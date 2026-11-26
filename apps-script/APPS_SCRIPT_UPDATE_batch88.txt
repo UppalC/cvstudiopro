@@ -1,0 +1,41 @@
+APPS SCRIPT UPDATE - Batch 88 (saboot / claims system)
+=======================================================
+Kyun: customer 13 mahine ya 2 saal baad claim kare to aap ke paas saboot ho. Naya Code.gs ye karta hai:
+ - Har order ki price/offer (jo customer ko us waqt dikhi) Sheet mein likhta hai (column L).
+ - Har kaam (order, approve, code dobara bheja, status, reminder, purge) "AuditLog" tab mein khud likhta hai.
+ - Admin se "Saboot save + download" dabane par order ka saboot "Evidence" tab mein mehfooz hota hai aur order HOLD ho jata hai.
+ - Purge ab 36 mahine par chalta hai, Transaction ID/price/code/status kabhi nahi mitata, HOLD wale orders nahi mitata.
+ - Har mahine ki 1 tareekh ko aap ko email aati hai: purge ka preview + Orders/AuditLog/Evidence ka CSV backup (kuch delete nahi hota).
+
+IMPORTANT: purani script ko pehle bachayein (copy karein), phir neeche ke 6 qadam.
+
+QADAM 1: apna SHEET_ID copy karein
+  Google Sheet kholein > Extensions > Apps Script. Code.gs mein is line ko dhoondein:
+      const SHEET_ID = '....lambi id....';
+  Is lambi id ko (quotes ke andar wali) kisi jagah copy kar lein (Notepad). Ye sirf aap ke paas hoti hai.
+
+QADAM 2: poora naya Code.gs lagayein
+  GitHub par apps-script/Code.gs kholein (ya Batch 88 zip ke andar wali file). Poori file copy karein.
+  Apps Script mein Code.gs ke andar Ctrl+A (sab select) phir Ctrl+V (paste) karein.
+  Ab upar wali line 'PASTE_YOUR_SHEET_ID_HERE' ko apni asli id se badal dein:
+      const SHEET_ID = 'aap ki id';
+  Disk icon (Save) dabayein.
+
+QADAM 3: Redeploy
+  Upar right: Deploy > Manage deployments > pencil (edit) icon > Version: "New version" > Deploy.
+  (URL wahi rehta hai, website mein kuch badalna nahi.)
+
+QADAM 4: mahana report install karein (sirf ek dafa)
+  Upar function dropdown se "installMonthlyReport" chunein > Run.
+  Google permission maangega ("Authorization required") > Review permissions > apna account > Advanced > Go to ... (unsafe) > Allow.
+  (Ye aap ki apni script hai, isliye Google "unsafe" likhta hai.)
+  Log mein likha aayega: "Monthly report installed".
+
+QADAM 5: ek dafa report test karein
+  Function dropdown se "monthlyReport" chunein > Run. Aap ki Gmail mein "CV Studio Pro monthly report" email aani chahiye
+  (attachments mein Orders, AuditLog CSV). Email mein likha hoga "nothing was deleted".
+
+QADAM 6 (optional): Sheet ke Orders tab mein L1 par "Price shown" aur M1 par "Hold" likh dein (sirf samajhne ke liye).
+
+Phir admin mein naya batch ka kaam test karein: kisi order par "Saboot save + download" dabayein. Sheet mein "Evidence" tab banega.
+Agar admin kehta hai "Server purana version hai", to Qadam 3 (New version) dobara karein.

@@ -32,7 +32,7 @@ test('public pages have title, description, canonical; admin is noindex',()=>{
 test('privacy policy: numbered sections 1..N in order and covers the countries we serve',()=>{
  const s=read('privacy.html'),nums=[...s.matchAll(/<h2>(\d+)\./g)].map(m=>+m[1]);
  assert.deepEqual(nums,nums.map((_,i)=>i+1));
- ['Pakistan','India','Saudi Arabia','United Arab Emirates','Qatar','Digital Personal Data Protection Act','12 months','outside Pakistan'].forEach(w=>assert.ok(s.includes(w),w));
+ ['Pakistan','India','Saudi Arabia','United Arab Emirates','Qatar','Digital Personal Data Protection Act','36 months','outside Pakistan'].forEach(w=>assert.ok(s.includes(w),w));
 });
 test('terms: numbered sections in order and service-area clause present',()=>{
  const s=read('terms.html'),nums=[...s.matchAll(/<h2>(\d+)\./g)].map(m=>+m[1]);

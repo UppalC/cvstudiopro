@@ -40,5 +40,15 @@ test('guide explains how to add the site to the phone home screen', () => {
 test('terms say how offers work (Premium only, price at checkout) and the date is current', () => {
   const s = read('terms.html');
   assert.ok(/offer applies to the Premium CV price only/.test(s) && /price shown at checkout/.test(s));
-  assert.ok(s.includes('Last updated: 18 November 2026'));
+  assert.ok(s.includes('Last updated: 26 November 2026'));
+});
+
+test('claims window and record keeping are stated consistently (30 days, 36 months)', () => {
+  const r = read('refund.html'), p = read('privacy.html'), t = read('terms.html');
+  assert.ok(/within 30 days of the date we email your access code/.test(r) && /does not take away any right you have under the law/.test(r));
+  assert.ok(/up to 36 months/.test(p) && /transaction record without your name/.test(p) && !/up to 12 months/.test(p));
+  assert.ok(/must be reported within 30 days/.test(t));
+  for (const s of [r, p, t]) assert.ok(s.includes('Last updated: 26 November 2026'));
+  const code = fs.readFileSync(path.join(root, 'apps-script/Code.gs'), 'utf8');
+  assert.ok(/CLAIM_DAYS = 30/.test(code) && /RETENTION_MONTHS = 36/.test(code), 'Code.gs uses the same numbers as the public pages');
 });

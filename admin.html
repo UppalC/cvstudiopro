@@ -36,6 +36,8 @@ button,a,input,select,label,summary{touch-action:manipulation;-webkit-tap-highli
 .lg-show:focus-visible,.lg-go:focus-visible{outline:3px solid #1d4ed8;outline-offset:2px}
 .lg-msg{min-height:20px;margin:10px 0 0;font-size:14px;font-weight:700;color:#b91c1c}
 .lg-note{margin:6px 0 0;font-size:12.5px;line-height:1.5;color:var(--ad-mut)}
+.ad-hold{display:inline-block;margin-top:6px;background:#e0e7ff;color:#312e81;border:1px solid #a5b4fc;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:800}
+.ad-btn.ev{border-color:#4f46e5;color:#3730a3}
 .ad-back{display:none;align-items:center;gap:6px;font:inherit;font-weight:800;font-size:14px;min-height:40px;padding:0 14px 0 10px;border-radius:999px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.12);color:#fff;cursor:pointer;margin-bottom:10px}
 .ad-back.on{display:inline-flex}
 .ad-back:hover{background:rgba(255,255,255,.22)}.ad-back:focus-visible{outline:3px solid #fff;outline-offset:2px}
@@ -230,7 +232,7 @@ button,a,input,select,label,summary{touch-action:manipulation;-webkit-tap-highli
 <p class="muted" id="setMsg" role="status" aria-live="polite"></p>
 </div></div></section>
 <section class="section ad-set"><h2 class="ad-h2">Orders ka backup</h2><div class="formsec"><p class="ad-hint2">Saare orders ki CSV file (Excel mein khulti hai) download karein.</p><div class="ad-actions"><button class="ad-btn" id="csvBtn" onclick="exportCSV()">Orders CSV download</button></div></div></section>
-<section class="section ad-set"><div><h2 class="ad-h2">Purana customer data hatayen (privacy)</h2><p class="muted small">Privacy policy mein likha hai ke orders ka data 12 mahine tak rakha jata hai. Ye button 12 mahine se purane orders ka naam, WhatsApp, email, note aur transaction ID mita deta hai. Order number, template, status aur code rehte hain. Ye wapas nahi aata. Mahine mein aik dafa chalana kafi hai.</p><div class="ad-actions"><button class="ad-btn" id="purgeBtn" onclick="purgeOldUI()">12 mahine se purana data hatayen</button></div><p class="muted small" id="purgeMsg" role="status"></p></div></section><section class="section ad-set"><div><h2 class="ad-h2">Owner password badlein</h2><div class="formsec"><label for="oldPassInput">Current Password</label><div class="pwrow"><input id="oldPassInput" type="password" autocomplete="current-password" placeholder="Current password"><button type="button" class="ad-btn" aria-label="Show or hide password" onclick="togglePwd('oldPassInput',this)">Show</button></div><label for="newPassInput">New Password</label><div class="pwrow"><input id="newPassInput" type="password" autocomplete="new-password" placeholder="Kam az kam 12 characters"><button type="button" class="ad-btn" aria-label="Show or hide password" onclick="togglePwd('newPassInput',this)">Show</button></div><div class="ad-actions"><button class="ad-btn pri" id="changePassBtn" onclick="changePasswordUI()">Change Password</button></div><p class="muted small" id="changePassMsg" role="status"></p></div></div></section>
+<section class="section ad-set"><div><h2 class="ad-h2">Purana customer data aur saboot (privacy + claims)</h2><p class="muted small"><b>Qaida:</b> customer ka naam, WhatsApp, email aur note <b>36 mahine</b> (3 saal) rakhe jate hain, kyunke Pakistan mein is muddat tak claim ho sakta hai. Us ke baad ye button sirf yehi personal cheezein mitata hai. <b>Order number, tareekh, template, status, code, Transaction ID aur price hamesha rehte hain</b> (ye aap ka saboot hai). Pehle sirf ginti dikhti hai, aap ke "OK" ke baghair kuch nahi mitta.</p><p class="muted small"><b>Kisi customer par shak ho?</b> Us ke order ke card par "Saboot save + download" dabayein. Saboot Sheet ke "Evidence" tab mein mehfooz ho jata hai, file download hoti hai, aur order HOLD par chala jata hai (purge usay kabhi nahi mitayega). Har order ki poori history Sheet ke "AuditLog" tab mein khud likhi jati hai.</p><div class="ad-actions"><button class="ad-btn" id="purgeBtn" onclick="purgeOldUI()">36 mahine se purana personal data hatayen (pehle ginti)</button></div><p class="muted small" id="purgeMsg" role="status"></p></div></section><section class="section ad-set"><div><h2 class="ad-h2">Owner password badlein</h2><div class="formsec"><label for="oldPassInput">Current Password</label><div class="pwrow"><input id="oldPassInput" type="password" autocomplete="current-password" placeholder="Current password"><button type="button" class="ad-btn" aria-label="Show or hide password" onclick="togglePwd('oldPassInput',this)">Show</button></div><label for="newPassInput">New Password</label><div class="pwrow"><input id="newPassInput" type="password" autocomplete="new-password" placeholder="Kam az kam 12 characters"><button type="button" class="ad-btn" aria-label="Show or hide password" onclick="togglePwd('newPassInput',this)">Show</button></div><div class="ad-actions"><button class="ad-btn pri" id="changePassBtn" onclick="changePasswordUI()">Change Password</button></div><p class="muted small" id="changePassMsg" role="status"></p></div></div></section>
 </div>
 <div id="helpBox"><section class="section"><details class="ad-help"><summary>Madad: order ka kaam kaise hota hai</summary>
 <ol class="muted"><li><b>Naya order</b> aata hai: payment check karein, phir <b>Approve &amp; Send Code</b> dabayen. Agle unused code customer ko email ho jata hai. Agar email nahi di thi to <b>WhatsApp par code bhejein</b> wala button dabayen.</li><li><b>Code bheja</b>: customer code daal kar khud CV download kar leta hai. Agar aap khud CV bana kar dena chahte hain to <b>Kaam shuru</b> dabayen.</li><li><b>Kaam jari hai</b>: jab CV de dein to <b>Mukammal</b> dabayen.</li><li>Codes khatam hon to <b>khud naye ban jate hain</b> (approve karte waqt). Chahein to Settings tab se pehle se bhi bana sakte hain.</li><li>Har status Google Sheet ke <b>Orders</b> tab mein save hota hai, isliye phone aur laptop dono par same nazar aata hai.</li></ol></details></section></div>
@@ -601,7 +603,8 @@ function card(o){
    +(g==='new'?'<div class="ad-meta">Aaya: '+esc(ageText(o.timestamp).t)+(ageText(o.timestamp).old?'<span class="ad-age">payment ka intezar</span>':'')+(o.reminded?' &middot; Reminder bheja: '+esc(fmtDate(o.reminded)):'')+'</div>':'')
    +(o.note?'<div class="ad-meta">Note: '+esc(o.note)+'</div>':'')
    +'<div class="ad-meta"><b>'+esc(o.orderNo||'')+'</b>'+(o.txn?' &middot; Txn ID: <b>'+esc(o.txn)+'</b>':(g==='new'?' &middot; Txn ID: nahi diya':''))+'</div>'
-   +(o.code?'<div><span class="ad-code">'+esc(o.code)+'</span></div>':'')+'</div></div><div class="ad-actions">';
+   +(o.price?'<div class="ad-meta">Price jo customer ko dikhi: <b>'+esc(o.price)+'</b></div>':'')
+   +(o.code?'<div><span class="ad-code">'+esc(o.code)+'</span></div>':'')+(o.hold?'<div><span class="ad-hold">HOLD: saboot mehfooz, purge nahi hoga</span></div>':'')+'</div></div><div class="ad-actions">';
   var rmsg='Assalam o Alaikum '+(o.name||'')+'! Aap ka CV Studio Pro order mil gaya hai lekin payment abhi tak nahi mili. Payment bhej kar screenshot yahan send kar dein, phir hum aap ka code/CV bhej denge. Shukriya!';
   if(g==='new'){if(o.email)h+='<button class="ad-btn rem" data-act="remindEmail" data-row="'+row+'">Payment reminder (email)</button>';if(wa)h+='<a class="ad-btn rem" data-remwa="'+row+'" target="_blank" rel="noopener noreferrer" href="https://wa.me/'+wa+'?text='+encodeURIComponent(rmsg)+'">Payment reminder (WhatsApp)</a>'}
   if(g==='new')h+='<button class="ad-btn pri" data-act="approve" data-row="'+row+'">Approve &amp; Send Code</button><button class="ad-btn warn" data-act="Cancelled" data-row="'+row+'">Cancel</button>';
@@ -611,6 +614,8 @@ function card(o){
   if(g==='cancel')h+='<button class="ad-btn" data-act="Pending" data-row="'+row+'">Dobara kholein</button>';
   h+='<button class="ad-btn" data-act="editEmail" data-row="'+row+'" data-email="'+esc(o.email||'')+'">Email badlein</button>';
   if(o.code&&o.email&&g!=='cancel')h+='<button class="ad-btn" data-act="resend" data-row="'+row+'">Code dobara email karein</button>';
+  h+='<button class="ad-btn ev" data-act="evidence" data-row="'+row+'">Saboot save + download</button>';
+  if(o.hold)h+='<button class="ad-btn" data-act="holdOff" data-row="'+row+'">Hold hatayen</button>';else h+='<button class="ad-btn" data-act="holdOn" data-row="'+row+'">Hold (purge se bachayen)</button>';
   return h+'</div></div>';
 }
 function group(id,title,hint,list){
@@ -713,6 +718,18 @@ async function onListClick(e){
     b.disabled=true;var r4=await api({action:'resendCode',rowIndex:row});if(r4===null)return;b.disabled=false;
     if(r4&&r4.valid&&r4.emailed)toast('ok','Code email kar diya gaya.');else toast('err','Email nahi gayi'+(r4&&r4.emailError?' ('+r4.emailError+')':'')+'. WhatsApp se bhejein.');
     return}
+  if(act==='evidence'){
+    b.disabled=true;var re=await api({action:'saveEvidence',rowIndex:row});b.disabled=false;if(re===null)return;
+    if(re&&re.valid&&re.evidence){downloadEvidence(re.evidence);toast('ok','Saboot Sheet ke "Evidence" tab mein save ho gaya, order HOLD par hai, aur file download ho rahi hai.');await loadOrders(false)}
+    else if(re&&re.error==='unknown_action')toast('err','Server purana version hai. Apps Script update karke Redeploy karein.');
+    else toast('err','Saboot save nahi hua. Dobara try karein.');
+    return}
+  if(act==='holdOn'||act==='holdOff'){
+    b.disabled=true;var rh=await api({action:'setHold',rowIndex:row,on:act==='holdOn'});b.disabled=false;if(rh===null)return;
+    if(rh&&rh.valid){toast('ok',act==='holdOn'?'Order HOLD par hai: purge isay nahi mitayega.':'Hold hata diya.');await loadOrders(false)}
+    else if(rh&&rh.error==='unknown_action')toast('err','Server purana version hai. Apps Script update karke Redeploy karein.');
+    else toast('err','Hold nahi badal saka.');
+    return}
   if(act==='Cancelled'&&!confirm('Is order ko cancel karna hai?'))return;
   var old=b.textContent;b.disabled=true;b.textContent='Wait...';
   var r;
@@ -746,15 +763,27 @@ async function changePasswordUI(){
   else{msg.textContent='Password nahi badal saka. Dobara try karein.'}
 }
 
+function downloadEvidence(ev){
+  try{
+    var blob=new Blob([JSON.stringify(ev,null,2)],{type:'application/json'}),a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);a.download='evidence-'+String(ev.orderNo||'order').replace(/[^A-Za-z0-9-]/g,'')+'.json';
+    document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500);
+  }catch(e){}
+}
 async function purgeOldUI(){
   var btn=$('purgeBtn'),msg=$('purgeMsg');
-  if(!confirm('12 mahine se purane orders ka naam, WhatsApp, email, note aur transaction ID hamesha ke liye mita diye jayenge. Wapas nahi aayega. Jari rakhein?'))return;
-  btn.disabled=true;msg.textContent='Ho raha hai...';
-  var r=await api({action:'purgeOldOrders',months:12});
+  btn.disabled=true;msg.textContent='Pehle sirf ginti ho rahi hai (kuch mitaya nahi ja raha)...';
+  var d=await api({action:'purgeOldOrders',months:36,dryRun:true});
+  if(d===null){btn.disabled=false;return}
+  if(!(d&&d.valid)){btn.disabled=false;msg.textContent=(d&&d.error==='unknown_action')?'Server purana version hai. Apps Script update karke Redeploy karein.':'Nahi ho saka. Dobara try karein.';return}
+  if(!d.purged){btn.disabled=false;msg.textContent='Koi order 36 mahine se purana nahi mila'+(d.held?' ('+d.held+' HOLD par hain).':'.');return}
+  var go=confirm(d.purged+' order(s) 36 mahine se purane hain. Un ka naam, WhatsApp, email aur note hamesha ke liye mita diya jayega. Order number, tareekh, template, status, code, Transaction ID aur price rehte hain. HOLD wale orders nahi mitenge ('+(d.held||0)+' hain). Wapas nahi aayega. Jari rakhein?');
+  if(!go){btn.disabled=false;msg.textContent='Cancel kiya. Kuch nahi mita.';return}
+  msg.textContent='Ho raha hai...';
+  var r=await api({action:'purgeOldOrders',months:36});
   btn.disabled=false;
   if(r===null)return;
-  if(r&&r.valid){msg.textContent=r.purged?(r.purged+' purane orders ka data mita diya gaya.'):'Koi order 12 mahine se purana nahi mila.';if(r.purged)loadOrders(true)}
-  else if(r&&r.error==='unknown_action'){msg.textContent='Server purana version hai. Apps Script update karke Redeploy karein.'}
+  if(r&&r.valid){msg.textContent=r.purged?(r.purged+' purane orders ka personal data mita diya gaya.'):'Kuch nahi mita.';if(r.purged)loadOrders(true)}
   else{msg.textContent='Nahi ho saka. Dobara try karein.'}
 }
 

@@ -9,7 +9,10 @@
  *   Codes       A=code, B=used, C=note, D=date used
  *   OwnerLogin  A2 = owner password (plain text is auto-converted to a salted hash on first login)
  *   Settings    A=key, B=value
- *   Orders      A=timestamp, B=name, C=whatsapp, D=email, E=template, F=note, G=status, H=code, I=updated
+ *   Orders      A=timestamp, B=name, C=whatsapp, D=email, E=template, F=note, G=status, H=code, I=updated,
+ *               J=reminded, K=transaction id, L=price/offer shown at order time, M=HOLD (kept for a dispute)
+ *   AuditLog    (auto-created) Time, Order, Event, Details  - append-only history of every order action
+ *   Evidence    (auto-created) Saved at, Order, JSON snapshot of the order + its AuditLog + code status
  *
  * Security notes:
  *   - Owner password is stored as a salted hash (h1$salt$hash) after first successful login.
@@ -25,6 +28,11 @@ const CODES_TAB = 'Codes';
 const OWNER_TAB = 'OwnerLogin';
 const SETTINGS_TAB = 'Settings';
 const ORDERS_TAB = 'Orders';
+const AUDIT_TAB = 'AuditLog';
+const EVIDENCE_TAB = 'Evidence';
+const RETENTION_MONTHS = 36;     // personal details are kept this long; after it they are erased (unless HOLD)
+const CLAIM_DAYS = 30;           // customers are told to report problems within this many days
+const POLICY_VERSION = '2026-11-25'; // which Refund/Terms text was live (written into the audit log)
 
 const STATUSES = ['Pending', 'Approved', 'In Progress', 'Completed', 'Cancelled'];
 const OWNER_MAX_FAILS = 8;       // wrong owner passwords before lock
@@ -57,7 +65,9 @@ function doPost(e) {
       case 'generateCodes':  return respond(withOwner(body, function () { return generateCodes(body.count); }));
       case 'sendReminder':   return respond(withOwner(body, function () { return sendReminder(body.rowIndex, body.via); }));
       case 'resendCode':     return respond(withOwner(body, function () { return resendCode(body.rowIndex); }));
-      case 'purgeOldOrders': return respond(withOwner(body, function () { return purgeOldOrders(body.months); }));
+      case 'purgeOldOrders': return respond(withOwner(body, function () { return purgeOldOrders(body.months, body.dryRun === true); }));
+      case 'setHold':        return respond(withOwner(body, function () { return setHold(body.rowIndex, body.on === true); }));
+      case 'saveEvidence':   return respond(withOwner(body, function () { return saveEvidence(body.rowIndex); }));
       case 'changePassword': return respond(changeOwnerPassword(body.oldPassword, body.newPassword));
       case 'logout':         return respond(logoutOwner(body.token));
       default:               return respond({ valid: false, error: 'unknown_action' });
@@ -445,8 +455,10 @@ function submitOrder(body) {
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);
   try {
-    sheet.appendRow([new Date(), name, whatsapp, email, cleanCell(body.template, 20), cleanCell(body.note, 300), 'Pending', '', '', '', txn]);
+    const priceShown = priceSnapshot();
+    sheet.appendRow([new Date(), name, whatsapp, email, cleanCell(body.template, 20), cleanCell(body.note, 300), 'Pending', '', '', '', txn, priceShown, '']);
     orderNo = orderNumber(sheet.getLastRow());
+    audit(orderNo, 'ORDER_CREATED', 'template=' + cleanCell(body.template, 20) + '; txn=' + (txn || 'none') + '; price shown: ' + priceShown + '; email given: ' + (email ? 'yes' : 'no') + '; policy ' + POLICY_VERSION);
   } finally { lock.releaseLock(); }
   try {
     MailApp.sendEmail(Session.getEffectiveUser().getEmail(), 'New CV Studio Order ' + orderNo, 'New order ' + orderNo + ' from ' + name + ' - ' + (email || whatsapp) + (txn ? '\nTransaction ID: ' + txn : '\nNo transaction ID given yet.'));
@@ -476,20 +488,24 @@ function getOrders() {
     const ts = data[i][0] instanceof Date ? Utilities.formatDate(data[i][0], tz, "yyyy-MM-dd'T'HH:mm:ss") : String(data[i][0]);
     const up = data[i][8] instanceof Date ? Utilities.formatDate(data[i][8], tz, "yyyy-MM-dd'T'HH:mm:ss") : String(data[i][8] || '');
     const rem = data[i][9] instanceof Date ? Utilities.formatDate(data[i][9], tz, "yyyy-MM-dd'T'HH:mm:ss") : String(data[i][9] || '');
-    orders.push({ row: i + 1, timestamp: ts, name: data[i][1], whatsapp: data[i][2], email: data[i][3], template: data[i][4], note: data[i][5], status: data[i][6], code: data[i][7], updated: up, reminded: rem, txn: String(data[i][10] || ''), orderNo: orderNumber(i + 1) });
+    orders.push({ row: i + 1, timestamp: ts, name: data[i][1], whatsapp: data[i][2], email: data[i][3], template: data[i][4], note: data[i][5], status: data[i][6], code: data[i][7], updated: up, reminded: rem, txn: String(data[i][10] || ''), price: String(data[i][11] || ''), hold: String(data[i][12] || '') === 'HOLD', orderNo: orderNumber(i + 1) });
   }
   return { valid: true, orders: orders, statuses: STATUSES, codesLeft: countFreeCodes() };
 }
 
-/** Privacy: erase personal details of orders older than N months (default 12). Keeps order number, template, status and code. */
-function purgeOldOrders(months) {
-  const m = months === undefined || months === null || months === '' ? 12 : Number(months);
-  if (!isFinite(m) || m < 3 || m > 60 || Math.floor(m) !== m) return { valid: false, error: 'bad_months' };
+/**
+ * Privacy: erase personal details (name, WhatsApp, email, note) of orders older than N months (default 36).
+ * KEEPS the transaction record: order number, date, template, status, code, Transaction ID and the price shown.
+ * Orders marked HOLD (a dispute / saved evidence) are never touched. dryRun=true only counts.
+ */
+function purgeOldOrders(months, dryRun) {
+  const m = months === undefined || months === null || months === '' ? RETENTION_MONTHS : Number(months);
+  if (!isFinite(m) || m < 12 || m > 60 || Math.floor(m) !== m) return { valid: false, error: 'bad_months' };
   const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(ORDERS_TAB);
   if (!sheet) return { valid: false, error: 'no_orders_tab' };
   const cutoff = new Date();
   cutoff.setMonth(cutoff.getMonth() - m);
-  let purged = 0;
+  let purged = 0, held = 0;
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);
   try {
@@ -497,16 +513,139 @@ function purgeOldOrders(months) {
     for (let i = 1; i < data.length; i++) {
       const ts = data[i][0];
       if (!(ts instanceof Date) || ts.getTime() >= cutoff.getTime()) continue;
-      if (String(data[i][1]) === 'Deleted' && !data[i][2] && !data[i][3] && !data[i][5] && !data[i][10]) continue;
+      if (String(data[i][1]) === 'Deleted' && !data[i][2] && !data[i][3] && !data[i][5]) continue;
+      if (String(data[i][12] || '') === 'HOLD') { held++; continue; }
+      purged++;
+      if (dryRun) continue;
       sheet.getRange(i + 1, 2, 1, 3).setValues([['Deleted', '', '']]);
       sheet.getRange(i + 1, 6).setValue('');
-      sheet.getRange(i + 1, 11).setValue('');
-      purged++;
     }
   } finally {
     lock.releaseLock();
   }
-  return { valid: true, purged: purged, months: m };
+  if (!dryRun && purged) audit('', 'PURGE', purged + ' order(s) older than ' + m + ' months had personal details erased; ' + held + ' on HOLD skipped');
+  return { valid: true, purged: purged, held: held, months: m, dryRun: !!dryRun };
+}
+
+/* ---------------- price shown, audit log, evidence, hold ---------------- */
+
+function getOrMakeTab(name, headers) {
+  const ss = SpreadsheetApp.openById(SHEET_ID);
+  let sh = ss.getSheetByName(name);
+  if (!sh) { sh = ss.insertSheet(name); sh.appendRow(headers); }
+  return sh;
+}
+
+/** Append-only history. Never lets a logging problem break an order. */
+function audit(orderNo, event, detail) {
+  try { getOrMakeTab(AUDIT_TAB, ['Time', 'Order', 'Event', 'Details']).appendRow([new Date(), String(orderNo || ''), String(event), cleanCell(detail, 500)]); }
+  catch (e) { Logger.log('audit failed: ' + e); }
+}
+
+/** What price/offer the customer was shown at the moment of the order (read from Settings on the server, not trusted from the browser). */
+function priceSnapshot() {
+  try {
+    const m = readSettingsMap() || {};
+    const yes = function (k) { return String(m[k]).toLowerCase() === 'true'; };
+    let s = (yes('show_prices') && m.price_premium) ? String(m.price_premium) : '(price not shown)';
+    const today = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd').slice(0, 10);
+    const ends = String(m.offer_ends || '');
+    if (yes('offer_enabled') && (!ends || ends >= today)) s += ' | offer on' + (m.price_old ? ' (was ' + m.price_old + ')' : '') + (ends ? ' until ' + ends : '');
+    if (yes('free_trial_mode')) s += ' | free trial mode on';
+    return cleanCell(s, 200);
+  } catch (e) { return ''; }
+}
+
+function fmtTs(v, tz) { return v instanceof Date ? Utilities.formatDate(v, tz, "yyyy-MM-dd'T'HH:mm:ss") : String(v || ''); }
+
+/** Everything we know about one order, as plain data (for the owner to keep). */
+function buildEvidence(rowIndex) {
+  const ss = SpreadsheetApp.openById(SHEET_ID);
+  const sheet = ss.getSheetByName(ORDERS_TAB);
+  if (!sheet) return null;
+  if (!(rowIndex >= 2) || rowIndex > sheet.getLastRow()) return null;
+  const tz = Session.getScriptTimeZone();
+  const r = sheet.getRange(rowIndex, 1, 1, 13).getValues()[0];
+  const orderNo = orderNumber(rowIndex);
+  const events = [];
+  const aSheet = ss.getSheetByName(AUDIT_TAB);
+  if (aSheet) {
+    const rows = aSheet.getDataRange().getValues();
+    for (let i = 1; i < rows.length; i++) if (String(rows[i][1]) === orderNo) events.push({ time: fmtTs(rows[i][0], tz), event: String(rows[i][2]), details: String(rows[i][3]) });
+  }
+  let codeInfo = { code: String(r[7] || ''), used: false, usedAt: '' };
+  const cSheet = ss.getSheetByName(CODES_TAB);
+  if (cSheet && codeInfo.code) {
+    const rows = cSheet.getDataRange().getValues();
+    for (let i = 1; i < rows.length; i++) {
+      if (String(rows[i][0]).trim().toUpperCase() === codeInfo.code.toUpperCase()) {
+        const u = rows[i][1];
+        codeInfo.used = (u === true || String(u).toUpperCase() === 'TRUE' || String(u).toUpperCase() === 'USED');
+        codeInfo.usedAt = fmtTs(rows[i][3], tz);
+        break;
+      }
+    }
+  }
+  return {
+    orderNo: orderNo, savedAt: fmtTs(new Date(), tz), policyVersion: POLICY_VERSION, claimDays: CLAIM_DAYS,
+    order: { placedAt: fmtTs(r[0], tz), name: String(r[1]), whatsapp: String(r[2]), email: String(r[3]), template: String(r[4]), note: String(r[5]), status: String(r[6]), updatedAt: fmtTs(r[8], tz), reminderAt: fmtTs(r[9], tz), transactionId: String(r[10] || ''), priceShownAtOrder: String(r[11] || ''), hold: String(r[12] || '') === 'HOLD' },
+    code: codeInfo, history: events
+  };
+}
+
+/** Owner: keep a permanent copy of one order's evidence (Evidence tab) and protect it from the purge (HOLD). */
+function saveEvidence(rowIndex) {
+  rowIndex = Number(rowIndex);
+  const ev = buildEvidence(rowIndex);
+  if (!ev) return { valid: false, error: 'bad_row' };
+  getOrMakeTab(EVIDENCE_TAB, ['Saved at', 'Order', 'Evidence (JSON)']).appendRow([new Date(), ev.orderNo, JSON.stringify(ev)]);
+  SpreadsheetApp.openById(SHEET_ID).getSheetByName(ORDERS_TAB).getRange(rowIndex, 13).setValue('HOLD');
+  audit(ev.orderNo, 'EVIDENCE_SAVED', 'snapshot saved and order put on HOLD');
+  ev.order.hold = true;
+  return { valid: true, evidence: ev };
+}
+
+/** Owner: protect an order from the purge (or release it). */
+function setHold(rowIndex, on) {
+  rowIndex = Number(rowIndex);
+  const sheet = SpreadsheetApp.openById(SHEET_ID).getSheetByName(ORDERS_TAB);
+  if (!sheet) return { valid: false, error: 'no_orders_tab' };
+  if (!(rowIndex >= 2) || rowIndex > sheet.getLastRow()) return { valid: false, error: 'bad_row' };
+  sheet.getRange(rowIndex, 13).setValue(on ? 'HOLD' : '');
+  audit(orderNumber(rowIndex), on ? 'HOLD_ON' : 'HOLD_OFF', on ? 'kept for a dispute' : 'released');
+  return { valid: true, hold: !!on };
+}
+
+/* ---------------- monthly report + backup (needs installMonthlyReport() once) ---------------- */
+
+function csvOf(rows) {
+  return rows.map(function (r) { return r.map(function (c) { return '"' + String(c instanceof Date ? c.toISOString() : (c === undefined || c === null ? '' : c)).replace(/"/g, '""') + '"'; }).join(','); }).join('\n');
+}
+
+/** Emails the owner (only) a purge preview and a CSV backup of Orders and AuditLog. Deletes NOTHING. */
+function monthlyReport() {
+  const ss = SpreadsheetApp.openById(SHEET_ID);
+  const preview = purgeOldOrders(RETENTION_MONTHS, true);
+  const stamp = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM');
+  const attach = [];
+  [ORDERS_TAB, AUDIT_TAB, EVIDENCE_TAB].forEach(function (n) {
+    const sh = ss.getSheetByName(n);
+    if (sh) attach.push(Utilities.newBlob(csvOf(sh.getDataRange().getValues()), 'text/csv', 'cvstudiopro-' + n + '-' + stamp + '.csv'));
+  });
+  MailApp.sendEmail({
+    to: Session.getEffectiveUser().getEmail(),
+    subject: 'CV Studio Pro monthly report ' + stamp,
+    body: 'Monthly report (nothing was deleted).\n\nOrders older than ' + RETENTION_MONTHS + ' months whose personal details WOULD be erased if you press the purge button in the admin: ' + (preview.purged || 0) + '\nOrders on HOLD (never erased): ' + (preview.held || 0) + '\n\nAttached: a backup copy of the Orders, AuditLog and Evidence tabs. Keep this email: it is an independent, dated copy of your records. It contains customer details, so do not forward it.',
+    attachments: attach,
+    name: 'CV Studio Pro'
+  });
+}
+
+/** Run ONCE from the editor (Run > installMonthlyReport) and accept the permission dialog. */
+function installMonthlyReport() {
+  ScriptApp.getProjectTriggers().forEach(function (t) { if (t.getHandlerFunction() === 'monthlyReport') ScriptApp.deleteTrigger(t); });
+  ScriptApp.newTrigger('monthlyReport').timeBased().onMonthDay(1).atHour(9).create();
+  Logger.log('Monthly report installed: day 1 of every month, about 9 am.');
 }
 
 /** Random, hard-to-guess code such as CVPRO-7KQ2M9XD (uses UUID randomness). */
@@ -574,7 +713,7 @@ function sendReminder(rowIndex, via) {
   if (!(rowIndex >= 2) || rowIndex > sheet.getLastRow()) return { valid: false, error: 'bad_row' };
   if (String(sheet.getRange(rowIndex, 7).getValue()) !== 'Pending') return { valid: false, error: 'not_pending' };
   const cell = sheet.getRange(rowIndex, 10);
-  if (via === 'whatsapp') { cell.setValue(new Date()); return { valid: true, emailed: false }; }
+  if (via === 'whatsapp') { cell.setValue(new Date()); audit(orderNumber(rowIndex), 'REMINDER', 'whatsapp (recorded)'); return { valid: true, emailed: false }; }
   const last = cell.getValue();
   if (last instanceof Date && (Date.now() - last.getTime()) < REMINDER_COOLDOWN_HOURS * 3600 * 1000) return { valid: false, error: 'too_soon' };
   const email = String(sheet.getRange(rowIndex, 4).getValue() || '').trim();
@@ -592,6 +731,7 @@ function sendReminder(rowIndex, via) {
     return { valid: true, emailed: false, emailError: String(e && e.message ? e.message : e).slice(0, 160) };
   }
   cell.setValue(new Date());
+  audit(orderNumber(rowIndex), 'REMINDER', 'email sent');
   return { valid: true, emailed: true };
 }
 
@@ -630,6 +770,7 @@ function approveOrder(rowIndex) {
     ordersSheet.getRange(rowIndex, 9).setValue(new Date());
     const email = String(ordersSheet.getRange(rowIndex, 4).getValue() || '');
     const sent = sendCodeEmail(email, assigned);
+    audit(orderNumber(rowIndex), 'APPROVED', 'code ' + assigned + (autoMade ? ' (auto-made)' : '') + '; email ' + (sent.emailed ? 'sent' : 'NOT sent: ' + (sent.emailError || 'no email')));
     return { valid: true, code: assigned, emailed: sent.emailed, emailError: sent.emailError, autoGenerated: autoMade };
   } finally {
     lock.releaseLock();
@@ -643,7 +784,7 @@ function sendCodeEmail(email, code) {
       MailApp.sendEmail({
         to: email,
         subject: 'Your CV Studio Pro Premium Code',
-        body: 'Assalam o Alaikum,\n\nYour premium unlock code is: ' + code + '\n\nOpen the CV builder, choose "Unlock", enter this code and download your CV as PDF or Word. Each code works once only.\n\nThank you,\nCV Studio Pro',
+        body: 'Assalam o Alaikum,\n\nYour premium unlock code is: ' + code + '\n\nOpen the CV builder, choose "Unlock", enter this code and download your CV as PDF or Word. Each code works once only.\n\nIf there is any problem with your order or this code, please contact us within ' + CLAIM_DAYS + ' days of receiving this email, quoting your order number. See our Refund Policy on the website.\n\nThank you,\nCV Studio Pro',
         name: 'CV Studio Pro'
       });
       emailed = true;
@@ -679,6 +820,7 @@ function resendCode(rowIndex) {
   if (!code) return { valid: false, error: 'no_code' };
   const email = String(sheet.getRange(rowIndex, 4).getValue() || '').trim();
   const sent = sendCodeEmail(email, code);
+  audit(orderNumber(rowIndex), 'CODE_RESENT', 'code ' + code + '; email ' + (sent.emailed ? 'sent' : 'NOT sent: ' + (sent.emailError || 'no email')));
   return { valid: true, emailed: sent.emailed, emailError: sent.emailError };
 }
 
@@ -692,6 +834,7 @@ function updateStatus(rowIndex, status) {
   if (!(rowIndex >= 2) || rowIndex > sheet.getLastRow()) return { valid: false, error: 'bad_row' };
   sheet.getRange(rowIndex, 7).setValue(status);
   sheet.getRange(rowIndex, 9).setValue(new Date());
+  audit(orderNumber(rowIndex), 'STATUS', status);
   return { valid: true };
 }
 
